@@ -17,7 +17,7 @@ $(document).ready(() => {
           success: function (response) {
             $("#msg").removeClass("d-none");
             setTimeout(function () {
-              window.location.href = "/dashboard";
+              window.location.href = "/user/dashboard";
             }, 2500);
           },
         });

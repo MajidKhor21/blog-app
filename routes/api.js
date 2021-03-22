@@ -1,12 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
+const checker = require("../tools/checker");
 
 // define register route
 router.use("/register", require("./register"));
 
 // define login route
 router.use("/login", require("./login"));
+
+//define user route
+router.use("/user", require("./user"));
 
 //create admin user at first
 router.post("/createAdmin", (req, res) => {
@@ -27,6 +31,12 @@ router.post("/createAdmin", (req, res) => {
       return res.send("admin created successfully");
     });
   });
+});
+
+//logout
+router.get("/logout", (req, res) => {
+  res.clearCookie("user_sid");
+  res.redirect("/login");
 });
 
 module.exports = router;

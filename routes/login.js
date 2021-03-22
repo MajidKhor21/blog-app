@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
+const checker = require("../tools/checker");
 
-router.get("/", (req, res, next) => {
+router.get("/", checker.sessionChecker, (req, res, next) => {
   res.render("login");
 });
 

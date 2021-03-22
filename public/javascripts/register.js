@@ -12,7 +12,10 @@ $(document).ready(() => {
         $("#alertMsg").removeClass("d-none");
       } else if ($(this).val()) {
         if (
-          !($("#username").val().length > 3 && $("#username").val().length < 30)
+          !(
+            $("#username").val().length > 3 && $("#username").val().length < 30
+          ) &&
+          $("#username").val() !== ""
         ) {
           $("#alertMsg2").removeClass("d-none");
         } else if ($("#password").val() !== $("#rePassword").val()) {
@@ -20,13 +23,15 @@ $(document).ready(() => {
         } else if (
           !$("#password")
             .val()
-            .match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/)
+            .match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/) &&
+          $("#password").val() !== ""
         ) {
           $("#alertMsg4").removeClass("d-none");
         } else if (
           !$("#mobileNumber")
             .val()
-            .match(/^\d{11}$/)
+            .match(/^\d{11}$/) &&
+          $("#mobileNumber").val() !== ""
         ) {
           $("#alertMsg5").removeClass("d-none");
         }
@@ -61,6 +66,7 @@ $(document).ready(() => {
           }, 2500);
         },
         error: function (err) {
+          console.log(err);
           let error = JSON.parse(err.responseText);
           if (error.msg == "user exist") {
             $("#alertMsg2").removeClass("d-none");
