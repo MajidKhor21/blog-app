@@ -5,10 +5,10 @@ const User = require("../models/user");
 // define register route
 router.use("/register", require("./register"));
 
-router.get("/login", function (req, res, next) {
-  res.render("login");
-});
+// define login route
+router.use("/login", require("./login"));
 
+//create admin user at first
 router.post("/createAdmin", (req, res) => {
   User.findOne({ role: "admin" }, (err, existAdmin) => {
     if (err) return res.status(500).send("err in create admin");

@@ -6,7 +6,7 @@ $(document).ready(() => {
     $("#alertMsg3").addClass("d-none");
     $("#alertMsg4").addClass("d-none");
     $("#alertMsg5").addClass("d-none");
-    $("input[type='text']").each(function () {
+    $("input").each(function () {
       if (!$(this).val()) {
         $(this).addClass("plc");
         $("#alertMsg").removeClass("d-none");
@@ -54,7 +54,7 @@ $(document).ready(() => {
           gender: $("#radioBtn input[type='radio']:checked").val(),
           mobileNumber: $("#mobileNumber").val().trim(),
         },
-        success: function () {
+        success: function (response) {
           $("#msg").removeClass("d-none");
           setTimeout(function () {
             window.location.href = "/login";

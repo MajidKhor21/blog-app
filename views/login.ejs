@@ -26,17 +26,30 @@
       <div class="container">
         <div class="center form col-11">
           <p class="title">ورود به پنل کاربری</p>
-
+          <div
+            class="alert alert-danger w-75 mx-auto d-none"
+            role="alert"
+            id="alertMsg"
+          >
+            الزامی
+          </div>
+          <div
+            class="alert alert-success w-75 mx-auto d-none"
+            role="alert"
+            id="msg"
+          >
+            ورود موفقیت آمیز
+          </div>
           <div class="text-input">
             <i class="fas fa-id-card-alt"></i>
             <input type="text" id="username" placeholder="نام کاربری" />
           </div>
           <div class="text-input">
             <i class="fas fa-lock"></i>
-            <input type="text" id="password" placeholder="رمز عبور" />
+            <input type="password" id="password" placeholder="رمز عبور" />
           </div>
 
-          <button class="submitBtn btn btn-success">ورود</button>
+          <button class="submitBtn btn btn-success" id="loginBtn">ورود</button>
 
           <p class="signup">
             حساب کاربری ندارید؟ <a href="/register">ثبت نام</a>
@@ -51,4 +64,5 @@
     integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
     crossorigin="anonymous"
   ></script>
+  <script src="/javascripts/login.js"></script>
 </html>
