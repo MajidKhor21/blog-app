@@ -18,12 +18,9 @@ $(document).ready(() => {
         } else if ($("#password").val() !== $("#rePassword").val()) {
           $("#alertMsg3").removeClass("d-none");
         } else if (
-          !(
-            $("#password")
-              .val()
-              .match(/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/) &&
-            $("#password").val().length >= 6
-          )
+          !$("#password")
+            .val()
+            .match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/)
         ) {
           $("#alertMsg4").removeClass("d-none");
         } else if (
@@ -32,33 +29,47 @@ $(document).ready(() => {
             .match(/^\d{11}$/)
         ) {
           $("#alertMsg5").removeClass("d-none");
-        } else if (
-          $("#username").val().length > 3 &&
-          $("#username").val().length < 30 &&
-          $("#password").val() === $("#rePassword").val() &&
-          $("#password")
-            .val()
-            .match(/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/) &&
-          $("#password").val().length >= 6 &&
-          $("#mobileNumber")
-            .val()
-            .match(/^\d{11}$/)
-        ) {
-          $.ajax({
-            type: "post",
-            url: "/register",
-            data: {
-              firstName: $("#firstName").val().trim(),
-              lastName: $("#lastName").val().trim(),
-              username: $("#username").val().trim(),
-              password: $("#password").val(),
-              gender: $("#radioBtn input[type='radio']:checked").val(),
-              mobileNumber: $("#mobileNumber").val().trim(),
-            },
-            success: function (response) {},
-          });
         }
       }
     });
+    if (
+      $("#username").val().length > 3 &&
+      $("#username").val().length < 30 &&
+      $("#password").val() === $("#rePassword").val() &&
+      $("#password")
+        .val()
+        .match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/) &&
+      $("#mobileNumber")
+        .val()
+        .match(/^\d{11}$/)
+    ) {
+      $.ajax({
+        type: "post",
+        url: "/register",
+        data: {
+          firstName: $("#firstName").val().trim(),
+          lastName: $("#lastName").val().trim(),
+          username: $("#username").val().trim(),
+          password: $("#password").val(),
+          gender: $("#radioBtn input[type='radio']:checked").val(),
+          mobileNumber: $("#mobileNumber").val().trim(),
+        },
+        success: function () {
+          $("#msg").removeClass("d-none");
+          setTimeout(function () {
+            window.location.href = "/login";
+          }, 2500);
+        },
+        error: function (err) {
+          let error = JSON.parse(err.responseText);
+          if (error.msg == "user exist") {
+            $("#alertMsg2").removeClass("d-none");
+          }
+          if (error.msg == "phone number") {
+            $("#alertMsg5").removeClass("d-none");
+          }
+        },
+      });
+    }
   });
 });

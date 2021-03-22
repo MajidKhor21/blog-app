@@ -30,7 +30,7 @@ const UserSchema = new Schema({
     required: true,
     minlength: 6,
     maxlength: 50,
-    match: /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/,
+    match: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/,
   },
   createdAt: {
     type: Date,
@@ -43,6 +43,7 @@ const UserSchema = new Schema({
   },
   mobileNumber: {
     type: String,
+    unique: true,
     required: true,
     match: /^\d{11}$/,
   },
