@@ -27,6 +27,42 @@
         <div class="center form col-11">
           <p class="title">ثبت نام</p>
 
+          <div
+            class="alert alert-danger w-75 mx-auto d-none"
+            role="alert"
+            id="alertMsg"
+          >
+            الزامی
+          </div>
+          <div
+            class="alert alert-warning w-75 mx-auto d-none"
+            role="alert"
+            id="alertMsg2"
+          >
+            نام کاربری معتبر نمی باشد
+          </div>
+          <div
+            class="alert alert-warning w-75 mx-auto d-none"
+            role="alert"
+            id="alertMsg3"
+          >
+            رمزهای وارد شده یکسان نیستند
+          </div>
+          <div
+            class="alert alert-warning w-75 mx-auto d-none"
+            role="alert"
+            id="alertMsg4"
+          >
+            رمز عبور باید حداقل شامل 6 کاراکتر و حداقل یک حرف و یک عدد باشد
+          </div>
+          <div
+            class="alert alert-warning w-75 mx-auto d-none"
+            role="alert"
+            id="alertMsg5"
+          >
+            شماره موبایل معتبر نمی باشد
+          </div>
+
           <div class="text-input">
             <i class="fas fa-user"></i>
             <input type="text" id="firstName" placeholder="نام" />
@@ -50,35 +86,41 @@
           </div>
           <div class="text-input">
             <i class="fas fa-mobile-alt"></i>
-            <input type="text" id="mobileNumber" placeholder="شماره موبایل" />
+            <input
+              type="text"
+              id="mobileNumber"
+              size="11"
+              placeholder="شماره موبایل"
+            />
           </div>
-          <div class="text-input mt-3">
+          <!-- <div class="text-input mt-3">
             <i class="fas fa-image" id="pic"></i>
             <input type="file" id="avatar" />
-          </div>
+          </div> -->
 
           <div class="text-input">
             <i class="fas fa-venus-mars" id="gen"></i>
-            <div class="form-check d-inline text-light">
+            <div class="form-check text-light" id="radioBtn">
               <input
                 class="form-check-input"
                 type="radio"
                 name="exampleRadios"
-                id="exampleRadios1"
-                value="option1"
+                value="male"
                 checked
               />
-              <label class="form-check-label mr-4" for="exampleRadios1">
+              <label
+                class="form-check-label mr-4"
+                for="exampleRadios1"
+                style="margin-left: 15px"
+              >
                 مرد
               </label>
-            </div>
-            <div class="form-check d-inline text-light">
               <input
                 class="form-check-input"
                 type="radio"
                 name="exampleRadios"
                 id="exampleRadios1"
-                value="option1"
+                value="female"
               />
               <label class="form-check-label mr-4" for="exampleRadios1">
                 زن
@@ -86,7 +128,9 @@
             </div>
           </div>
 
-          <button class="submitBtn btn btn-success">ثبت نام</button>
+          <button class="submitBtn btn btn-success" id="submitBtn">
+            ثبت نام
+          </button>
 
           <p class="login">حساب کاربری دارید؟ <a href="/login">ورود</a></p>
         </div>
@@ -99,4 +143,5 @@
     integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
     crossorigin="anonymous"
   ></script>
+  <script src="/javascripts/register.js"></script>
 </html>

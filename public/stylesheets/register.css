@@ -8,6 +8,15 @@
     src: url(../fonts/IRANSansWeb_Light.woff);
   }
 
+  .plc::placeholder {
+    color: red;
+    font-weight: bold;
+  }
+
+  .alert{
+    font-size: 12px !important;
+  }
+
   * {
     margin: 0;
     padding: 0;
@@ -161,7 +170,7 @@
     background-color: rgba(0, 0, 0, 0.8);
     width: 440px;
     position: absolute;
-    top: 400px !important;
+    top: 450px !important;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
