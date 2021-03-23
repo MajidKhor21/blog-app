@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Dashboard</title>
+    <title>ویرایش مشخصات</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -74,7 +74,7 @@
                     type="text"
                     class="form-control"
                     id="firstName"
-                    value="<%= user.firstName %> "
+                    value="<%= user.firstName %>"
                   />
                 </div>
               </div>
@@ -87,7 +87,7 @@
                     type="text"
                     class="form-control"
                     id="lastName"
-                    placeholder="<%= user.lastName %> "
+                    value="<%= user.lastName %>"
                   />
                 </div>
               </div>
@@ -102,21 +102,46 @@
                     disabled
                     class="form-control-plaintext"
                     id="username"
-                    placeholder="<%= user.username %> "
+                    value="<%= user.username %>"
                   />
                 </div>
               </div>
               <div class="form-group row">
-                <label for="inputPassword" class="col-sm-2 col-form-label"
+                <label for="gender" class="col-sm-2 col-form-label"
                   >جنسیت</label
                 >
                 <div class="col-sm-10">
+                  <% if (user.gender === 'male') { %>
                   <input
                     type="text"
-                    class="form-control"
-                    id="inputPassword"
-                    placeholder="Password"
+                    readonly
+                    disabled
+                    class="form-control-plaintext d-inline-block"
+                    id="gender"
+                    value="مرد"
+                    style="width: 15% !important"
                   />
+                  <%} else { %>
+                  <input
+                    type="text"
+                    readonly
+                    disabled
+                    class="form-control-plaintext d-inline-block"
+                    id="gender"
+                    value="زن"
+                    style="width: 15% !important"
+                  />
+                  <% } %>
+                  <select
+                    class="custom-select w-50 d-inline-block"
+                    id="gender2"
+                    name="gender"
+                    style="width: 84% !important"
+                  >
+                    <option value="default">انتخاب کنید...</option>
+                    <option value="male">مرد</option>
+                    <option value="female">زن</option>
+                  </select>
                 </div>
               </div>
               <div class="form-group row">
@@ -128,7 +153,7 @@
                     type="text"
                     class="form-control"
                     id="mobileNumber"
-                    placeholder="<%= user.mobileNumber %> "
+                    value="<%= user.mobileNumber %>"
                   />
                 </div>
               </div>
@@ -144,7 +169,7 @@
                     disabled
                     class="form-control-plaintext"
                     id="inputPassword"
-                    placeholder="مدیر"
+                    value="مدیر"
                   />
                   <%} else { %>
                   <input
@@ -153,11 +178,14 @@
                     disabled
                     class="form-control-plaintext"
                     id="inputPassword"
-                    placeholder="نویسنده"
+                    value="نویسنده"
                   />
                   <% } %>
                 </div>
               </div>
+              <button type="submit" class="btn btn-primary mt-5" id="editBtn">
+                ویرایش
+              </button>
             </div>
           </div>
         </section>
