@@ -6,6 +6,8 @@ $(document).ready(() => {
     $("#alertMsg3").addClass("d-none");
     $("#alertMsg4").addClass("d-none");
     $("#alertMsg5").addClass("d-none");
+    $("#msg").addClass("d-none");
+    $("#msg2").addClass("d-none");
     $("input").each(function () {
       if (!$(this).val()) {
         $(this).addClass("plc");
@@ -38,8 +40,12 @@ $(document).ready(() => {
       }
     });
     if (
-      $("#username").val().length > 3 &&
-      $("#username").val().length < 30 &&
+      $("#firstName").val().length >= 3 &&
+      $("#firstName").val().length <= 30 &&
+      $("#lastName").val().length >= 3 &&
+      $("#lastName").val().length <= 30 &&
+      $("#username").val().length >= 3 &&
+      $("#username").val().length <= 30 &&
       $("#password").val() === $("#rePassword").val() &&
       $("#password")
         .val()
@@ -76,6 +82,8 @@ $(document).ready(() => {
           }
         },
       });
+    } else {
+      $("#msg2").removeClass("d-none");
     }
   });
 });

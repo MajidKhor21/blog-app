@@ -9,8 +9,8 @@ $(document).ready(() => {
     });
     if (
       $("#firstName").val() &&
-      $("#firstName").val().length > 3 &&
-      $("#firstName").val().length < 30 &&
+      $("#firstName").val().length >= 3 &&
+      $("#firstName").val().length <= 30 &&
       $("#lastName").val() &&
       $("#lastName").val().length > 3 &&
       $("#lastName").val().length < 30 &&
