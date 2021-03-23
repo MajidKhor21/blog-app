@@ -4,7 +4,7 @@ const User = require("../models/user");
 const checker = require("../tools/checker");
 
 router.get("/dashboard", checker.loginChecker, (req, res) => {
-  console.log(req.session.user);
+  console.log(new Date());
   res.render("dashboard", { user: req.session.user });
 });
 

@@ -14,6 +14,19 @@
     </li>
   </ul>
   <ul class="navbar-nav mr-auto">
-    <a href="/logout"><i class="fas fa-power-off text-white ml-4"></i></a>
+    <li class="nav-item d-none d-sm-inline-block">
+      <div
+        id="MyClockDisplay"
+        class="clock mt-2 ml-4"
+        onload="showTime()"
+        style="color: rgba(255, 255, 255, 0.75)"
+      ></div>
+    </li>
+    <li class="nav-item d-none d-sm-inline-block">
+      <a class="nav-link ml-4" id="dateNow"></a>
+    </li>
+    <a href="/logout"
+      ><i class="fas fa-power-off text-warning ml-4 mt-2"></i
+    ></a>
   </ul>
 </nav>
