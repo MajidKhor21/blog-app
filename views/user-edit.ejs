@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Dashboard</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <!-- Ionicons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ionicons/5.5.0/esm/ionicons.min.js"></script>
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="/stylesheets/adminlte.css" />
+    <!-- Google Font: Source Sans Pro -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap 4 RTL
+    <link
+      rel="stylesheet"
+      href="https://cdn.rtlcss.com/bootstrap/v4.2.1/css/bootstrap.min.css"
+    /> -->
+    <!-- Custom style for RTL -->
+    <link rel="stylesheet" href="/stylesheets/custom.css" />
+  </head>
+  <body class="hold-transition sidebar-mini">
+    <!-- Site wrapper -->
+    <div class="wrapper">
+      <!-- Navbar -->
+      <%- include('partials/dashboard-navbar') %>
+      <!-- /.navbar -->
+
+      <!-- Main Sidebar Container -->
+      <%- include('partials/sidebar') %>
+
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1>ویرایش مشخصات</h1>
+              </div>
+              <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                  <li class="breadcrumb-item">
+                    <a href="/user/dashboard">داشبورد</a>
+                  </li>
+                  <li class="breadcrumb-item active">ویرایش مشخصات</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+          <!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+          <div class="text-center w-50 m-auto">
+            <div class="mt-5">
+              <div class="form-group row">
+                <label for="firstName" class="col-sm-2 col-form-label"
+                  >نام</label
+                >
+                <div class="col-sm-10">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="firstName"
+                    value="<%= user.firstName %> "
+                  />
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="lastName" class="col-sm-2 col-form-label"
+                  >نام خانوادگی</label
+                >
+                <div class="col-sm-10">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="lastName"
+                    placeholder="<%= user.lastName %> "
+                  />
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="username" class="col-sm-2 col-form-label"
+                  >نام کاربری</label
+                >
+                <div class="col-sm-10">
+                  <input
+                    type="text"
+                    readonly
+                    disabled
+                    class="form-control-plaintext"
+                    id="username"
+                    placeholder="<%= user.username %> "
+                  />
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >جنسیت</label
+                >
+                <div class="col-sm-10">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="inputPassword"
+                    placeholder="Password"
+                  />
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="mobileNumber" class="col-sm-2 col-form-label"
+                  >شماره موبایل</label
+                >
+                <div class="col-sm-10">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="mobileNumber"
+                    placeholder="<%= user.mobileNumber %> "
+                  />
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >نقش</label
+                >
+                <div class="col-sm-10">
+                  <% if (user.role === 'admin') { %>
+                  <input
+                    type="text"
+                    readonly
+                    disabled
+                    class="form-control-plaintext"
+                    id="inputPassword"
+                    placeholder="مدیر"
+                  />
+                  <%} else { %>
+                  <input
+                    type="text"
+                    readonly
+                    disabled
+                    class="form-control-plaintext"
+                    id="inputPassword"
+                    placeholder="نویسنده"
+                  />
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- /.content -->
+      </div>
+      <!-- /.content-wrapper -->
+
+      <footer class="main-footer"></footer>
+
+      <!-- Control Sidebar -->
+      <aside
+        class="control-sidebar control-sidebar-dark control-sidebar-animate"
+      >
+        <!-- Control sidebar content goes here -->
+      </aside>
+      <!-- /.control-sidebar -->
+    </div>
+    <!-- ./wrapper -->
+
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+    <!-- AdminLTE App -->
+    <script src="/javascripts/adminlte.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="/javascripts/demo.js"></script>
+    r
+  </body>
+</html>

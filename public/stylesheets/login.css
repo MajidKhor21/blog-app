@@ -17,6 +17,10 @@
     direction: rtl;
   }
 
+  .alert{
+    font-size: 12px !important;
+  }
+
   .plc::placeholder {
     color: red;
     font-weight: bold;
