@@ -170,7 +170,7 @@
     background-color: rgba(0, 0, 0, 0.8);
     width: 440px;
     position: absolute;
-    top: 35% !important;
+    top: 350px !important;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
