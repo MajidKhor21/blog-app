@@ -1,4 +1,7 @@
 $(document).ready(() => {
+  $("#cancelBtn").click(() => {
+    location.reload();
+  });
   $("#editBtn").click(() => {
     $("#msgAlert").addClass("d-none");
     $("#msgAlert2").addClass("d-none");
