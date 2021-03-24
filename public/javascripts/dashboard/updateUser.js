@@ -28,6 +28,7 @@ $(document).ready(() => {
           gender: $("#gender2").val(),
           mobileNumber: $("#mobileNumber").val(),
           username: $("#username").val(),
+          lastUpdate: Date.now(),
         },
         success: function (response) {
           $("#msgAlert2").removeClass("d-none");

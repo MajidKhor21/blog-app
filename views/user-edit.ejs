@@ -168,6 +168,16 @@
                   <% } %>
                 </div>
               </div>
+
+              <div class="form-group row float-left" style="font-size: 14px">
+                <p class="font-weight-bolder">
+                  آخرین ویرایش:
+                  <span class="font-weight-lighter"
+                    ><%= user.lastUpdateTime %> - <%= user.lastUpdateDate
+                    %></span
+                  >
+                </p>
+              </div>
               <button type="submit" class="btn btn-primary mt-5" id="editBtn">
                 ویرایش
               </button>

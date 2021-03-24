@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
 const checker = require("../tools/checker");
+const moment = require("moment-jalaali");
 
 //redirect user to dashboard page
 router.get("/dashboard", checker.loginChecker, (req, res, next) => {
@@ -15,6 +16,12 @@ router.get("/info", checker.loginChecker, (req, res, next) => {
 
 //edit user information
 router.get("/edit", checker.loginChecker, (req, res, next) => {
+  req.session.user.lastUpdateDate = moment(req.session.user.lastUpdate).format(
+    "jYYYY/jM/jD"
+  );
+  req.session.user.lastUpdateTime = moment(req.session.user.lastUpdate).format(
+    "HH:mm"
+  );
   res.render("user-edit", { user: req.session.user });
 });
 
