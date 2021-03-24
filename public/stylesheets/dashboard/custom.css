@@ -20,6 +20,9 @@ ul {
   float: right;
   
 }
+.plc::placeholder {
+  color: red !important;
+}
 .layout-fixed .main-sidebar {
   right: 0;
 }

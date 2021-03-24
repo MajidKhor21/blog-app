@@ -37,9 +37,6 @@ $(document).ready(() => {
         },
         error: function (err) {
           $("#msgAlert").removeClass("d-none");
-          setTimeout(function () {
-            location.reload();
-          }, 2500);
         },
       });
     } else {

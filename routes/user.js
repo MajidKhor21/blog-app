@@ -31,17 +31,27 @@ router.put("/update", (req, res) => {
   ) {
     return res.status(400).json({ msg: "empty field" });
   }
-  //find user by username and update
-  User.findOneAndUpdate(
-    req.body.username,
-    req.body,
-    { new: true },
-    (err, user) => {
-      if (err) return res.status(500).json({ msg: "server error" });
-      req.session.user = user;
-      return res.status(200).json({ msg: "ok" });
-    }
-  );
+  //find user by username and check this username exist in our database
+  User.findOne({ username: req.body.username }, (err, user) => {
+    if (err) return res.status(500).json({ msg: "server error" });
+    if (!user) return res.status(400).json({ msg: "not found" });
+    //find user by user._id and update with req.body
+    User.findByIdAndUpdate(
+      { _id: user._id },
+      req.body,
+      { new: true },
+      (err, user2) => {
+        if (err) return res.status(500).json({ msg: "server error" });
+        req.session.user = user2;
+        return res.status(200).json({ msg: "ok" });
+      }
+    );
+  });
+});
+
+//display calendar in dashboard
+router.get("/calendar", checker.loginChecker, (req, res) => {
+  res.render("user-calendar", { user: req.session.user });
 });
 
 module.exports = router;

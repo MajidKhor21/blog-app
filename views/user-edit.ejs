@@ -4,49 +4,26 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>ویرایش مشخصات</title>
-    <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Font Awesome -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
     />
-    <!-- Ionicons -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ionicons/5.5.0/esm/ionicons.min.js"></script>
-    <!-- overlayScrollbars -->
-    <link rel="stylesheet" href="/stylesheets/adminlte.css" />
-    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="/stylesheets/dashboard/adminlte.css" />
     <link
       href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700"
       rel="stylesheet"
     />
-    <!-- Bootstrap 4 RTL
-    <link
-      rel="stylesheet"
-      href="https://cdn.rtlcss.com/bootstrap/v4.2.1/css/bootstrap.min.css"
-    /> -->
-    <!-- Custom style for RTL -->
-    <link rel="stylesheet" href="/stylesheets/custom.css" />
-    <style>
-      .plc::placeholder {
-        color: red !important;
-      }
-    </style>
+    <link rel="stylesheet" href="/stylesheets/dashboard/custom.css" />
   </head>
   <body class="hold-transition sidebar-mini">
-    <!-- Site wrapper -->
     <div class="wrapper">
-      <!-- Navbar -->
-      <%- include('partials/dashboard-navbar') %>
-      <!-- /.navbar -->
+      <%- include('partials/dashboard-navbar') %> <%-
+      include('partials/sidebar') %>
 
-      <!-- Main Sidebar Container -->
-      <%- include('partials/sidebar') %>
-
-      <!-- Content Wrapper. Contains page content -->
       <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
         <section class="content-header">
           <div class="container-fluid">
             <div class="row mb-2">
@@ -63,10 +40,8 @@
               </div>
             </div>
           </div>
-          <!-- /.container-fluid -->
         </section>
 
-        <!-- Main content -->
         <section class="content">
           <div class="text-center w-50 m-auto">
             <div class="mt-5">
@@ -199,25 +174,15 @@
             </div>
           </div>
         </section>
-        <!-- /.content -->
       </div>
-      <!-- /.content-wrapper -->
 
       <footer class="main-footer"></footer>
 
-      <!-- Control Sidebar -->
       <aside
         class="control-sidebar control-sidebar-dark control-sidebar-animate"
-      >
-        <!-- Control sidebar content goes here -->
-      </aside>
-      <!-- /.control-sidebar -->
+      ></aside>
     </div>
-    <!-- ./wrapper -->
-
-    <!-- jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <!-- Bootstrap 4 -->
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
       integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
@@ -228,12 +193,11 @@
       integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
       crossorigin="anonymous"
     ></script>
-    <!-- AdminLTE App -->
-    <script src="/javascripts/adminlte.js"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="/javascripts/demo.js"></script>
-    <script src="https://unpkg.com/jalaali-js/dist/jalaali.js"></script>
-    <script src="/javascripts/date.js"></script>
-    <script src="/javascripts/updateUser.js"></script>
+    <script src="/javascripts/dashboard/adminlte.js"></script>
+    <script src="/javascripts/dashboard/demo.js"></script>
+    <script src="/javascripts/dashboard/moment.min.js"></script>
+    <script src="/javascripts/dashboard/moment-jalaali.js"></script>
+    <script src="/javascripts/dashboard/date.js"></script>
+    <script src="/javascripts/dashboard/updateUser.js"></script>
   </body>
 </html>

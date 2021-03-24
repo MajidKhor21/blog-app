@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>تقویم</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ionicons/5.5.0/esm/ionicons.min.js"></script>
+    <link rel="stylesheet" href="/stylesheets/dashboard/adminlte.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/stylesheets/dashboard/custom.css" />
+    <link rel="stylesheet" href="/stylesheets/dashboard/calendar.css" />
+  </head>
+  <body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+      <%- include('partials/dashboard-navbar') %> <%-
+      include('partials/sidebar') %>
+
+      <div class="content-wrapper">
+        <section class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h3>تقویم</h3>
+              </div>
+              <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                  <li class="breadcrumb-item"><a href="#">خانه</a></li>
+                  <li class="breadcrumb-item active">داشبورد</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="content">
+          <div class="container">
+            <main>
+              <table id="cal1" class="fc-table m-auto">
+                <caption>
+                  <label for="fc-year">سال:</label>
+                  <select
+                    name="fc-year "
+                    class="fc-year custom-select w-25 ml-4"
+                  >
+                    <option value="1395">1395</option>
+                    <option value="1396">1396</option>
+                    <option value="1397">1397</option>
+                    <option value="1398">1398</option>
+                    <option value="1399">1399</option>
+                    <option value="1400">1400</option>
+                    <option value="1401">1401</option>
+                    <option value="1402">1402</option>
+                    <option value="1403">1403</option>
+                    <option value="1404">1404</option>
+                    <option value="1405">1405</option>
+                  </select>
+
+                  <label for="fc-month">ماه:</label>
+                  <select name="fc-month" class="fc-month custom-select w-25">
+                    <option value="0">فروردین</option>
+                    <option value="1">اردیبهشت</option>
+                    <option value="2">خرداد</option>
+                    <option value="3">تیر</option>
+                    <option value="4">مرداد</option>
+                    <option value="5">شهریور</option>
+                    <option value="6">مهر</option>
+                    <option value="7">آبان</option>
+                    <option value="8">آذر</option>
+                    <option value="9">دی</option>
+                    <option value="10">بهمن</option>
+                    <option value="11">اسفند</option>
+                  </select>
+                </caption>
+                <tr>
+                  <th>شنبه</th>
+                  <th>یکشنبه</th>
+                  <th>دوشنبه</th>
+                  <th>سه شنبه</th>
+                  <th>چهارشنبه</th>
+                  <th>پنچشنبه</th>
+                  <th>جمعه</th>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </table>
+            </main>
+          </div>
+        </section>
+      </div>
+
+      <footer class="main-footer"></footer>
+
+      <aside
+        class="control-sidebar control-sidebar-dark control-sidebar-animate"
+      ></aside>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/javascripts/dashboard/calendar/hijri.js"></script>
+    <script src="/javascripts/dashboard/calendar/jalali.js"></script>
+    <script src="/javascripts/dashboard/adminlte.js"></script>
+    <script src="/javascripts/dashboard/demo.js"></script>
+    <script src="/javascripts/dashboard/moment.min.js"></script>
+    <script src="/javascripts/dashboard/moment-jalaali.js"></script>
+    <script src="/javascripts/dashboard/date.js"></script>
+    <script src="/javascripts/dashboard/calendar/calendar.js"></script>
+  </body>
+</html>
