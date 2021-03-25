@@ -5,6 +5,8 @@ const checker = require("../tools/checker");
 const moment = require("moment-jalaali");
 const multer = require("multer");
 const generalTools = require("../tools/general-tools");
+const fs = require("fs");
+const path = require("path");
 
 //redirect user to dashboard page
 router.get("/dashboard", checker.loginChecker, (req, res, next) => {
@@ -70,20 +72,85 @@ router.get("/avatar", checker.loginChecker, (req, res) => {
 
 //upload user avatar
 router.post("/uploadAvatar", (req, res) => {
-  console.log(req.body);
   const upload = generalTools.uploadAvatar.single("avatar");
 
   upload(req, res, function (err) {
     if (err instanceof multer.MulterError) {
-      res.status(404).send("Server Error!");
+      return res.status(500).json({ msg: "Server Error" });
     } else if (err) {
       res.status(406).send(err.message);
     } else {
-      let a = req.file;
-      console.log(a);
-      res.json(true);
+      console.log(req.file.filename);
+      console.log(req.session.user._id);
+      User.findByIdAndUpdate(
+        req.session.user._id,
+        { avatar: req.file.filename },
+        { new: true },
+        (err, user) => {
+          console.log(user);
+          if (err) {
+            res.status(500).json({ msg: "Server Error!" });
+          } else {
+            if (
+              req.session.user.avatar &&
+              req.session.user.avatar !== "default"
+            ) {
+              fs.unlink(
+                path.join(
+                  __dirname,
+                  "../public/images/avatars",
+                  req.session.user.avatar
+                ),
+                (err) => {
+                  if (err) {
+                    res.status(500).json({ msg: "Server Error!" });
+                  } else {
+                    req.session.user = user;
+
+                    res.redirect("/user/dashboard");
+                  }
+                }
+              );
+            } else {
+              req.session.user = user;
+
+              res.redirect("/user/dashboard");
+            }
+          }
+        }
+      );
     }
   });
+});
+
+//delete user's avatar
+router.put("/removeAvatar", (req, res) => {
+  User.findByIdAndUpdate(
+    req.session.user._id,
+    req.body,
+    { new: true },
+    (err, user) => {
+      console.log(user);
+      if (err) return res.status(500).json({ msg: "Server Error" });
+      if (req.session.user.avatar && req.session.user.avatar !== "default") {
+        fs.unlink(
+          path.join(
+            __dirname,
+            "../public/images/avatars",
+            req.session.user.avatar
+          ),
+          (err) => {
+            if (err) return res.status(500).json({ msg: "Server Error" });
+            req.session.user = user;
+            return res.status(200).json({ msg: "ok" });
+          }
+        );
+      } else {
+        req.session.user = user;
+        return res.status(200).json({ msg: "ok" });
+      }
+    }
+  );
 });
 
 module.exports = router;

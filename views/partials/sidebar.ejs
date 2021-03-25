@@ -12,11 +12,19 @@
   <div class="sidebar">
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
       <div class="image">
+        <% if (user.avatar === "default") { %>
         <img
-          src="/images/avatars/admin-1616669247212-photo_2020-11-28_22-52-16.jpg"
+          src="/images/avatar.png"
           class="img-circle elevation-2"
           alt="User Image"
         />
+        <%} else { %>
+        <img
+          src="/images/avatars/<%= user.avatar %> "
+          class="img-circle elevation-2"
+          alt="User Image"
+        />
+        <% } %>
       </div>
       <div class="info">
         <a href="#" class="d-block"

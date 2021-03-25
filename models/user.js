@@ -56,11 +56,14 @@ const UserSchema = new Schema({
     enum: ["admin", "blogger"],
     default: "blogger",
   },
+  avatar: {
+    type: String,
+    default: "default",
+  },
 });
 
 UserSchema.methods.toJSON = function () {
   let user = this.toObject();
-  delete user._id;
   delete user.__v;
   delete user.password;
   return user;
