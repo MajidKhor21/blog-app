@@ -3,6 +3,8 @@ const router = express.Router();
 const User = require("../models/user");
 const checker = require("../tools/checker");
 const moment = require("moment-jalaali");
+const multer = require("multer");
+const generalTools = require("../tools/general-tools");
 
 //redirect user to dashboard page
 router.get("/dashboard", checker.loginChecker, (req, res, next) => {
@@ -59,6 +61,29 @@ router.put("/update", (req, res) => {
 //display calendar in dashboard
 router.get("/calendar", checker.loginChecker, (req, res) => {
   res.render("user-calendar", { user: req.session.user });
+});
+
+//get avatar edit page
+router.get("/avatar", checker.loginChecker, (req, res) => {
+  res.render("user-avatar", { user: req.session.user });
+});
+
+//upload user avatar
+router.post("/uploadAvatar", (req, res) => {
+  console.log(req.body);
+  const upload = generalTools.uploadAvatar.single("avatar");
+
+  upload(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      res.status(404).send("Server Error!");
+    } else if (err) {
+      res.status(406).send(err.message);
+    } else {
+      let a = req.file;
+      console.log(a);
+      res.json(true);
+    }
+  });
 });
 
 module.exports = router;

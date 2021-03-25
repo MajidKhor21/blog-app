@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>تغییر آواتار</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/stylesheets/dashboard/adminlte.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/stylesheets/dashboard/custom.css" />
+  </head>
+  <body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+      <%- include('partials/dashboard-navbar') %> <%-
+      include('partials/sidebar') %>
+
+      <div class="content-wrapper">
+        <section class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1>تغییر آواتار</h1>
+              </div>
+              <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                  <li class="breadcrumb-item">
+                    <a href="/user/dashboard">داشبورد</a>
+                  </li>
+                  <li class="breadcrumb-item active">تغییر آواتار</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="content">
+          <div class="text-center w-50 m-auto">
+            <div class="mt-5">
+              <form
+                id="uploadForm"
+                enctype="multipart/form-data"
+                action="/user/uploadAvatar"
+                method="post"
+              >
+                <input type="file" name="avatar" />
+                <input
+                  type="submit"
+                  value="بارگذاری"
+                  name="submit"
+                  class="btn btn-success"
+                />
+              </form>
+              <a
+                name="removeAvatar"
+                id="removeAvatar"
+                href="/user/removeAvatar"
+                class="btn btn-danger text-white mt-5"
+              >
+                حذف آواتار
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <footer class="main-footer"></footer>
+
+      <aside
+        class="control-sidebar control-sidebar-dark control-sidebar-animate"
+      ></aside>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/javascripts/dashboard/adminlte.js"></script>
+    <script src="/javascripts/dashboard/demo.js"></script>
+    <script src="/javascripts/dashboard/moment.min.js"></script>
+    <script src="/javascripts/dashboard/moment-jalaali.js"></script>
+    <script src="/javascripts/dashboard/date.js"></script>
+  </body>
+</html>
