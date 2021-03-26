@@ -11,7 +11,6 @@ router.get("/", checker.sessionChecker, (req, res, next) => {
 
 //login route
 router.post("/", (req, res, next) => {
-  console.log(req.body);
   //check req.body is not empty
   if (!req.body.username || !req.body.password) {
     return res.status(400).json({ msg: "empty fields" });

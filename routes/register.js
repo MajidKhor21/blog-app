@@ -10,7 +10,6 @@ router.get("/", checker.sessionChecker, (req, res, next) => {
 
 //add a new user route
 router.post("/", (req, res, next) => {
-  console.log(req.body);
   //check request body is not empty
   if (
     !req.body.firstName ||

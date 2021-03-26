@@ -16,6 +16,12 @@ router.use("/login", require("./login"));
 //define user route
 router.use("/user", require("./user"));
 
+//logout
+router.get("/logout", (req, res) => {
+  res.clearCookie("user_sid");
+  res.redirect("/login");
+});
+
 //create admin user at first
 router.post("/createAdmin", (req, res) => {
   User.findOne({ role: "admin" }, (err, existAdmin) => {
@@ -35,12 +41,6 @@ router.post("/createAdmin", (req, res) => {
       return res.send("admin created successfully");
     });
   });
-});
-
-//logout
-router.get("/logout", (req, res) => {
-  res.clearCookie("user_sid");
-  res.redirect("/login");
 });
 
 module.exports = router;

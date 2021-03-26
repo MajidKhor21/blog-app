@@ -31,7 +31,6 @@ router.get("/edit", checker.loginChecker, (req, res, next) => {
 
 //update route
 router.put("/update", (req, res) => {
-  console.log(req.body);
   //check request body is not empty
   if (
     !req.body.firstName ||
@@ -72,6 +71,7 @@ router.get("/avatar", checker.loginChecker, (req, res) => {
 
 //upload user avatar
 router.post("/uploadAvatar", (req, res) => {
+  //use multer middleware to check and store avatar
   const upload = generalTools.uploadAvatar.single("avatar");
 
   upload(req, res, function (err) {
@@ -80,17 +80,16 @@ router.post("/uploadAvatar", (req, res) => {
     } else if (err) {
       res.status(406).send(err.message);
     } else {
-      console.log(req.file.filename);
-      console.log(req.session.user._id);
+      //update user avatar
       User.findByIdAndUpdate(
         req.session.user._id,
         { avatar: req.file.filename },
         { new: true },
         (err, user) => {
-          console.log(user);
           if (err) {
             res.status(500).json({ msg: "Server Error!" });
           } else {
+            //delete previous user avatar from our host
             if (
               req.session.user.avatar &&
               req.session.user.avatar !== "default"
@@ -125,13 +124,14 @@ router.post("/uploadAvatar", (req, res) => {
 
 //delete user's avatar
 router.put("/removeAvatar", (req, res) => {
+  //find user in our database and change avatar to default
   User.findByIdAndUpdate(
     req.session.user._id,
     req.body,
     { new: true },
     (err, user) => {
-      console.log(user);
       if (err) return res.status(500).json({ msg: "Server Error" });
+      //delete previous user's avatar from our host
       if (req.session.user.avatar && req.session.user.avatar !== "default") {
         fs.unlink(
           path.join(
@@ -151,6 +151,19 @@ router.put("/removeAvatar", (req, res) => {
       }
     }
   );
+});
+
+//article route
+router.use("/article", require("./article"));
+
+//get new article page
+router.get("/new-article", checker.loginChecker, (req, res) => {
+  res.render("new-article", { user: req.session.user });
+});
+
+router.post("/addArticle", (req, res) => {
+  console.log(req.file);
+  console.log(req.body);
 });
 
 module.exports = router;
