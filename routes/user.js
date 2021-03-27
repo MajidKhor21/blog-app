@@ -75,6 +75,9 @@ router.post("/uploadAvatar", (req, res) => {
   const upload = generalTools.uploadAvatar.single("avatar");
 
   upload(req, res, function (err) {
+    if (!req.file) {
+      return res.redirect("/user/dashboard");
+    }
     if (err instanceof multer.MulterError) {
       return res.status(500).json({ msg: "Server Error" });
     } else if (err) {

@@ -21,6 +21,7 @@ router.post("/add", (req, res) => {
   upload(req, res, function (err) {
     console.log(req.body);
     console.log(req.session.user._id);
+    //check article picture and describe is not empty
     if (!req.file || !req.body.describe)
       return res.redirect(
         url.format({
@@ -35,6 +36,7 @@ router.post("/add", (req, res) => {
     } else if (err) {
       res.status(406).send(err.message);
     } else {
+      //create article object
       const newArticle = new Article({
         title: req.body.title,
         brief: req.body.brief,
@@ -42,6 +44,7 @@ router.post("/add", (req, res) => {
         picture: req.file.filename,
         author: req.session.user._id,
       });
+      //save new article to our database
       newArticle.save((err) => {
         if (err) return res.status(500).json({ msg: "Server Error" });
         return res.redirect(

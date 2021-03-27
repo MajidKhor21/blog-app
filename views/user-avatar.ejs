@@ -16,6 +16,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/stylesheets/dashboard/custom.css" />
+    <link rel="stylesheet" href="/stylesheets/dashboard/addPicture.css">
   </head>
   <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -50,13 +51,17 @@
                 action="/user/uploadAvatar"
                 method="post"
               >
-                <input type="file" name="avatar" />
-                <input
+                  <div class="file-input col-sm-10">
+                    <input type="file" name="avatar" required />
+                    <span class='button'>انتخاب تصویر</span>
+                    <span class='label' data-js-label>تصویری انتخاب نشده است</label>
+                  </div>
+                  <input
                   type="submit"
                   value="بارگذاری"
                   name="submit"
                   class="btn btn-success"
-                />
+                /> 
               </form>
               <button class="btn btn-danger text-white mt-5" id="deleteAvatar">
                 حذف آواتار
@@ -89,5 +94,6 @@
     <script src="/javascripts/dashboard/moment-jalaali.js"></script>
     <script src="/javascripts/dashboard/date.js"></script>
     <script src="/javascripts/dashboard/deleteAvatar.js"></script>
+    <script src="/javascripts/dashboard/addPicture.js"></script>
   </body>
 </html>

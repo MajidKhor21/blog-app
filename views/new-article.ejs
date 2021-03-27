@@ -16,6 +16,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/stylesheets/dashboard/custom.css" />
+    <link rel="stylesheet" href="/stylesheets/dashboard/addPicture.css" />
     <script src="/ckeditor/ckeditor.js"></script>
   </head>
   <body class="hold-transition sidebar-mini">
@@ -88,8 +89,10 @@
               <label for="" class="col-sm-2 col-form-label"
                 >تصویر مقاله:
               </label>
-              <div class="col-sm-10">
-                <input type="file" name="picture" id="picture" required />
+              <div class="file-input col-sm-10">
+                <input type="file" />
+                <span class='button'>انتخاب تصویر</span>
+                <span class='label' data-js-label>تصویری انتخاب نشده است</label>
               </div>
             </div>
             <input
@@ -113,12 +116,18 @@
           </div>
           <div class="col-sm-12 w-75 mx-auto">
             <button
-              class="btn btn-success mt-3"
+              class="btn btn-success mt-3 ml-3"
               id="secondaryButton"
               onclick="submitFunc()"
             >
               ذخیره
             </button>
+            <a
+            class="btn btn-secondary mt-3"
+            href="/user/dashboard"
+          >
+            انصراف
+          </a>
           </div>
         </section>
       </div>
@@ -146,5 +155,6 @@
     <script src="/javascripts/dashboard/moment-jalaali.js"></script>
     <script src="/javascripts/dashboard/date.js"></script>
     <script src="/javascripts/dashboard/article/newArticle.js"></script>
+    <script src="/javascripts/dashboard/addPicture.js"></script>
   </body>
 </html>
