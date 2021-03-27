@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
+const Article = require("../models/article");
 const checker = require("../tools/checker");
 const moment = require("moment-jalaali");
 const multer = require("multer");
@@ -10,7 +11,25 @@ const path = require("path");
 
 //redirect user to dashboard page
 router.get("/dashboard", checker.loginChecker, (req, res, next) => {
-  res.render("dashboard", { user: req.session.user, msg: req.query.msg });
+  Article.find({}, { __v: 0 })
+    .populate("author", { firstName: 1, lastName: 1, avatar: 1, _id: 0 })
+    .sort({ createdAt: -1 })
+    .exec((err, articles) => {
+      if (err) return res.status(500).json({ msg: "Server Error" });
+      let createTime = [];
+      for (let index = 0; index < articles.length; index++) {
+        createTime[index] = {
+          date: moment(articles[index].createdAt).format("jYYYY/jM/jD"),
+          time: moment(articles[index].createdAt).format("HH:mm"),
+        };
+      }
+      return res.status(200).render("dashboard", {
+        user: req.session.user,
+        msg: req.query.msg,
+        articles,
+        createTime,
+      });
+    });
 });
 
 //user information page

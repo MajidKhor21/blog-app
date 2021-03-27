@@ -74,8 +74,8 @@ router.get("/:username", checker.loginChecker, (req, res) => {
     }
     res.render("my-articles", {
       user: req.session.user,
-      articles: articles,
-      createTime: createTime,
+      articles,
+      createTime,
     });
   });
 });

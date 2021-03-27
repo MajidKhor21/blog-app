@@ -16,6 +16,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/stylesheets/dashboard/custom.css" />
+    <link rel="stylesheet" href="/stylesheets/dashboard/article.css" />
   </head>
   <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -44,35 +45,29 @@
         <section class="content mt-5">
           <div class="card-deck">
             <% for( let index = 0; index < articles.length; index++ ) { %>
-            <div class="card">
-              <img
-                class="card-img-top"
-                src="/images/articles/<%= articles[index].picture %>"
-                alt="Card image cap"
-                width="362px"
-                height="180px"
-              />
-              <div class="card-body">
-                <div class="mb-3 text-center">
-                  <small class="text-muted"
-                    >نویسنده : <%= user.firstName %> <%= user.lastName %></small
-                  >
+            <div class="col-xs-12 col-sm-4">
+              <div
+                class="card"
+                style="
+                  background: linear-gradient(rgb(0 0 0 / 55%), rgb(0 0 0 / 0%)),
+                    url('/images/articles/<%= articles[index].picture %>');
+                "
+              >
+                <div class="card-time">
+                  <%= createTime[index].time %> - <%= createTime[index].date %>
                 </div>
-
-                <h3 class="card-title font-weight-bold">
-                  <%= articles[index].title %>
-                </h3>
-                <br />
-                <p class="card-text"><%= articles[index].brief %></p>
-              </div>
-              <div class="card-footer">
-                <small class="text-muted float-left"
-                  ><%= createTime[index].time %> - <%= createTime[index].date
-                  %></small
-                >
-                <small class="float-right"
-                  ><a href="">بیشتر بخوانید...</a></small
-                >
+                <div class="card-description">
+                  <h2><%= articles[index].title %></h2>
+                  <p><%= articles[index].brief %></p>
+                </div>
+                <img
+                  class="card-user avatar avatar-large"
+                  src="/images/avatars/<%= user.avatar %>"
+                />
+                <a
+                  class="card-link"
+                  href="/user/article/<%= articles[index]._id %>"
+                ></a>
               </div>
             </div>
             <% } %>
