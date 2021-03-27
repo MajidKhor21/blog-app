@@ -36,7 +36,7 @@
   .file-input > .label {
     color: #333;
     white-space: nowrap;
-    opacity: .6;
+    opacity: .7;
   }
   
   .file-input.-chosen > .label {

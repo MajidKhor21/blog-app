@@ -4,6 +4,7 @@ const User = require("../models/user");
 const Article = require("../models/article");
 const checker = require("../tools/checker");
 const multer = require("multer");
+const moment = require("moment-jalaali");
 const generalTools = require("../tools/general-tools");
 const fs = require("fs");
 const path = require("path");
@@ -19,8 +20,6 @@ router.post("/add", (req, res) => {
   const upload = generalTools.uploadArticlePic.single("picture");
 
   upload(req, res, function (err) {
-    console.log(req.body);
-    console.log(req.session.user._id);
     //check article picture and describe is not empty
     if (!req.file || !req.body.describe)
       return res.redirect(
@@ -57,6 +56,27 @@ router.post("/add", (req, res) => {
         );
       });
     }
+  });
+});
+
+//show user's article
+router.get("/:username", checker.loginChecker, (req, res) => {
+  //find all article's of this username
+  Article.find({ author: req.session.user._id }, (err, articles) => {
+    if (err) return res.status(500).json({ msg: "Server Error" });
+    //change create date to jalaali datetime
+    let createTime = [];
+    for (let index = 0; index < articles.length; index++) {
+      createTime[index] = {
+        date: moment(articles[index].createdAt).format("jYYYY/jM/jD"),
+        time: moment(articles[index].createdAt).format("HH:mm"),
+      };
+    }
+    res.render("my-articles", {
+      user: req.session.user,
+      articles: articles,
+      createTime: createTime,
+    });
   });
 });
 

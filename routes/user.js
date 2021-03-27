@@ -159,14 +159,4 @@ router.put("/removeAvatar", (req, res) => {
 //article route
 router.use("/article", require("./article"));
 
-//get new article page
-router.get("/new-article", checker.loginChecker, (req, res) => {
-  res.render("new-article", { user: req.session.user });
-});
-
-router.post("/addArticle", (req, res) => {
-  console.log(req.file);
-  console.log(req.body);
-});
-
 module.exports = router;
