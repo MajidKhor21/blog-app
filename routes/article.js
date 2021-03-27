@@ -80,4 +80,26 @@ router.get("/:username", checker.loginChecker, (req, res) => {
   });
 });
 
+router.get("/view/:id", checker.loginChecker, (req, res) => {
+  Article.findOne({ _id: req.params.id })
+    .populate("author", {
+      _id: 0,
+      firstName: 1,
+      lastName: 1,
+      avatar: 1,
+    })
+    .exec((err, article) => {
+      if (err) return res.status(500).json({ msg: "Server Error" });
+      createTime = {
+        date: moment(article.createdAt).format("jYYYY/jM/jD"),
+        time: moment(article.createdAt).format("HH:mm"),
+      };
+      res.render("single-article", {
+        user: req.session.user,
+        article,
+        createTime,
+      });
+    });
+});
+
 module.exports = router;

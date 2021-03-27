@@ -11,11 +11,13 @@ const path = require("path");
 
 //redirect user to dashboard page
 router.get("/dashboard", checker.loginChecker, (req, res, next) => {
+  //find all article with author's first name and last name
   Article.find({}, { __v: 0 })
     .populate("author", { firstName: 1, lastName: 1, avatar: 1, _id: 0 })
     .sort({ createdAt: -1 })
     .exec((err, articles) => {
       if (err) return res.status(500).json({ msg: "Server Error" });
+      ////change create date to jalaali datetime
       let createTime = [];
       for (let index = 0; index < articles.length; index++) {
         createTime[index] = {
@@ -23,6 +25,7 @@ router.get("/dashboard", checker.loginChecker, (req, res, next) => {
           time: moment(articles[index].createdAt).format("HH:mm"),
         };
       }
+      //render page with user , articles
       return res.status(200).render("dashboard", {
         user: req.session.user,
         msg: req.query.msg,
