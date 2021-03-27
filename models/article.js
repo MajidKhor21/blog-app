@@ -21,7 +21,11 @@ const ArticleSchema = new Schema({
     required: true,
     trim: true,
     minlength: 10,
-    maxlength: 1000,
+    maxlength: 3000,
+  },
+  picture: {
+    type: String,
+    required: true,
   },
   createdAt: {
     type: Date,

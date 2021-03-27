@@ -10,7 +10,7 @@ const path = require("path");
 
 //redirect user to dashboard page
 router.get("/dashboard", checker.loginChecker, (req, res, next) => {
-  res.render("dashboard", { user: req.session.user });
+  res.render("dashboard", { user: req.session.user, msg: req.query.msg });
 });
 
 //user information page
