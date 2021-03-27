@@ -59,6 +59,13 @@
             enctype="multipart/form-data"
             class="w-75 mx-auto mb-5"
           >
+            <!-- <input
+              type="submit"
+              class="btn btn-success float-left"
+              id="submitBtn"
+              value="ذخیره"
+            /> -->
+
             <div class="form-group row w-50">
               <label class="col-sm-2 col-form-label" for="title"
                 >عنوان مقاله:
@@ -97,18 +104,33 @@
                 <input type="file" name="picture" id="picture" />
               </div>
             </div>
-            <input type="text" value="" name="describe" id="hiddenInput" />
-            <input type="submit" class="btn btn-success" id="submitBtn" />
+            <input
+              type="text"
+              value=""
+              name="describe"
+              id="hiddenInput"
+              class="d-none"
+            />
+            <input
+              type="submit"
+              class="btn btn-success d-none"
+              id="submitBtn"
+              value="ذخیره"
+            />
           </form>
 
           <div class="col-sm-12 w-75 mx-auto">
             <textarea name="editor1" required></textarea>
           </div>
-          <!-- <div class="col-sm-12 w-75 mx-auto">
-            <button class="btn btn-success mt-3" onclick="submitFunc()">
+          <div class="col-sm-12 w-75 mx-auto">
+            <button
+              class="btn btn-success mt-3"
+              id="secondaryButton"
+              onclick="submitFunc()"
+            >
               ذخیره
             </button>
-          </div> -->
+          </div>
         </section>
       </div>
 
