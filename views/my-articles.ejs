@@ -45,7 +45,7 @@
         <section class="content mt-5">
           <div class="card-deck">
             <% for( let index = 0; index < articles.length; index++ ) { %>
-            <div class="col-xs-12 col-sm-4">
+            <div class="col-12 col-sm-6 col-lg-4">
               <div
                 class="card"
                 style="
@@ -72,9 +72,13 @@
             </div>
             <% } %>
           </div>
+          <p id="allArticle" class="d-none"><%= arts %></p>
+          <p id="myUsername" class="d-none"><%= user.username %></p>
         </section>
       </div>
-
+      <nav aria-label="Page navigation example d-flex">
+        <ul class="pagination justify-content-center mb-5" id="pagination"></ul>
+      </nav>
       <footer class="main-footer"></footer>
 
       <aside
@@ -97,5 +101,6 @@
     <script src="/javascripts/dashboard/moment.min.js"></script>
     <script src="/javascripts/dashboard/moment-jalaali.js"></script>
     <script src="/javascripts/dashboard/date.js"></script>
+    <script src="/javascripts/dashboard/myArticle.js"></script>
   </body>
 </html>

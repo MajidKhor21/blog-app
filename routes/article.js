@@ -62,22 +62,33 @@ router.post("/add", (req, res) => {
 //show user's article
 router.get("/:username", checker.loginChecker, (req, res) => {
   //find all article's of this username
-  Article.find({ author: req.session.user._id }, (err, articles) => {
-    if (err) return res.status(500).json({ msg: "Server Error" });
-    //change create date to jalaali datetime
-    let createTime = [];
-    for (let index = 0; index < articles.length; index++) {
-      createTime[index] = {
-        date: moment(articles[index].createdAt).format("jYYYY/jM/jD"),
-        time: moment(articles[index].createdAt).format("HH:mm"),
-      };
-    }
-    res.render("my-articles", {
-      user: req.session.user,
-      articles,
-      createTime,
+  req.query.showArticle = req.query.showArticle | null;
+
+  Article.find({ author: req.session.user._id })
+    .skip(req.query.showArticle)
+    .limit(6)
+    .exec((err, articles) => {
+      if (err) return res.status(500).json({ msg: "Server Error" });
+      //change create date to jalaali datetime
+      let createTime = [];
+      for (let index = 0; index < articles.length; index++) {
+        createTime[index] = {
+          date: moment(articles[index].createdAt).format("jYYYY/jM/jD"),
+          time: moment(articles[index].createdAt).format("HH:mm"),
+        };
+      }
+      Article.find({})
+        .count()
+        .exec((err, arts) => {
+          if (err) return res.status(500).json({ msg: "Server Error" });
+          res.render("my-articles", {
+            user: req.session.user,
+            articles,
+            createTime,
+            arts,
+          });
+        });
     });
-  });
 });
 
 router.get("/view/:id", checker.loginChecker, (req, res) => {
