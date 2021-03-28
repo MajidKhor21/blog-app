@@ -29,6 +29,7 @@ router.get("/dashboard", checker.loginChecker, (req, res, next) => {
           time: moment(articles[index].createdAt).format("HH:mm"),
         };
       }
+      //find count of all articles
       Article.find({})
         .count()
         .exec((err, arts) => {

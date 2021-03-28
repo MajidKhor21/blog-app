@@ -1,13 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/user");
 const Article = require("../models/article");
 const checker = require("../tools/checker");
 const multer = require("multer");
 const moment = require("moment-jalaali");
 const generalTools = require("../tools/general-tools");
-const fs = require("fs");
-const path = require("path");
 const url = require("url");
 
 //get new article page
@@ -77,6 +74,7 @@ router.get("/:username", checker.loginChecker, (req, res) => {
           time: moment(articles[index].createdAt).format("HH:mm"),
         };
       }
+      //find count of all articles
       Article.find({})
         .count()
         .exec((err, arts) => {
@@ -91,7 +89,9 @@ router.get("/:username", checker.loginChecker, (req, res) => {
     });
 });
 
+//show article in a single page
 router.get("/view/:id", checker.loginChecker, (req, res) => {
+  //find that article's requested
   Article.findOne({ _id: req.params.id })
     .populate("author", {
       _id: 0,
@@ -101,6 +101,7 @@ router.get("/view/:id", checker.loginChecker, (req, res) => {
     })
     .exec((err, article) => {
       if (err) return res.status(500).json({ msg: "Server Error" });
+      //change create date to jalaali datetime
       createTime = {
         date: moment(article.createdAt).format("jYYYY/jM/jD"),
         time: moment(article.createdAt).format("HH:mm"),
