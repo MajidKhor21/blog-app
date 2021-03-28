@@ -4,13 +4,15 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>پنل کاربری</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=0.86, maximum-scale=5.0, minimum-scale=0.86"
+    />
 
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
     />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ionicons/5.5.0/esm/ionicons.min.js"></script>
     <link rel="stylesheet" href="/stylesheets/dashboard/adminlte.css" />
     <link
       href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700"
@@ -28,7 +30,9 @@
           <div class="container-fluid">
             <div class="row mb-2">
               <div class="col-sm-6">
-                <h3>مقالات</h3>
+                <h3 class="d-inline-block ml-2">مقالات</h3>
+                <span class="d-inline-block ml-1">صفحه</span
+                ><span class="d-inline-block" id="articleSpan">1</span>
               </div>
 
               <div class="col-sm-6">
@@ -47,51 +51,65 @@
         </section>
 
         <section class="content">
-          <div class="card-deck row">
-            <% for( let index = 0; index < articles.length; index++ ) { %>
-            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
-              <div class="card">
-                <img
-                  class="card-img-top"
-                  src="/images/articles/<%= articles[index].picture %>"
-                  alt="Card image cap"
-                  width="362px"
-                  height="180px"
-                />
-                <div class="card-body">
-                  <div class="mb-3 text-center">
-                    <small class="text-muted"
-                      >نویسنده : <%= articles[index].author.firstName %> <%=
-                      articles[index].author.lastName %></small
+          <div class="container">
+            <div class="card-deck row">
+              <% for( let index = 0; index < articles.length; index++ ) { %>
+              <div class="col-10 col-sm-6 col-lg-4 mx-auto">
+                <div class="card">
+                  <img
+                    class="card-img-top"
+                    src="/images/articles/<%= articles[index].picture %>"
+                    alt="Card image cap"
+                    width="362px"
+                    height="180px"
+                  />
+                  <div class="card-body">
+                    <div class="mb-3 text-center">
+                      <small class="text-muted">
+                        <i class="fas fa-marker"></i> <%=
+                        articles[index].author.firstName %> <%=
+                        articles[index].author.lastName %></small
+                      >
+                    </div>
+
+                    <h3 class="card-title font-weight-bold">
+                      <%= articles[index].title %>
+                    </h3>
+                    <br />
+                    <p class="card-text"><%= articles[index].brief %></p>
+                  </div>
+                  <div class="card-footer">
+                    <small class="text-muted float-left"
+                      ><%= createTime[index].time %> - <%=
+                      createTime[index].date %></small
+                    >
+                    <small class="float-right"
+                      ><a href="/user/article/view/<%= articles[index]._id %>"
+                        >بیشتر بخوانید...</a
+                      ></small
                     >
                   </div>
-
-                  <h3 class="card-title font-weight-bold">
-                    <%= articles[index].title %>
-                  </h3>
-                  <br />
-                  <p class="card-text"><%= articles[index].brief %></p>
-                </div>
-                <div class="card-footer">
-                  <small class="text-muted float-left"
-                    ><%= createTime[index].time %> - <%= createTime[index].date
-                    %></small
-                  >
-                  <small class="float-right"
-                    ><a href="/user/article/view/<%= articles[index]._id %>"
-                      >بیشتر بخوانید...</a
-                    ></small
-                  >
                 </div>
               </div>
+              <% } %>
             </div>
-
-            <% } %>
           </div>
+          <p id="allArticle" class="d-none"><%= arts %></p>
+          <nav aria-label="Page navigation example d-flex">
+            <ul
+              class="pagination justify-content-center mt-5 mb-5"
+              id="pagination"
+            ></ul>
+          </nav>
         </section>
       </div>
 
-      <footer class="main-footer"></footer>
+      <footer class="main-footer text-left">
+        <i class="fab fa-linkedin ml-2"></i>
+        <i class="fab fa-instagram ml-2"></i>
+        <i class="fab fa-telegram ml-2"></i>
+        <i class="fab fa-github ml-2"></i>
+      </footer>
 
       <aside
         class="control-sidebar control-sidebar-dark control-sidebar-animate"

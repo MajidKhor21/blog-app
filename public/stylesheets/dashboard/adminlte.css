@@ -66,7 +66,7 @@ body {
   line-height: 1.5;
   color: #212529;
   text-align: left;
-  background-color: #ffffff;
+  background-color: #f4f6f9 !important;
 }
 
 [tabindex="-1"]:focus {
@@ -11048,7 +11048,7 @@ body,
 }
 
 .main-footer {
-  background: #ffffff;
+  background: #343a40;
   border-top: 1px solid #dee2e6;
   color: #869099;
   padding: 1rem;

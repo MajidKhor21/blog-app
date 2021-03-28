@@ -41,57 +41,74 @@
         </section>
 
         <section class="content m-auto text-center">
-          <div class="row">
-            <!-- Post Content Column -->
-            <div class="col-lg-12">
-              <!-- Title -->
-              <h1 class="mt-4"><%= article.title %></h1>
+          <div class="container">
+            <div class="row">
+              <!-- Post Content Column -->
+              <div class="col-lg-12">
+                <!-- Title -->
+                <h1 class="mt-4"><%= article.title %></h1>
 
-              <!-- Author -->
-              <p class="lead">
-                نویسنده:
-                <a href="#"
-                  ><%= article.author.firstName %> <%= article.author.lastName
-                  %> </a
-                ><img
-                  src="/images/avatars/<%= article.author.avatar %> "
-                  alt="تصویر پروفایل نویسنده"
-                  style="width: 30px !important; border-radius: 50% !important"
-                />
-              </p>
-
-              <hr />
-              <div class="d-flex justify-content-between">
-                <div class="">
-                  <p class="float-right"><%= article.brief %></p>
-                  <br />
-
-                  <p class="float-right">
-                    ارسال شده در تاریخ: <%= createTime.date %> ساعت : <%=
-                    createTime.time %>
-                  </p>
-                </div>
-
-                <div class="">
+                <!-- Author -->
+                <p class="lead">
+                  نویسنده:
+                  <a href="#"
+                    ><%= article.author.firstName %> <%= article.author.lastName
+                    %>
+                  </a>
+                  <% if (user.avatar === "default") { %>
                   <img
-                    class="img-fluid rounded"
-                    src="/images/articles/<%= article.picture %>"
-                    alt="تصویر پست مقاله"
-                    style="width: 180px !important; height: 80px !important"
+                    src="/images/avatar.png"
+                    alt="تصویر پروفایل نویسنده"
+                    style="
+                      width: 30px !important;
+                      border-radius: 50% !important;
+                    "
                   />
+                  <%} else { %>
+                  <img
+                    src="/images/avatars/<%= article.author.avatar %> "
+                    alt="تصویر پروفایل نویسنده"
+                    style="
+                      width: 30px !important;
+                      border-radius: 50% !important;
+                    "
+                  />
+                  <% } %>
+                </p>
+
+                <hr />
+                <div class="d-flex justify-content-between">
+                  <div class="">
+                    <h5 class="float-right"><%= article.brief %></h5>
+                    <br />
+
+                    <p class="float-right text-muted">
+                      ارسال شده در تاریخ: <%= createTime.date %> ساعت : <%=
+                      createTime.time %>
+                    </p>
+                  </div>
+
+                  <div class="">
+                    <img
+                      class="img-fluid rounded"
+                      src="/images/articles/<%= article.picture %>"
+                      alt="تصویر پست مقاله"
+                      style="width: 140px !important; height: 80px !important"
+                    />
+                  </div>
                 </div>
+
+                <hr />
+
+                <!-- Preview Image -->
+
+                <div class="mx-auto d-none" id="describe">
+                  <%= article.describe %>
+                </div>
+                <div id="desc"></div>
+
+                <!-- Post Content -->
               </div>
-
-              <hr />
-
-              <!-- Preview Image -->
-
-              <div class="mx-auto d-none" id="describe">
-                <%= article.describe %>
-              </div>
-              <div id="desc"></div>
-
-              <!-- Post Content -->
             </div>
           </div>
           <!-- /.row -->

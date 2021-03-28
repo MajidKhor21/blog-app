@@ -11,8 +11,12 @@ const path = require("path");
 
 //redirect user to dashboard page
 router.get("/dashboard", checker.loginChecker, (req, res, next) => {
+  console.log(req.query.showArticle);
+  req.query.showArticle = req.query.showArticle | null;
   //find all article with author's first name and last name
   Article.find({}, { __v: 0 })
+    .skip(req.query.showArticle)
+    .limit(6)
     .populate("author", { firstName: 1, lastName: 1, avatar: 1, _id: 0 })
     .sort({ createdAt: -1 })
     .exec((err, articles) => {
@@ -25,13 +29,19 @@ router.get("/dashboard", checker.loginChecker, (req, res, next) => {
           time: moment(articles[index].createdAt).format("HH:mm"),
         };
       }
-      //render page with user , articles
-      return res.status(200).render("dashboard", {
-        user: req.session.user,
-        msg: req.query.msg,
-        articles,
-        createTime,
-      });
+      Article.find({})
+        .count()
+        .exec((err, arts) => {
+          if (err) return res.status(500).json({ msg: "Server Error" });
+          //render page with user , articles
+          return res.status(200).render("dashboard", {
+            user: req.session.user,
+            msg: req.query.msg,
+            articles,
+            createTime,
+            arts,
+          });
+        });
     });
 });
 
