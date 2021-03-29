@@ -64,13 +64,17 @@
 
                 <hr />
                 <div class="d-flex justify-content-between">
-                  <div class="">
+                  <div class="my-auto">
                     <h5 class="float-right"><%= article.brief %></h5>
                     <br />
 
                     <p class="float-right text-muted">
                       ارسال شده در تاریخ: <%= createTime.date %> ساعت : <%=
                       createTime.time %>
+                    </p>
+                    <br />
+                    <p class="float-right text-muted font-weight-lighter">
+                      تعداد بازدید: <%= art.viewCounter %>
                     </p>
                   </div>
 
@@ -79,7 +83,7 @@
                       class="img-fluid rounded"
                       src="/images/articles/<%= article.picture %>"
                       alt="تصویر پست مقاله"
-                      style="width: 140px !important; height: 80px !important"
+                      style="width: 180px !important; height: 100px !important"
                     />
                   </div>
                 </div>

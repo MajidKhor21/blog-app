@@ -40,7 +40,7 @@
           <div class="container">
             <div class="card-deck">
               <% for( let index = 0; index < articles.length; index++ ) { %>
-              <div class="col-10 col-sm-6 col-lg-4 m-auto">
+              <div class="col-10 col-sm-6 col-lg-4 mx-auto m-md-0">
                 <div class="card">
                   <img
                     class="card-img-top"
@@ -56,6 +56,18 @@
                         articles[index].author.firstName %> <%=
                         articles[index].author.lastName %></small
                       >
+                      <div>
+                        <small
+                          ><i class="fas fa-eye text-muted"></i
+                          ><span class="mr-1 ml-2 text-muted"
+                            ><%= articles[index].viewCounter %>
+                          </span></small
+                        >
+                        <small
+                          ><i class="fas fa-comment-dots text-muted"></i
+                          ><span class="mr-1">0</span></small
+                        >
+                      </div>
                     </div>
 
                     <h3 class="card-title font-weight-bold">
@@ -69,16 +81,6 @@
                       ><%= createTime[index].time %> - <%=
                       createTime[index].date %></small
                     >
-                    <div class="d-inline-block mr-5">
-                      <small
-                        ><i class="fas fa-eye text-muted"></i
-                        ><span class="mr-1 ml-2">1</span></small
-                      >
-                      <small
-                        ><i class="fas fa-comment-dots text-muted"></i
-                        ><span class="mr-1">2</span></small
-                      >
-                    </div>
                     <small class="float-right d-inline-block"
                       ><a href="/article/view/<%= articles[index]._id %>"
                         >بیشتر بخوانید...</a

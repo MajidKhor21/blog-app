@@ -24,7 +24,7 @@ router.post("/create", (req, res) => {
     if (!req.file || !req.body.describe)
       return res.redirect(
         url.format({
-          pathname: "/user/article/add",
+          pathname: "/article/create",
           query: {
             msg: "error",
           },
@@ -104,16 +104,25 @@ router.get("/view/:id", checker.loginChecker, (req, res) => {
     })
     .exec((err, article) => {
       if (err) return res.status(500).json({ msg: "Server Error" });
-      //change create date to jalaali datetime
-      createTime = {
-        date: moment(article.createdAt).format("jYYYY/jM/jD"),
-        time: moment(article.createdAt).format("HH:mm"),
-      };
-      res.render("article/single-article", {
-        user: req.session.user,
-        article,
-        createTime,
-      });
+      Article.findByIdAndUpdate(
+        req.params.id,
+        { $inc: { viewCounter: 1 } },
+        { new: true },
+        (err, art) => {
+          if (err) return res.status(500).json({ msg: "Server Error" });
+          //change create date to jalaali datetime
+          createTime = {
+            date: moment(article.createdAt).format("jYYYY/jM/jD"),
+            time: moment(article.createdAt).format("HH:mm"),
+          };
+          res.render("article/single-article", {
+            user: req.session.user,
+            article,
+            createTime,
+            art,
+          });
+        }
+      );
     });
 });
 

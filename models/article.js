@@ -35,6 +35,10 @@ const ArticleSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  viewCounter: {
+    type: Number,
+    default: 0,
+  },
   author: {
     type: Schema.Types.ObjectId,
     required: true,

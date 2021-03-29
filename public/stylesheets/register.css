@@ -196,4 +196,9 @@
     .text-input > i {
       padding-bottom: 9px !important;
     }
+    @-moz-document url-prefix() {
+      .text-input > i {
+        padding-bottom: 11.5px !important;
+      }
+  }
   }
