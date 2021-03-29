@@ -6,10 +6,7 @@ $(document).ready(() => {
     });
 
   let all = $("#allArticle").text();
-  console.log(all);
   let limit = 6;
-  let max = all % limit;
-  console.log(max);
   let pages = 1;
   let index = 0;
   while (index < all) {
@@ -28,7 +25,6 @@ $(document).ready(() => {
 
   let url = document.URL;
   url = url.substr(-1);
-  console.log(Number(url));
   url = Number(url);
   let x;
   if (url % limit === 0) {
