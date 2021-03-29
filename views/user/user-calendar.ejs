@@ -4,31 +4,13 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>تقویم</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-      crossorigin="anonymous"
-    />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ionicons/5.5.0/esm/ionicons.min.js"></script>
-    <link rel="stylesheet" href="/stylesheets/dashboard/adminlte.css" />
-    <link
-      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="/stylesheets/dashboard/custom.css" />
+    <%- include('../partials/dashboard/scripts-header') %>
     <link rel="stylesheet" href="/stylesheets/dashboard/calendar.css" />
   </head>
   <body class="hold-transition sidebar-mini">
     <div class="wrapper">
-      <%- include('partials/dashboard-navbar') %> <%-
-      include('partials/sidebar') %>
+      <%- include('../partials/dashboard/navbar') %> <%-
+      include('../partials/dashboard/sidebar') %>
 
       <div class="content-wrapper">
         <section class="content-header">
@@ -155,7 +137,7 @@
         </section>
       </div>
 
-      <%- include('partials/dashboard-footer') %>
+      <%- include('../partials/dashboard/footer') %>
 
       <aside
         class="control-sidebar control-sidebar-dark control-sidebar-animate"

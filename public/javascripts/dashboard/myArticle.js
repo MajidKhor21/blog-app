@@ -9,7 +9,7 @@ $(document).ready(() => {
   let index = 0;
   while (index < all) {
     $("#pagination").append(
-      `<li class="page-item" id="li${index}"><a class="page-link" href="/user/article/${username}?showArticle=${index}">${pages}</a></li>`
+      `<li class="page-item" id="li${index}"><a class="page-link" href="/article/${username}?showArticle=${index}">${pages}</a></li>`
     );
     pages++;
     index = index + limit;

@@ -48,7 +48,7 @@ router.get("/dashboard", checker.loginChecker, (req, res, next) => {
 
 //user information page
 router.get("/info", checker.loginChecker, (req, res, next) => {
-  res.render("user-info", { user: req.session.user });
+  res.render("user/user-info", { user: req.session.user });
 });
 
 //edit user information
@@ -59,7 +59,7 @@ router.get("/edit", checker.loginChecker, (req, res, next) => {
   req.session.user.lastUpdateTime = moment(req.session.user.lastUpdate).format(
     "HH:mm"
   );
-  res.render("user-edit", { user: req.session.user });
+  res.render("user/user-edit", { user: req.session.user });
 });
 
 //update route
@@ -94,12 +94,12 @@ router.put("/update", (req, res) => {
 
 //display calendar in dashboard
 router.get("/calendar", checker.loginChecker, (req, res) => {
-  res.render("user-calendar", { user: req.session.user });
+  res.render("user/user-calendar", { user: req.session.user });
 });
 
 //get avatar edit page
 router.get("/avatar", checker.loginChecker, (req, res) => {
-  res.render("user-avatar", { user: req.session.user });
+  res.render("user/user-avatar", { user: req.session.user });
 });
 
 //upload user avatar
@@ -188,8 +188,5 @@ router.put("/removeAvatar", (req, res) => {
     }
   );
 });
-
-//article route
-router.use("/article", require("./article"));
 
 module.exports = router;

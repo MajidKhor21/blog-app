@@ -22,6 +22,9 @@ router.get("/logout", (req, res) => {
   res.redirect("/login");
 });
 
+//define article route
+router.use("/article", require("./article"));
+
 //create admin user at first
 router.post("/createAdmin", (req, res) => {
   User.findOne({ role: "admin" }, (err, existAdmin) => {

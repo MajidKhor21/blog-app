@@ -8,12 +8,15 @@ const generalTools = require("../tools/general-tools");
 const url = require("url");
 
 //get new article page
-router.get("/add", checker.loginChecker, (req, res) => {
-  res.render("new-article", { user: req.session.user, msg: req.query.msg });
+router.get("/create", checker.loginChecker, (req, res) => {
+  res.render("article/new-article", {
+    user: req.session.user,
+    msg: req.query.msg,
+  });
 });
 
 //add new article
-router.post("/add", (req, res) => {
+router.post("/create", (req, res) => {
   const upload = generalTools.uploadArticlePic.single("picture");
 
   upload(req, res, function (err) {
@@ -79,7 +82,7 @@ router.get("/:username", checker.loginChecker, (req, res) => {
         .count()
         .exec((err, arts) => {
           if (err) return res.status(500).json({ msg: "Server Error" });
-          res.render("my-articles", {
+          res.render("article/my-articles", {
             user: req.session.user,
             articles,
             createTime,
@@ -106,7 +109,7 @@ router.get("/view/:id", checker.loginChecker, (req, res) => {
         date: moment(article.createdAt).format("jYYYY/jM/jD"),
         time: moment(article.createdAt).format("HH:mm"),
       };
-      res.render("single-article", {
+      res.render("article/single-article", {
         user: req.session.user,
         article,
         createTime,
