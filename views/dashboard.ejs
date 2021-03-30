@@ -40,8 +40,22 @@
           <div class="container">
             <div class="card-deck">
               <% for( let index = 0; index < articles.length; index++ ) { %>
-              <div class="col-10 col-sm-6 col-lg-4 mx-auto m-md-0">
-                <div class="card">
+              <div class="col-10 col-md-6 col-lg-4 m-auto">
+                <div class="card position-relative">
+                  <% if (index === 0) { %>
+                  <span
+                    class="badge badge-danger rounded w-25 position-absolute"
+                    style="top: -10px !important"
+                    >جدیدترین</span
+                  >
+                  <%} else if ((new Date(articles[index].createdAt).getTime() >=
+                  Date.now() - 172800000) ) { %>
+                  <span
+                    class="badge badge-danger rounded w-25 position-absolute"
+                    style="top: -10px !important"
+                    >جدید</span
+                  >
+                  <% } %>
                   <img
                     class="card-img-top"
                     src="/images/articles/<%= articles[index].picture %>"

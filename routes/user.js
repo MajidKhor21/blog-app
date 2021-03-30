@@ -11,7 +11,6 @@ const path = require("path");
 
 //redirect user to dashboard page
 router.get("/dashboard", checker.loginChecker, (req, res, next) => {
-  console.log(req.query.showArticle);
   req.query.showArticle = req.query.showArticle | null;
   //find all article with author's first name and last name
   Article.find({}, { __v: 0 })
@@ -35,6 +34,7 @@ router.get("/dashboard", checker.loginChecker, (req, res, next) => {
         .exec((err, arts) => {
           if (err) return res.status(500).json({ msg: "Server Error" });
           //render page with user , articles
+          console.log(articles[0]);
           return res.status(200).render("dashboard", {
             user: req.session.user,
             msg: req.query.msg,
