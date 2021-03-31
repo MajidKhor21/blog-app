@@ -60,7 +60,7 @@ router.post("/create", (req, res) => {
 });
 
 //show user's article
-router.get("/:username", checker.loginChecker, (req, res) => {
+router.get("/my/:username", checker.loginChecker, (req, res) => {
   //find all article's of this username
   req.query.showArticle = req.query.showArticle | null;
 
@@ -124,6 +124,32 @@ router.get("/view/:id", checker.loginChecker, (req, res) => {
         }
       );
     });
+});
+
+//get edit articles page
+router.get("/edit", checker.loginChecker, (req, res) => {
+  Article.find({ author: req.session.user._id }, (err, articles) => {
+    if (err) return res.status(500).json({ msg: "Server Error" });
+    return res
+      .status(200)
+      .render("article/edit-article", { articles, user: req.session.user });
+  });
+});
+
+//delete article
+router.get("/delete/:id", (req, res) => {
+  console.log(req.params.id);
+  Article.findByIdAndDelete(req.params.id, (err) => {
+    if (err) return res.status(500).json({ msg: "Server Error" });
+    return res.redirect(
+      url.format({
+        pathname: "/user/dashboard",
+        query: {
+          msg: "successfully deleted",
+        },
+      })
+    );
+  });
 });
 
 module.exports = router;
