@@ -34,7 +34,6 @@ router.get("/dashboard", checker.loginChecker, (req, res, next) => {
         .exec((err, arts) => {
           if (err) return res.status(500).json({ msg: "Server Error" });
           //render page with user , articles
-          console.log(articles[0]);
           return res.status(200).render("dashboard", {
             user: req.session.user,
             msg: req.query.msg,

@@ -21,6 +21,7 @@
                 <span class="d-inline-block ml-1">صفحه</span
                 ><span class="d-inline-block" id="articleSpan">1</span>
               </div>
+
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-left">
                   <li class="breadcrumb-item">
@@ -54,10 +55,19 @@
                   <h2><%= articles[index].title %></h2>
                   <p><%= articles[index].brief %></p>
                 </div>
+                <% if (user.avatar === "default") { %>
                 <img
                   class="card-user avatar avatar-large"
-                  src="/images/avatars/<%= user.avatar %>"
+                  src="/images/avatar.png"
                 />
+                <%} else { %>
+                <img
+                  src="/images/avatars/<%= user.avatar %> "
+                  class="img-circle elevation-2"
+                  alt="User Image"
+                />
+                <% } %>
+
                 <a
                   class="card-link"
                   href="/article/view/<%= articles[index]._id %>"

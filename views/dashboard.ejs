@@ -40,9 +40,11 @@
           <div class="container">
             <div class="card-deck">
               <% for( let index = 0; index < articles.length; index++ ) { %>
-              <div class="col-10 col-md-6 col-lg-4 m-auto">
+              <div class="col-10 col-md-6 col-lg-4">
                 <div class="card position-relative">
-                  <% if (index === 0) { %>
+                  <% if (index === 0 && (new
+                  Date(articles[index].createdAt).getTime() >= Date.now() -
+                  172800000)) { %>
                   <span
                     class="badge badge-danger rounded w-25 position-absolute"
                     style="top: -10px !important"
@@ -56,13 +58,14 @@
                     >جدید</span
                   >
                   <% } %>
-                  <img
-                    class="card-img-top"
-                    src="/images/articles/<%= articles[index].picture %>"
-                    alt="Card image cap"
-                    width="362px"
-                    height="180px"
-                  />
+                  <a href="/article/view/<%= articles[index]._id %>">
+                    <img
+                      class="card-img-top"
+                      src="/images/articles/<%= articles[index].picture %>"
+                      alt="Card image cap"
+                      width="362px"
+                      height="180px"
+                  /></a>
                   <div class="card-body">
                     <div class="mb-3 text-center">
                       <small class="text-muted">
@@ -91,11 +94,17 @@
                     <p class="card-text"><%= articles[index].brief %></p>
                   </div>
                   <div class="card-footer">
-                    <small class="text-muted float-left d-inline-block"
+                    <% if (new Date(articles[index].createdAt).getTime() >=
+                    Date.now() - 300000) { %>
+                    <small class="text-muted float-left">لحظاتی پیش</small>
+                    <%} else { %>
+                    <small class="text-muted float-left"
                       ><%= createTime[index].time %> - <%=
                       createTime[index].date %></small
                     >
-                    <small class="float-right d-inline-block"
+                    <% } %>
+
+                    <small class="float-right"
                       ><a href="/article/view/<%= articles[index]._id %>"
                         >بیشتر بخوانید...</a
                       ></small
@@ -111,7 +120,10 @@
       </div>
 
       <nav aria-label="Page navigation example d-flex">
-        <ul class="pagination justify-content-center mb-5" id="pagination"></ul>
+        <ul
+          class="pagination justify-content-center mt-5 mb-5"
+          id="pagination"
+        ></ul>
       </nav>
       <%- include('partials/dashboard/footer') %>
 
