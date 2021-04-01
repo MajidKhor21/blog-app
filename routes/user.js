@@ -11,11 +11,12 @@ const path = require("path");
 
 //redirect user to dashboard page
 router.get("/dashboard", checker.loginChecker, (req, res, next) => {
-  req.query.showArticle = req.query.showArticle | null;
+  let perPage = 6;
+  let page = req.query.page || 1;
   //find all article with author's first name and last name
   Article.find({}, { __v: 0 })
-    .skip(req.query.showArticle)
-    .limit(6)
+    .skip(perPage * page - perPage)
+    .limit(perPage)
     .populate("author", { firstName: 1, lastName: 1, avatar: 1, _id: 0 })
     .sort({ createdAt: -1 })
     .exec((err, articles) => {
@@ -29,19 +30,19 @@ router.get("/dashboard", checker.loginChecker, (req, res, next) => {
         };
       }
       //find count of all articles
-      Article.find({})
-        .count()
-        .exec((err, arts) => {
-          if (err) return res.status(500).json({ msg: "Server Error" });
-          //render page with user , articles
-          return res.status(200).render("dashboard", {
-            user: req.session.user,
-            msg: req.query.msg,
-            articles,
-            createTime,
-            arts,
-          });
+      Article.count().exec((err, count) => {
+        if (err) return res.status(500).json({ msg: "Server Error" });
+        //render page with user , articles
+        return res.status(200).render("dashboard", {
+          user: req.session.user,
+          msg: req.query.msg,
+          page: req.query.page,
+          articles,
+          createTime,
+          current: page,
+          pages: Math.ceil(count / perPage),
         });
+      });
     });
 });
 

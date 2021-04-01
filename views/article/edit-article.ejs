@@ -42,6 +42,7 @@
                 "
               >
                 <tr>
+                  <th class="d-none" scope="col"></th>
                   <th scope="col">#</th>
                   <th scope="col">عنوان مقاله</th>
                   <th scope="col">خلاصه مقاله</th>
@@ -54,6 +55,7 @@
               <tbody>
                 <% for( let index = 0; index < articles.length; index++ ) { %>
                 <tr class="text-right">
+                  <th class="d-none"><%= articles[index]._id %></th>
                   <th scope="row"><%= index+1 %></th>
                   <td><%= articles[index].title %></td>
                   <td><%= articles[index].brief %></td>
@@ -67,7 +69,7 @@
                   </td>
                   <td><%= articles[index].viewCounter %></td>
                   <td>
-                    <a class="text-warning" href="/update"
+                    <a class="text-warning updateBtn" href="#"
                       ><i class="far fa-edit"></i
                     ></a>
                   </td>
@@ -85,15 +87,90 @@
             </table>
           </div>
         </section>
-        <div
-          class="modal fade bd-example-modal-lg"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="myLargeModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">...</div>
+        <div class="modal" tabindex="-1" id="modalUpdate">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Edit Employee</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div
+                  class="alert alert-success text-center d-none"
+                  role="alert"
+                  id="editEmployeeAlert"
+                >
+                  Your Employee Edited Successfully.
+                </div>
+                <div
+                  class="alert alert-danger text-center d-none"
+                  role="alert"
+                  id="editEmployeeError"
+                >
+                  Unable to Edit Employee.
+                </div>
+                <div class="form-floating mb-3">
+                  <input
+                    type="text"
+                    class="form-control text-capitalize"
+                    id="editFirstName"
+                  />
+                  <label for="editFirstName">First Name</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <input
+                    type="text"
+                    class="form-control text-capitalize"
+                    id="editLastName"
+                  />
+                  <label for="editLastName">Last Name</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <input
+                    type="text"
+                    class="form-control text-capitalize"
+                    id="editNationalCode"
+                  />
+                  <label for="editNationalCode">National Code</label>
+                </div>
+                <div class="form-floating mb-3" id="editGenderDom"></div>
+                <div class="form-floating mb-3" id="editManagerDom"></div>
+                <div class="form-floating mb-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="editBirthdayDate"
+                    readonly
+                  />
+                  <label for="editBirthdayDate">Birthday Date</label>
+                  <input type="date" class="form-control" id="birthdayDate" />
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  id="submitEmployee"
+                >
+                  Save changes
+                </button>
+                <button class="btn btn-danger" id="deleteEmployee">
+                  Delete
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -104,6 +181,6 @@
       ></aside>
     </div>
     <%- include('../partials/dashboard/scripts-footer') %>
-    <script src="/javascripts/dashboard/myArticle.js"></script>
+    <script src="/javascripts/dashboard/article/updateArticle.js"></script>
   </body>
 </html>
