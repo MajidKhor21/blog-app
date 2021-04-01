@@ -150,9 +150,82 @@ router.get("/view/:id", checker.loginChecker, (req, res) => {
 router.get("/edit", checker.loginChecker, (req, res) => {
   Article.find({ author: req.session.user._id }, (err, articles) => {
     if (err) return res.status(500).json({ msg: "Server Error" });
-    return res
-      .status(200)
-      .render("article/edit-article", { articles, user: req.session.user });
+    return res.status(200).render("article/all-article", {
+      articles,
+      user: req.session.user,
+      msg: req.query.msg,
+    });
+  });
+});
+
+//get edit article single page
+router.get("/edit/:id", checker.loginChecker, (req, res) => {
+  Article.findById(req.params.id, (err, article) => {
+    if (err) return res.status(500).json({ msg: "Server Error" });
+    return res.status(200).render("article/edit-article", {
+      article,
+      user: req.session.user,
+      msg: req.query.msg,
+    });
+  });
+});
+
+router.post("/update", (req, res) => {
+  console.log(13232);
+  const upload = generalTools.uploadArticlePic.single("picture");
+
+  upload(req, res, function (err) {
+    console.log(req.file);
+    console.log(req.body);
+    //check article picture and describe is not empty
+    if (!req.body.title || !req.body.brief || !req.body.describe)
+      return res.redirect(
+        url.format({
+          pathname: "/article/edit",
+          query: {
+            msg: "error",
+          },
+        })
+      );
+    if (err instanceof multer.MulterError) {
+      return res.status(500).json({ msg: "Server Error" });
+    } else if (err) {
+      res.status(406).send(err.message);
+    } else if (!req.file) {
+      Article.findByIdAndUpdate(req.body.id, req.body, (err) => {
+        if (err) return res.status(500).json({ msg: "Server Error" });
+        return res.redirect(
+          url.format({
+            pathname: "/article/edit",
+            query: {
+              msg: "successfully",
+            },
+          })
+        );
+      });
+      //save new article to our database
+    } else {
+      Article.findByIdAndUpdate(
+        req.body.id,
+        {
+          title: req.body.title,
+          brief: req.body.brief,
+          describe: req.body.describe,
+          picture: req.file.filename,
+        },
+        (err) => {
+          if (err) return res.status(500).json({ msg: "Server Error" });
+          return res.redirect(
+            url.format({
+              pathname: "/article/edit",
+              query: {
+                msg: "successfully",
+              },
+            })
+          );
+        }
+      );
+    }
   });
 });
 

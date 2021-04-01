@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>مقالات من</title>
+    <%- include('../partials/dashboard/scripts-header') %>
+    <link rel="stylesheet" href="/stylesheets/dashboard/article.css" />
+  </head>
+  <body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+      <%- include('../partials/dashboard/navbar') %> <%-
+      include('../partials/dashboard/sidebar') %>
+
+      <div class="content-wrapper">
+        <section class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h3 class="d-inline-block ml-2">ویرایش مقالات</h3>
+              </div>
+
+              <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                  <li class="breadcrumb-item">
+                    <a href="/user/dashboard">داشبورد</a>
+                  </li>
+                  <li class="breadcrumb-item active">ویرایش مقالات</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <% if (msg === "error") { %>
+        <div class="alert alert-warning w-25" role="alert" id="alertSuccess">
+          ویرایش ناموفق
+        </div>
+        <% } %> <% if (msg === "successfully") { %>
+        <div class="alert alert-success w-25" role="alert" id="alertSuccess">
+          ویرایش موفق
+        </div>
+        <% } %>
+
+        <section class="content mt-5">
+          <div class="container">
+            <table class="table">
+              <thead
+                style="
+                  background-color: #343a40;
+                  color: rgba(255, 255, 255, 0.75);
+                "
+              >
+                <tr>
+                  <th class="d-none" scope="col"></th>
+                  <th scope="col">#</th>
+                  <th scope="col">عنوان مقاله</th>
+                  <th scope="col">خلاصه مقاله</th>
+                  <th scope="col">تصویر مقاله</th>
+                  <th scope="col">تعداد بازدید</th>
+                  <th scope="col">ویرایش</th>
+                  <th scope="col">حذف</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% for( let index = 0; index < articles.length; index++ ) { %>
+                <tr class="text-right">
+                  <th class="d-none"><%= articles[index]._id %></th>
+                  <th scope="row"><%= index+1 %></th>
+                  <td>
+                    <a href="/article/view/<%= articles[index]._id %>"
+                      ><%= articles[index].title %></a
+                    >
+                  </td>
+                  <td><%= articles[index].brief %></td>
+                  <td>
+                    <img
+                      src="/images/articles/<%= articles[index].picture %>"
+                      alt="تصویر مقاله"
+                      width="60px"
+                      height="40px;"
+                    />
+                  </td>
+                  <td><%= articles[index].viewCounter %></td>
+                  <td>
+                    <a
+                      class="text-warning updateBtn"
+                      href="/article/edit/<%= articles[index]._id %> "
+                      ><i class="far fa-edit"></i
+                    ></a>
+                  </td>
+                  <td>
+                    <a
+                      class="text-danger"
+                      href="/article/delete/<%= articles[index]._id %> "
+                    >
+                      <i class="far fa-trash-alt"></i
+                    ></a>
+                  </td>
+                </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+      <%- include('../partials/dashboard/footer') %>
+
+      <aside
+        class="control-sidebar control-sidebar-dark control-sidebar-animate"
+      ></aside>
+    </div>
+    <%- include('../partials/dashboard/scripts-footer') %>
+    <script src="/javascripts/dashboard/article/updateArticle.js"></script>
+    <script>
+      $("#alertSuccess")
+        .fadeTo(2000, 500)
+        .slideUp(500, function () {
+          $("#alertSuccess").slideUp(500);
+        });
+    </script>
+  </body>
+</html>

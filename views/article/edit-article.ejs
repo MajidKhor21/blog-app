@@ -3,9 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>مقالات من</title>
+    <title>ویرایش <%= article.title %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <%- include('../partials/dashboard/scripts-header') %>
-    <link rel="stylesheet" href="/stylesheets/dashboard/article.css" />
+    <link rel="stylesheet" href="/stylesheets/dashboard/addPicture.css" />
+    <script src="//cdn.ckeditor.com/4.16.0/full/ckeditor.js"></script>
   </head>
   <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -17,163 +20,115 @@
           <div class="container-fluid">
             <div class="row mb-2">
               <div class="col-sm-6">
-                <h3 class="d-inline-block ml-2">ویرایش مقالات</h3>
+                <h3>ویرایش <%= article.title %></h3>
               </div>
-
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-left">
                   <li class="breadcrumb-item">
                     <a href="/user/dashboard">داشبورد</a>
                   </li>
-                  <li class="breadcrumb-item active">ویرایش مقالات</li>
+                  <li class="breadcrumb-item active">ویرایش <%= article.title %></li>
                 </ol>
               </div>
             </div>
           </div>
         </section>
 
-        <section class="content mt-5">
-          <div class="container">
-            <table class="table">
-              <thead
-                style="
-                  background-color: #343a40;
-                  color: rgba(255, 255, 255, 0.75);
-                "
-              >
-                <tr>
-                  <th class="d-none" scope="col"></th>
-                  <th scope="col">#</th>
-                  <th scope="col">عنوان مقاله</th>
-                  <th scope="col">خلاصه مقاله</th>
-                  <th scope="col">تصویر مقاله</th>
-                  <th scope="col">تعداد بازدید</th>
-                  <th scope="col">ویرایش</th>
-                  <th scope="col">حذف</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% for( let index = 0; index < articles.length; index++ ) { %>
-                <tr class="text-right">
-                  <th class="d-none"><%= articles[index]._id %></th>
-                  <th scope="row"><%= index+1 %></th>
-                  <td><%= articles[index].title %></td>
-                  <td><%= articles[index].brief %></td>
-                  <td>
-                    <img
-                      src="/images/articles/<%= articles[index].picture %>"
-                      alt="تصویر مقاله"
-                      width="60px"
-                      height="30px;"
-                    />
-                  </td>
-                  <td><%= articles[index].viewCounter %></td>
-                  <td>
-                    <a class="text-warning updateBtn" href="#"
-                      ><i class="far fa-edit"></i
-                    ></a>
-                  </td>
-                  <td>
-                    <a
-                      class="text-danger"
-                      href="/article/delete/<%= articles[index]._id %> "
-                    >
-                      <i class="far fa-trash-alt"></i
-                    ></a>
-                  </td>
-                </tr>
-                <% } %>
-              </tbody>
-            </table>
-          </div>
-        </section>
-        <div class="modal" tabindex="-1" id="modalUpdate">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">Edit Employee</h5>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div class="modal-body">
-                <div
-                  class="alert alert-success text-center d-none"
-                  role="alert"
-                  id="editEmployeeAlert"
-                >
-                  Your Employee Edited Successfully.
-                </div>
-                <div
-                  class="alert alert-danger text-center d-none"
-                  role="alert"
-                  id="editEmployeeError"
-                >
-                  Unable to Edit Employee.
-                </div>
-                <div class="form-floating mb-3">
-                  <input
-                    type="text"
-                    class="form-control text-capitalize"
-                    id="editFirstName"
-                  />
-                  <label for="editFirstName">First Name</label>
-                </div>
-                <div class="form-floating mb-3">
-                  <input
-                    type="text"
-                    class="form-control text-capitalize"
-                    id="editLastName"
-                  />
-                  <label for="editLastName">Last Name</label>
-                </div>
-                <div class="form-floating mb-3">
-                  <input
-                    type="text"
-                    class="form-control text-capitalize"
-                    id="editNationalCode"
-                  />
-                  <label for="editNationalCode">National Code</label>
-                </div>
-                <div class="form-floating mb-3" id="editGenderDom"></div>
-                <div class="form-floating mb-3" id="editManagerDom"></div>
-                <div class="form-floating mb-3">
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="editBirthdayDate"
-                    readonly
-                  />
-                  <label for="editBirthdayDate">Birthday Date</label>
-                  <input type="date" class="form-control" id="birthdayDate" />
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Close
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  id="submitEmployee"
-                >
-                  Save changes
-                </button>
-                <button class="btn btn-danger" id="deleteEmployee">
-                  Delete
-                </button>
+        <section class="content mt-5 mb-5">
+          <form
+            method="post"
+            action="/article/update"
+            enctype="multipart/form-data"
+            class="w-75 mx-auto mb-5"
+          >
+            <% if (msg === "error") { %>
+            <div class="alert alert-danger w-25" role="alert" id="alertDanger">
+              خطا
+            </div>
+            <% } %>
+            <input class="d-none" type="text" name="id" value="<%= article._id %>">
+            <div class="form-group row w-50">
+              <label class="col-sm-2 col-form-label" for="title"
+                >عنوان مقاله:
+              </label>
+              <div class="col-sm-10">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="title"
+                  minlength="3"
+                  maxlength="100"
+                  value="<%= article.title %>"
+                  required
+                />
               </div>
             </div>
+            <div class="form-group row w-50">
+              <label class="col-sm-2 col-form-label" for="brief"
+                >خلاصه مقاله:
+              </label>
+              <div class="col-sm-10">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="brief"
+                  minlength="5"
+                  maxlength="100"
+                  value="<%= article.brief %>"
+                  required
+                />
+              </div>
+            </div>
+            <div class="form-group row w-50">
+              <label for="" class="col-sm-2 col-form-label"
+                >تصویر مقاله:
+              </label>
+              <div class="file-input col-sm-10">
+                <input type="file" name="picture" />
+                <span class='button'>انتخاب تصویر</span>
+                <span class='label' data-js-label>تصویری انتخاب نشده است</label>
+              </div>
+            </div>
+            <div class="form-group row w-50">
+                <img src="/images/articles/<%= article.picture %>" alt="تصویر مقاله" width="100px" height="60px">
+            </div>
+            <input
+              type="text"
+              value=""
+              name="describe"
+              id="hiddenInput"
+              class="d-none"
+              required
+            />
+            <input
+              type="submit"
+              class="btn btn-success d-none"
+              id="submitBtn"
+              value="ذخیره"
+            />
+          </form>
+         <input class="d-none" type="text" id="describeValue" value="<%= article.describe %>">
+          <div class="col-sm-12 w-75 mx-auto">
+            <textarea name="editor1" required></textarea>
           </div>
-        </div>
+          <div class="col-sm-12 w-75 mx-auto">
+            <button
+              class="btn btn-success mt-3 ml-3"
+              id="secondaryButton"
+              onclick="submitFunc()"
+            >
+              ذخیره
+            </button>
+            <a
+            class="btn btn-secondary mt-3"
+            href="/user/dashboard"
+          >
+            انصراف
+          </a>
+          </div>
+        </section>
       </div>
+
       <%- include('../partials/dashboard/footer') %>
 
       <aside
@@ -181,6 +136,7 @@
       ></aside>
     </div>
     <%- include('../partials/dashboard/scripts-footer') %>
-    <script src="/javascripts/dashboard/article/updateArticle.js"></script>
+    <script src="/javascripts/dashboard/article/editArticle.js"></script>
+    <script src="/javascripts/dashboard/addPicture.js"></script>
   </body>
 </html>
