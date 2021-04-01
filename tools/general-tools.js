@@ -3,6 +3,19 @@ const multer = require("multer");
 
 let generalTools = {};
 
+const getDir = () => {
+  let year = new Date().getFullYear();
+  let month = new Date().getMonth() + 1;
+  let day = new Date().getDate();
+
+  return `./public/images/describes/${year}/${month}/${day}`;
+};
+
+let year = new Date().getFullYear();
+let month = new Date().getMonth();
+let day = new Date().getDay();
+console.log(year + "/" + month + "/" + day);
+
 const avatarStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(__dirname, "../public/images/avatars"));
@@ -18,6 +31,13 @@ const articlePicStorage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     cb(null, `${req.session.user.username}-${Date.now()}-${file.originalname}`);
+  },
+});
+
+const describePicStorage = multer.diskStorage({
+  destination: getDir(),
+  filename: function (req, file, cb) {
+    cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
 
@@ -39,6 +59,21 @@ generalTools.uploadAvatar = multer({
 
 generalTools.uploadArticlePic = multer({
   storage: articlePicStorage,
+  fileFilter: function (req, file, cb) {
+    if (
+      file.mimetype === "image/png" ||
+      file.mimetype === "image/jpg" ||
+      file.mimetype === "image/jpeg"
+    ) {
+      cb(null, true);
+    } else {
+      cb(new Error("invalid type!"), false);
+    }
+  },
+});
+
+generalTools.uploadDescribePic = multer({
+  storage: describePicStorage,
   fileFilter: function (req, file, cb) {
     if (
       file.mimetype === "image/png" ||

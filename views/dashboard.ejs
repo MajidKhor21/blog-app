@@ -20,9 +20,7 @@
                 <% if (articles.length) { %>
                 <span class="d-inline-block ml-1">صفحه</span>
                 <% } %> <% if (page) { %>
-                <span class="d-inline-block" id="articleSpan"
-                  ><%= page %>
-                </span>
+                <span class="d-inline-block" id="articleSpan"><%= page %></span>
                 <%} else if(!page && articles.length) { %>
                 <span class="d-inline-block" id="articleSpan">1</span>
                 <% } %>

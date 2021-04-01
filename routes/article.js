@@ -59,6 +59,24 @@ router.post("/create", (req, res) => {
   });
 });
 
+router.post("/uploader", (req, res) => {
+  const upload = generalTools.uploadDescribePic.single("upload");
+  upload(req, res, function (err) {
+    console.log(req.file);
+    if (err instanceof multer.MulterError) {
+      return res.status(500).json({ msg: "Server Error" });
+    } else if (err) {
+      res.status(406).send(err.message);
+    } else {
+      return res.json({
+        uploaded: 1,
+        filename: req.file.filename,
+        url: `${req.file.destination}/${req.file.filename}`.substring(8),
+      });
+    }
+  });
+});
+
 //show user's article
 router.get("/my/:username", checker.loginChecker, (req, res) => {
   let perPage = 6;
