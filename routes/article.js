@@ -61,12 +61,14 @@ router.post("/create", (req, res) => {
 
 //show user's article
 router.get("/my/:username", checker.loginChecker, (req, res) => {
+  let perPage = 6;
+  let page = req.query.page || 1;
   //find all article's of this username
-  req.query.showArticle = req.query.showArticle | null;
 
   Article.find({ author: req.session.user._id })
-    .skip(req.query.showArticle)
-    .limit(6)
+    .skip(perPage * page - perPage)
+    .limit(perPage)
+    .sort({ createdAt: -1 })
     .exec((err, articles) => {
       if (err) return res.status(500).json({ msg: "Server Error" });
       //change create date to jalaali datetime
@@ -78,17 +80,17 @@ router.get("/my/:username", checker.loginChecker, (req, res) => {
         };
       }
       //find count of all articles
-      Article.find({})
-        .count()
-        .exec((err, arts) => {
-          if (err) return res.status(500).json({ msg: "Server Error" });
-          res.render("article/my-articles", {
-            user: req.session.user,
-            articles,
-            createTime,
-            arts,
-          });
+      Article.count().exec((err, count) => {
+        if (err) return res.status(500).json({ msg: "Server Error" });
+        res.render("article/my-articles", {
+          user: req.session.user,
+          page: req.query.page,
+          articles,
+          createTime,
+          current: page,
+          pages: Math.ceil(count / perPage),
         });
+      });
     });
 });
 
