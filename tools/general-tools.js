@@ -8,13 +8,8 @@ const getDir = () => {
   let month = new Date().getMonth() + 1;
   let day = new Date().getDate();
 
-  return `./public/images/describes/${year}/${month}/${day}`;
+  return `./public/images/uploads/${year}/${month}/${day}/`;
 };
-
-let year = new Date().getFullYear();
-let month = new Date().getMonth();
-let day = new Date().getDay();
-console.log(year + "/" + month + "/" + day);
 
 const avatarStorage = multer.diskStorage({
   destination: function (req, file, cb) {

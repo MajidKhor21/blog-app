@@ -8,6 +8,6 @@ module.exports = (function () {
     fs.mkdirSync(path.join(__dirname, "../public/images/avatars"));
   fs.existsSync(path.join(__dirname, "../public/images/articles")) ||
     fs.mkdirSync(path.join(__dirname, "../public/images/articles"));
-  fs.existsSync(path.join(__dirname, "../public/images/describes")) ||
-    fs.mkdirSync(path.join(__dirname, "../public/images/describes"));
+  fs.existsSync(path.join(__dirname, "../public/images/uploads")) ||
+    fs.mkdirSync(path.join(__dirname, "../public/images/uploads"));
 })();

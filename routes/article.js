@@ -61,6 +61,7 @@ router.post("/create", (req, res) => {
   });
 });
 
+//upload images of ckeditor
 router.post("/uploader", (req, res) => {
   const upload = generalTools.uploadDescribePic.single("upload");
   upload(req, res, function (err) {
@@ -150,14 +151,37 @@ router.get("/view/:id", checker.loginChecker, (req, res) => {
 
 //get edit articles page
 router.get("/edit", checker.loginChecker, (req, res) => {
-  Article.find({ author: req.session.user._id }, (err, articles) => {
-    if (err) return res.status(500).json({ msg: "Server Error" });
-    return res.status(200).render("article/all-article", {
-      articles,
-      user: req.session.user,
-      msg: req.query.msg,
+  //paginate user articles per page 10
+  let perPage = 10;
+  let page = req.query.page || 1;
+  Article.find({ author: req.session.user._id })
+    .skip(perPage * page - perPage)
+    .limit(perPage)
+    .sort({ createdAt: -1 })
+    .exec((err, articles) => {
+      if (err) return res.status(500).json({ msg: "Server Error" });
+      let lastUpdate = [];
+      for (let index = 0; index < articles.length; index++) {
+        lastUpdate[index] = {
+          date: moment(articles[index].lastUpdate).format("jYYYY/jM/jD"),
+          time: moment(articles[index].lastUpdate).format("HH:mm"),
+        };
+      }
+      //count all article's
+      Article.find({ author: req.session.user._id })
+        .count()
+        .exec((err, count) => {
+          if (err) return res.status(500).json({ msg: "Server Error" });
+          return res.status(200).render("article/all-article", {
+            articles,
+            lastUpdate,
+            user: req.session.user,
+            msg: req.query.msg,
+            current: page,
+            pages: Math.ceil(count / perPage),
+          });
+        });
     });
-  });
 });
 
 //get edit article single page
@@ -172,7 +196,9 @@ router.get("/edit/:id", checker.loginChecker, (req, res) => {
   });
 });
 
+//update article route
 router.post("/update", (req, res) => {
+  //update article's picture
   const upload = generalTools.uploadArticlePic.single("picture");
 
   upload(req, res, function (err) {
@@ -191,19 +217,29 @@ router.post("/update", (req, res) => {
     } else if (err) {
       res.status(406).send(err.message);
     } else if (!req.file) {
-      Article.findByIdAndUpdate(req.body.id, req.body, (err) => {
-        if (err) return res.status(500).json({ msg: "Server Error" });
-        return res.redirect(
-          url.format({
-            pathname: "/article/edit",
-            query: {
-              msg: "successfully",
-            },
-          })
-        );
-      });
-      //save new article to our database
+      //update article where don't update article's picture
+      Article.findByIdAndUpdate(
+        req.body.id,
+        {
+          title: req.body.title,
+          brief: req.body.brief,
+          describe: req.body.describe,
+          lastUpdate: Date.now(),
+        },
+        (err) => {
+          if (err) return res.status(500).json({ msg: "Server Error" });
+          return res.redirect(
+            url.format({
+              pathname: "/article/edit",
+              query: {
+                msg: "successfully",
+              },
+            })
+          );
+        }
+      );
     } else {
+      //update article where update article's picture
       Article.findById(req.body.id, (err, article) => {
         if (err) return res.status(500).json({ msg: "Server Error" });
         if (article && article.picture) {
@@ -217,6 +253,7 @@ router.post("/update", (req, res) => {
               brief: req.body.brief,
               describe: req.body.describe,
               picture: req.file.filename,
+              lastUpdate: Date.now(),
             },
             (err) => {
               if (err) return res.status(500).json({ msg: "Server Error" });
@@ -232,59 +269,43 @@ router.post("/update", (req, res) => {
           );
         }
       });
-      // Article.findByIdAndUpdate(
-      //   req.body.id,
-      //   {
-      //     title: req.body.title,
-      //     brief: req.body.brief,
-      //     describe: req.body.describe,
-      //     picture: req.file.filename,
-      //   },
-      //   (err) => {
-      //     if (err) return res.status(500).json({ msg: "Server Error" });
-      //     return res.redirect(
-      //       url.format({
-      //         pathname: "/article/edit",
-      //         query: {
-      //           msg: "successfully",
-      //         },
-      //       })
-      //     );
-      //   }
-      // );
     }
   });
 });
 
 //delete article
-router.get("/delete/:id", (req, res) => {
-  Article.findById(req.params.id, (err, article) => {
-    if (err) return res.status(500).json({ msg: "Server Error" });
-    if (article && article.picture) {
-      fs.unlinkSync(
-        path.join(__dirname, "../public/images/articles/", article.picture)
-      );
-      article.remove();
-      return res.redirect(
-        url.format({
-          pathname: "/user/dashboard",
-          query: {
-            msg: "successfully deleted",
-          },
-        })
-      );
-    } else if (article) {
-      article.remove();
-      return res.redirect(
-        url.format({
-          pathname: "/user/dashboard",
-          query: {
-            msg: "successfully deleted",
-          },
-        })
-      );
-    }
+router.get("/delete/:id", async (req, res) => {
+  //get article's requested
+  let article = await Article.findById(req.params.id);
+  if (!article) {
+    return res.status(500).json({ msg: "error" });
+  }
+  //delete picture of article from our host
+  fs.unlinkSync(
+    path.join(__dirname, "../public/images/articles/", article.picture)
+  );
+  //find source of images that uses in describe and delete them from our host
+  let regex = new RegExp("<" + "img" + " .*?" + "src" + '="(.*?)"', "gi"),
+    result,
+    articlePic = [];
+
+  while ((result = regex.exec(article.describe))) {
+    articlePic.push(result[1]);
+  }
+  articlePic.forEach((element) => {
+    fs.unlinkSync(path.join(__dirname, "../public/", element));
   });
+
+  //find and delete article
+  await Article.findByIdAndDelete(req.params.id);
+  return res.redirect(
+    url.format({
+      pathname: "/user/dashboard",
+      query: {
+        msg: "successfully-deleted",
+      },
+    })
+  );
 });
 
 module.exports = router;

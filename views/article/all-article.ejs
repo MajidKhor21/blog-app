@@ -12,7 +12,7 @@
       <%- include('../partials/dashboard/navbar') %> <%-
       include('../partials/dashboard/sidebar') %>
 
-      <div class="content-wrapper">
+      <div class="content-wrapper mb-5">
         <section class="content-header">
           <div class="container-fluid">
             <div class="row mb-2">
@@ -42,7 +42,7 @@
         </div>
         <% } %>
 
-        <section class="content mt-5">
+        <section class="content mt-2">
           <div class="container">
             <table class="table">
               <thead
@@ -58,6 +58,7 @@
                   <th scope="col">خلاصه مقاله</th>
                   <th scope="col">تصویر مقاله</th>
                   <th scope="col">تعداد بازدید</th>
+                  <th scope="col">آخرین ویرایش</th>
                   <th scope="col"></th>
                 </tr>
               </thead>
@@ -81,18 +82,19 @@
                     />
                   </td>
                   <td><%= articles[index].viewCounter %></td>
+                  <td><%= lastUpdate[index].time %> - <%= lastUpdate[index].date %> </td>
                   <td>
                     <div>
                       <a
                         class="text-warning updateBtn"
                         href="/article/edit/<%= articles[index]._id %> "
-                        ><i class="far fa-edit ml-4"></i
+                        ><i class="far fa-edit ml-4" style="font-size: 20px"></i
                       ></a>
                       <a
                         class="text-danger"
                         href="/article/delete/<%= articles[index]._id %> "
                       >
-                        <i class="far fa-trash-alt"></i
+                        <i class="far fa-trash-alt" style="font-size: 20px"></i></i
                       ></a>
                     </div>
                   </td>
@@ -103,6 +105,47 @@
           </div>
         </section>
       </div>
+      <nav aria-label="Page navigation example d-flex">
+        <% if (pages > 0) { %>
+        <ul class="pagination text-center justify-content-center">
+          <% if (current == 1) { %>
+          <li class="page-item disabled">
+            <a class="page-link">اولین</a>
+          </li>
+          <% } else { %>
+          <li>
+            <a class="page-link" href="/article/edit?page=1">اولین</a>
+          </li>
+          <% } %> <% let i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+          <% if (i !== 1) { %>
+          <li class="page-item disabled"><a class="page-link">...</a></li>
+          <% } %> <% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
+          <% if (i == current) { %>
+          <li class="page-item active">
+            <a class="page-link"><%= i %></a>
+          </li>
+          <% } else { %>
+          <li>
+            <a class="page-link" href="/article/edit?page=<%= i %>"
+              ><%= i %></a
+            >
+          </li>
+          <% } %> <% if (i == Number(current) + 4 && i < pages) { %>
+          <li class="page-item disabled"><a class="page-link">...</a></li>
+          <% } %> <% } %> <% if (current == pages) { %>
+          <li class="page-item disabled">
+            <a class="page-link">آخرین</a>
+          </li>
+          <% } else { %>
+          <li>
+            <a class="page-link" href="/article/edit?page=<%= pages %>"
+              >آخرین</a
+            >
+          </li>
+          <% } %>
+        </ul>
+        <% } %>
+      </nav>
       <%- include('../partials/dashboard/footer') %>
 
       <aside
