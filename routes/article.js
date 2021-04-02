@@ -6,6 +6,8 @@ const multer = require("multer");
 const moment = require("moment-jalaali");
 const generalTools = require("../tools/general-tools");
 const url = require("url");
+const fs = require("fs");
+const path = require("path");
 
 //get new article page
 router.get("/create", checker.loginChecker, (req, res) => {
@@ -171,12 +173,9 @@ router.get("/edit/:id", checker.loginChecker, (req, res) => {
 });
 
 router.post("/update", (req, res) => {
-  console.log(13232);
   const upload = generalTools.uploadArticlePic.single("picture");
 
   upload(req, res, function (err) {
-    console.log(req.file);
-    console.log(req.body);
     //check article picture and describe is not empty
     if (!req.body.title || !req.body.brief || !req.body.describe)
       return res.redirect(
@@ -205,43 +204,86 @@ router.post("/update", (req, res) => {
       });
       //save new article to our database
     } else {
-      Article.findByIdAndUpdate(
-        req.body.id,
-        {
-          title: req.body.title,
-          brief: req.body.brief,
-          describe: req.body.describe,
-          picture: req.file.filename,
-        },
-        (err) => {
-          if (err) return res.status(500).json({ msg: "Server Error" });
-          return res.redirect(
-            url.format({
-              pathname: "/article/edit",
-              query: {
-                msg: "successfully",
-              },
-            })
+      Article.findById(req.body.id, (err, article) => {
+        if (err) return res.status(500).json({ msg: "Server Error" });
+        if (article && article.picture) {
+          fs.unlinkSync(
+            path.join(__dirname, "../public/images/articles/", article.picture)
+          );
+          Article.findByIdAndUpdate(
+            req.body.id,
+            {
+              title: req.body.title,
+              brief: req.body.brief,
+              describe: req.body.describe,
+              picture: req.file.filename,
+            },
+            (err) => {
+              if (err) return res.status(500).json({ msg: "Server Error" });
+              return res.redirect(
+                url.format({
+                  pathname: "/article/edit",
+                  query: {
+                    msg: "successfully",
+                  },
+                })
+              );
+            }
           );
         }
-      );
+      });
+      // Article.findByIdAndUpdate(
+      //   req.body.id,
+      //   {
+      //     title: req.body.title,
+      //     brief: req.body.brief,
+      //     describe: req.body.describe,
+      //     picture: req.file.filename,
+      //   },
+      //   (err) => {
+      //     if (err) return res.status(500).json({ msg: "Server Error" });
+      //     return res.redirect(
+      //       url.format({
+      //         pathname: "/article/edit",
+      //         query: {
+      //           msg: "successfully",
+      //         },
+      //       })
+      //     );
+      //   }
+      // );
     }
   });
 });
 
 //delete article
 router.get("/delete/:id", (req, res) => {
-  console.log(req.params.id);
-  Article.findByIdAndDelete(req.params.id, (err) => {
+  Article.findById(req.params.id, (err, article) => {
     if (err) return res.status(500).json({ msg: "Server Error" });
-    return res.redirect(
-      url.format({
-        pathname: "/user/dashboard",
-        query: {
-          msg: "successfully deleted",
-        },
-      })
-    );
+    if (article && article.picture) {
+      fs.unlinkSync(
+        path.join(__dirname, "../public/images/articles/", article.picture)
+      );
+      article.remove();
+      return res.redirect(
+        url.format({
+          pathname: "/user/dashboard",
+          query: {
+            msg: "successfully deleted",
+          },
+        })
+      );
+    } else if (article) {
+      article.remove();
+      return res.redirect(
+        url.format({
+          pathname: "/user/dashboard",
+          query: {
+            msg: "successfully deleted",
+          },
+        })
+      );
+    }
   });
 });
 

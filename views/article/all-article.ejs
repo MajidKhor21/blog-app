@@ -58,8 +58,7 @@
                   <th scope="col">خلاصه مقاله</th>
                   <th scope="col">تصویر مقاله</th>
                   <th scope="col">تعداد بازدید</th>
-                  <th scope="col">ویرایش</th>
-                  <th scope="col">حذف</th>
+                  <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
@@ -83,19 +82,19 @@
                   </td>
                   <td><%= articles[index].viewCounter %></td>
                   <td>
-                    <a
-                      class="text-warning updateBtn"
-                      href="/article/edit/<%= articles[index]._id %> "
-                      ><i class="far fa-edit"></i
-                    ></a>
-                  </td>
-                  <td>
-                    <a
-                      class="text-danger"
-                      href="/article/delete/<%= articles[index]._id %> "
-                    >
-                      <i class="far fa-trash-alt"></i
-                    ></a>
+                    <div>
+                      <a
+                        class="text-warning updateBtn"
+                        href="/article/edit/<%= articles[index]._id %> "
+                        ><i class="far fa-edit ml-4"></i
+                      ></a>
+                      <a
+                        class="text-danger"
+                        href="/article/delete/<%= articles[index]._id %> "
+                      >
+                        <i class="far fa-trash-alt"></i
+                      ></a>
+                    </div>
                   </td>
                 </tr>
                 <% } %>
