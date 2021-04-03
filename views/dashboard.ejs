@@ -10,12 +10,12 @@
     <div class="wrapper">
       <%- include('partials/dashboard/navbar') %> <%-
       include('partials/dashboard/sidebar') %>
-
       <div class="content-wrapper">
         <section class="content-header">
           <div class="container-fluid">
             <div class="row mb-2">
-              <div class="col-sm-6">
+              <div class="col-sm-4">
+                <% let { search, page} = req.query %>
                 <h3 class="d-inline-block ml-2">مقالات</h3>
                 <% if (articles.length) { %>
                 <span class="d-inline-block ml-1">صفحه</span>
@@ -25,8 +25,24 @@
                 <span class="d-inline-block" id="articleSpan">1</span>
                 <% } %>
               </div>
-
-              <div class="col-sm-6">
+              <div class="col-sm-4">
+                <form
+                  class="input-group col-6 m-auto"
+                  style="direction: rtl"
+                  action="/user/dashboard"
+                  method="GET"
+                >
+                  <input
+                    type="search"
+                    class="form-control rounded"
+                    placeholder="جستجو در نام مقالات..."
+                    aria-label="Search"
+                    aria-describedby="search-addon"
+                    name="search"
+                  />
+                </form>
+              </div>
+              <div class="col-sm-4">
                 <ol class="breadcrumb float-sm-left">
                   <li class="breadcrumb-item"><a href="#">خانه</a></li>
                   <li class="breadcrumb-item active">داشبورد</li>
@@ -53,7 +69,7 @@
                 <div class="card position-relative">
                   <% if (index === 0 && (new
                   Date(articles[index].createdAt).getTime() >= Date.now() -
-                  172800000)) { %>
+                  172800000) && current < 2 && search === 'no') { %>
                   <span
                     class="badge badge-danger rounded w-25 position-absolute"
                     style="top: -10px !important"
@@ -136,7 +152,11 @@
           </li>
           <% } else { %>
           <li>
-            <a class="page-link" href="/user/dashboard?page=1">اولین</a>
+            <a
+              class="page-link"
+              href="/user/dashboard?search=<%= search %>&page=1"
+              >اولین</a
+            >
           </li>
           <% } %> <% let i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
           <% if (i !== 1) { %>
@@ -148,7 +168,9 @@
           </li>
           <% } else { %>
           <li>
-            <a class="page-link" href="/user/dashboard?page=<%= i %>"
+            <a
+              class="page-link"
+              href="/user/dashboard?search=<%= search %>&page=<%= i %>"
               ><%= i %></a
             >
           </li>
@@ -160,7 +182,9 @@
           </li>
           <% } else { %>
           <li>
-            <a class="page-link" href="/user/dashboard?page=<%= pages %>"
+            <a
+              class="page-link"
+              href="/user/dashboard?search=<%= search %>&page=<%= pages %>"
               >آخرین</a
             >
           </li>

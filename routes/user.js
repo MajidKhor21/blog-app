@@ -8,42 +8,42 @@ const multer = require("multer");
 const generalTools = require("../tools/general-tools");
 const fs = require("fs");
 const path = require("path");
+const { query } = require("express");
 
 //redirect user to dashboard page
-router.get("/dashboard", checker.loginChecker, (req, res, next) => {
+router.get("/dashboard", checker.loginChecker, async (req, res, next) => {
   let perPage = 6;
   let page = req.query.page || 1;
-  //find all article with author's first name and last name
-  Article.find({}, { __v: 0 })
+  let search = new RegExp(req.query.search, "i");
+  const articles = await Article.find({
+    $or: [{ title: { $regex: search } }, { brief: { $regex: search } }],
+  })
     .skip(perPage * page - perPage)
     .limit(perPage)
     .populate("author", { firstName: 1, lastName: 1, avatar: 1, _id: 0 })
-    .sort({ createdAt: -1 })
-    .exec((err, articles) => {
-      if (err) return res.status(500).json({ msg: "Server Error" });
-      ////change create date to jalaali datetime
-      let createTime = [];
-      for (let index = 0; index < articles.length; index++) {
-        createTime[index] = {
-          date: moment(articles[index].createdAt).format("jYYYY/jM/jD"),
-          time: moment(articles[index].createdAt).format("HH:mm"),
-        };
-      }
-      //find count of all articles
-      Article.count().exec((err, count) => {
-        if (err) return res.status(500).json({ msg: "Server Error" });
-        //render page with user , articles
-        return res.status(200).render("dashboard", {
-          user: req.session.user,
-          msg: req.query.msg,
-          page: req.query.page,
-          articles,
-          createTime,
-          current: page,
-          pages: Math.ceil(count / perPage),
-        });
-      });
-    });
+    .sort({ createdAt: -1 });
+  console.log(articles);
+  let createTime = [];
+  for (let index = 0; index < articles.length; index++) {
+    createTime[index] = {
+      date: moment(articles[index].createdAt).format("jYYYY/jM/jD"),
+      time: moment(articles[index].createdAt).format("HH:mm"),
+    };
+  }
+  const count = await Article.find({
+    $or: [{ title: { $regex: search } }, { brief: { $regex: search } }],
+  })
+    .count()
+    .exec();
+  return res.status(200).render("dashboard", {
+    user: req.session.user,
+    msg: req.query.msg,
+    page: req.query.page,
+    articles,
+    createTime,
+    current: page,
+    pages: Math.ceil(count / perPage),
+  });
 });
 
 //user information page
