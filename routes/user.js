@@ -15,14 +15,21 @@ router.get("/dashboard", checker.loginChecker, async (req, res, next) => {
   let perPage = 6;
   let page = req.query.page || 1;
   let search = new RegExp(req.query.search, "i");
+  req.query.order = req.query.order || "desc";
+  let order = -1;
+  if (req.query.order === "asc") {
+    order = 1;
+  } else if (req.query.order === "desc") {
+    order = -1;
+  }
+
   const articles = await Article.find({
     $or: [{ title: { $regex: search } }, { brief: { $regex: search } }],
   })
     .skip(perPage * page - perPage)
     .limit(perPage)
     .populate("author", { firstName: 1, lastName: 1, avatar: 1, _id: 0 })
-    .sort({ createdAt: -1 });
-  console.log(articles);
+    .sort({ createdAt: order });
   let createTime = [];
   for (let index = 0; index < articles.length; index++) {
     createTime[index] = {

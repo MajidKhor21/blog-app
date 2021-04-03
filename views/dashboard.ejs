@@ -15,7 +15,7 @@
           <div class="container-fluid">
             <div class="row mb-2">
               <div class="col-sm-4">
-                <% let { search, page} = req.query %>
+                <% let { search, page, order } = req.query %>
                 <h3 class="d-inline-block ml-2">مقالات</h3>
                 <% if (articles.length) { %>
                 <span class="d-inline-block ml-1">صفحه</span>
@@ -35,7 +35,7 @@
                   <input
                     type="search"
                     class="form-control rounded"
-                    placeholder="جستجو در نام مقالات..."
+                    placeholder="جستجو در مقالات..."
                     aria-label="Search"
                     aria-describedby="search-addon"
                     name="search"
@@ -63,6 +63,36 @@
 
         <section class="content">
           <div class="container">
+            <% if (order === 'desc') { %>
+            <select onChange="window.location.href=this.value">
+              <option
+                value="/user/dashboard?search=<%= search %>&page=<%= page %>&order=desc"
+                selected
+              >
+                نزولی
+              </option>
+              <option
+                value="/user/dashboard?search=<%= search %>&page=<%= page %>&order=asc"
+              >
+                صعودی
+              </option>
+            </select>
+            <%} else if(order === 'asc') { %>
+            <select onChange="window.location.href=this.value">
+              <option
+                value="/user/dashboard?search=<%= search %>&page=<%= page %>&order=desc"
+              >
+                نزولی
+              </option>
+              <option
+                value="/user/dashboard?search=<%= search %>&page=<%= page %>&order=asc"
+                selected
+              >
+                صعودی
+              </option>
+            </select>
+            <% } %>
+
             <div class="card-deck">
               <% for( let index = 0; index < articles.length; index++ ) { %>
               <div class="col-10 col-md-6 col-lg-4">
@@ -154,7 +184,7 @@
           <li>
             <a
               class="page-link"
-              href="/user/dashboard?search=<%= search %>&page=1"
+              href="/user/dashboard?search=<%= search %>&page=1&order=<%= order %>"
               >اولین</a
             >
           </li>
@@ -170,7 +200,7 @@
           <li>
             <a
               class="page-link"
-              href="/user/dashboard?search=<%= search %>&page=<%= i %>"
+              href="/user/dashboard?search=<%= search %>&page=<%= i %>&order=<%= order %>"
               ><%= i %></a
             >
           </li>
@@ -184,7 +214,7 @@
           <li>
             <a
               class="page-link"
-              href="/user/dashboard?search=<%= search %>&page=<%= pages %>"
+              href="/user/dashboard?search=<%= search %>&page=<%= pages %>&order=<%= order %>"
               >آخرین</a
             >
           </li>
