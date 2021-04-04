@@ -46,6 +46,11 @@
               خطا
             </div>
             <% } %>
+            <% if (msg === "invalid title") { %>
+              <div class="alert alert-danger w-25" role="alert" id="alertDanger">
+                عنوان مقاله نامعتبر
+              </div>
+              <% } %>
             <input class="d-none" type="text" name="id" value="<%= article._id %>">
             <div class="form-group row w-50">
               <label class="col-sm-2 col-form-label" for="title"
@@ -56,10 +61,10 @@
                   type="text"
                   class="form-control"
                   name="title"
-                  minlength="3"
-                  maxlength="100"
+                  pattern=".{3,50}" required
+                  oninvalid="setCustomValidity('عنوان مقاله را وارد کنید')" 
+                  oninput="setCustomValidity('')" title="عنوان مقاله باید بین 3 تا 50 کاراکتر باشد"
                   value="<%= article.title %>"
-                  required
                 />
               </div>
             </div>
@@ -72,10 +77,11 @@
                   type="text"
                   class="form-control"
                   name="brief"
-                  minlength="5"
-                  maxlength="100"
+                  pattern=".{5,100}" required
+                  oninvalid="setCustomValidity('خلاصه مقاله را وارد کنید')" 
+                  oninput="setCustomValidity('')" title="خلاصه مقاله باید بین 3 تا 50 کاراکتر باشد"
                   value="<%= article.brief %>"
-                  required
+                 
                 />
               </div>
             </div>
@@ -90,6 +96,7 @@
               </div>
             </div>
             <div class="form-group row w-50">
+                <input type="text" class="d-none" value="<%= article.picture %>" name="prePic">
                 <img src="/images/articles/<%= article.picture %>" alt="تصویر مقاله" width="100px" height="60px">
             </div>
             <input

@@ -226,7 +226,7 @@ router.post("/update", (req, res) => {
   const upload = generalTools.uploadArticlePic.single("picture");
 
   upload(req, res, function (err) {
-    //check article picture and describe is not empty
+    //check article title, describe and brief is not empty
     if (!req.body.title || !req.body.brief || !req.body.describe)
       return res.redirect(
         url.format({
@@ -240,59 +240,84 @@ router.post("/update", (req, res) => {
       return res.status(500).json({ msg: "Server Error" });
     } else if (err) {
       res.status(406).send(err.message);
-    } else if (!req.file) {
-      //update article where don't update article's picture
-      Article.findByIdAndUpdate(
-        req.body.id,
+    } else {
+      //find one article with this title's requested and return
+      Article.findOne(
         {
-          title: req.body.title,
-          brief: req.body.brief,
-          describe: req.body.describe,
-          lastUpdate: Date.now(),
+          $and: [{ title: req.body.title }, { _id: { $ne: req.body.id } }],
         },
-        (err) => {
+        (err, article) => {
           if (err) return res.status(500).json({ msg: "Server Error" });
-          return res.redirect(
-            url.format({
-              pathname: "/article/edit",
-              query: {
-                msg: "successfully",
+          if (article) {
+            return res.redirect(
+              url.format({
+                pathname: `/article/edit/${req.body.id}`,
+                query: {
+                  msg: "invalid title",
+                },
+              })
+            );
+          } else if (req.file) {
+            //update article where update article's picture
+            Article.findById(req.body.id, (err, article) => {
+              if (err) return res.status(500).json({ msg: "Server Error" });
+              if (article && article.picture) {
+                fs.unlinkSync(
+                  path.join(
+                    __dirname,
+                    "../public/images/articles/",
+                    article.picture
+                  )
+                );
+                Article.findByIdAndUpdate(
+                  req.body.id,
+                  {
+                    title: req.body.title,
+                    brief: req.body.brief,
+                    describe: req.body.describe,
+                    picture: req.file.filename,
+                    lastUpdate: Date.now(),
+                  },
+                  (err) => {
+                    if (err)
+                      return res.status(500).json({ msg: "Server Error" });
+                    return res.redirect(
+                      url.format({
+                        pathname: "/article/edit",
+                        query: {
+                          msg: "successfully",
+                        },
+                      })
+                    );
+                  }
+                );
+              }
+            });
+          } else {
+            //find article
+            Article.findByIdAndUpdate(
+              req.body.id,
+              {
+                title: req.body.title,
+                brief: req.body.brief,
+                describe: req.body.describe,
+                lastUpdate: Date.now(),
               },
-            })
-          );
+              (err) => {
+                if (err) return res.status(500).json({ msg: "Server Error" });
+                return res.redirect(
+                  url.format({
+                    pathname: "/article/edit",
+                    query: {
+                      msg: "successfully",
+                    },
+                  })
+                );
+              }
+            );
+          }
         }
       );
-    } else {
-      //update article where update article's picture
-      Article.findById(req.body.id, (err, article) => {
-        if (err) return res.status(500).json({ msg: "Server Error" });
-        if (article && article.picture) {
-          fs.unlinkSync(
-            path.join(__dirname, "../public/images/articles/", article.picture)
-          );
-          Article.findByIdAndUpdate(
-            req.body.id,
-            {
-              title: req.body.title,
-              brief: req.body.brief,
-              describe: req.body.describe,
-              picture: req.file.filename,
-              lastUpdate: Date.now(),
-            },
-            (err) => {
-              if (err) return res.status(500).json({ msg: "Server Error" });
-              return res.redirect(
-                url.format({
-                  pathname: "/article/edit",
-                  query: {
-                    msg: "successfully",
-                  },
-                })
-              );
-            }
-          );
-        }
-      });
     }
   });
 });
