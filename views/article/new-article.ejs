@@ -62,10 +62,10 @@
                   class="form-control"
                   id="title"
                   name="title"
-                  minlength="3"
-                  maxlength="100"
-                  value="<%= form.title %> "
-                  required
+                  pattern=".{3,50}" required
+                  oninvalid="setCustomValidity('عنوان مقاله را وارد کنید')" 
+                  oninput="setCustomValidity('')" title="عنوان مقاله باید بین 3 تا 50 کاراکتر باشد"
+                  value="<%= form.title %>"
                 />
               </div>
             </div>
@@ -78,10 +78,11 @@
                   type="text"
                   class="form-control"
                   name="brief"
-                  minlength="5"
-                  maxlength="100"
-                  value="<%= form.brief %> "
-                  required
+                  pattern=".{5,100}" required
+                  oninvalid="setCustomValidity('خلاصه مقاله را وارد کنید')" 
+                  oninput="setCustomValidity('')" title="خلاصه مقاله باید بین 3 تا 50 کاراکتر باشد"
+                  value="<%= form.brief %>"
+                  
                 />
               </div>
             </div>
@@ -90,7 +91,9 @@
                 >تصویر مقاله:
               </label>
               <div class="file-input col-sm-10">
-                <input type="file" name="picture" required />
+                <input type="file" name="picture" required
+                oninvalid="setCustomValidity('عکس مقاله را انتخاب کنید')" 
+                oninput="setCustomValidity('')" title="عکس مقاله را انتخاب کنید" />
                 <span class='button'>انتخاب تصویر</span>
                 <span class='label' data-js-label>تصویری انتخاب نشده است</label>
               </div>

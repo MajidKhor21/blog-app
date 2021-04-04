@@ -24,9 +24,8 @@ router.post("/create", (req, res) => {
   const upload = generalTools.uploadArticlePic.single("picture");
 
   upload(req, res, function (err) {
-    console.log(req.body);
     //check article picture and describe is not empty
-    if (!req.file || !req.body.describe)
+    if (!req.file || !req.body.describe || !req.body.title || !req.body.brief)
       return res.redirect(
         url.format({
           pathname: "/article/create",
