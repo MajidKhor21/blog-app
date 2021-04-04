@@ -64,13 +64,13 @@
                 </div>
                 <% if (user.avatar === "default") { %>
                 <img
-                  class="card-user avatar avatar-large"
+                  class="card-user img-circle elevation-2"
                   src="/images/avatar.png"
                 />
                 <%} else { %>
                 <img
                   src="/images/avatars/<%= user.avatar %> "
-                  class="img-circle elevation-2"
+                  class="card-user img-circle elevation-2"
                   alt="User Image"
                 />
                 <% } %>

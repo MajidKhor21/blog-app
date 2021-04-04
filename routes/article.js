@@ -144,7 +144,7 @@ router.get("/view/:id", checker.loginChecker, (req, res) => {
   //find that article's requested
   Article.findOne({ _id: req.params.id })
     .populate("author", {
-      _id: 0,
+      _id: 1,
       firstName: 1,
       lastName: 1,
       avatar: 1,
@@ -162,6 +162,7 @@ router.get("/view/:id", checker.loginChecker, (req, res) => {
             date: moment(article.createdAt).format("jYYYY/jM/jD"),
             time: moment(article.createdAt).format("HH:mm"),
           };
+          console.log(req.session.user, article.author);
           res.render("article/single-article", {
             user: req.session.user,
             article,
