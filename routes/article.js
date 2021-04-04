@@ -11,9 +11,11 @@ const path = require("path");
 
 //get new article page
 router.get("/create", checker.loginChecker, (req, res) => {
+  form = req.session.form || req.body;
   res.render("article/new-article", {
     user: req.session.user,
     msg: req.query.msg,
+    form,
   });
 });
 
@@ -22,6 +24,7 @@ router.post("/create", (req, res) => {
   const upload = generalTools.uploadArticlePic.single("picture");
 
   upload(req, res, function (err) {
+    console.log(req.body);
     //check article picture and describe is not empty
     if (!req.file || !req.body.describe)
       return res.redirect(
@@ -37,25 +40,47 @@ router.post("/create", (req, res) => {
     } else if (err) {
       res.status(406).send(err.message);
     } else {
-      //create article object
-      const newArticle = new Article({
-        title: req.body.title,
-        brief: req.body.brief,
-        describe: req.body.describe,
-        picture: req.file.filename,
-        author: req.session.user._id,
-      });
-      //save new article to our database
-      newArticle.save((err) => {
+      Article.findOne({ title: req.body.title }, (err, article) => {
         if (err) return res.status(500).json({ msg: "Server Error" });
-        return res.redirect(
-          url.format({
-            pathname: "/user/dashboard",
-            query: {
-              msg: "successfully",
-            },
-          })
-        );
+        if (article) {
+          fs.unlinkSync(
+            path.join(
+              __dirname,
+              "../public/images/articles/",
+              req.file.filename
+            )
+          );
+          req.session.form = req.body;
+          return res.status(403).redirect(
+            url.format({
+              pathname: "/article/create",
+              query: {
+                msg: "invalid",
+              },
+            })
+          );
+        }
+        req.session.form = {};
+        //create article object
+        const newArticle = new Article({
+          title: req.body.title,
+          brief: req.body.brief,
+          describe: req.body.describe,
+          picture: req.file.filename,
+          author: req.session.user._id,
+        });
+        //save new article to our database
+        newArticle.save((err) => {
+          if (err) return res.status(500).json({ msg: "Server Error" });
+          return res.redirect(
+            url.format({
+              pathname: "/user/dashboard",
+              query: {
+                msg: "successfully",
+              },
+            })
+          );
+        });
       });
     }
   });

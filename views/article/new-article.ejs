@@ -34,6 +34,7 @@
           </div>
         </section>
 
+
         <section class="content mt-5 mb-5">
           <form
             method="post"
@@ -46,6 +47,11 @@
               خطا
             </div>
             <% } %>
+            <% if (msg === "invalid") { %>
+              <div class="alert alert-danger w-25" role="alert" id="alertDanger">
+                نام مقاله تکراری می باشد
+              </div>
+              <% } %>
             <div class="form-group row w-50">
               <label class="col-sm-2 col-form-label" for="title"
                 >عنوان مقاله:
@@ -54,9 +60,11 @@
                 <input
                   type="text"
                   class="form-control"
+                  id="title"
                   name="title"
                   minlength="3"
                   maxlength="100"
+                  value="<%= form.title %> "
                   required
                 />
               </div>
@@ -72,6 +80,7 @@
                   name="brief"
                   minlength="5"
                   maxlength="100"
+                  value="<%= form.brief %> "
                   required
                 />
               </div>
@@ -102,6 +111,7 @@
             />
           </form>
 
+          <input class="d-none" type="text" id="describeValue" value="<%= form.describe %>">
           <div class="col-sm-12 w-75 mx-auto">
             <textarea name="editor1" required></textarea>
           </div>

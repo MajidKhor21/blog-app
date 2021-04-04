@@ -64,31 +64,37 @@
         <section class="content">
           <div class="container">
             <% if (order === 'desc') { %>
-            <select onChange="window.location.href=this.value">
+            <select
+              class="form-control col-3 w-75 mb-4"
+              onChange="window.location.href=this.value"
+            >
               <option
                 value="/user/dashboard?search=<%= search %>&page=<%= page %>&order=desc"
                 selected
               >
-                نزولی
+                مرتب سازی: از آخرین به اولین
               </option>
               <option
                 value="/user/dashboard?search=<%= search %>&page=<%= page %>&order=asc"
               >
-                صعودی
+                مرتب سازی: از اولین به آخرین
               </option>
             </select>
             <%} else if(order === 'asc') { %>
-            <select onChange="window.location.href=this.value">
+            <select
+              class="form-control col-3 w-75 mb-4"
+              onChange="window.location.href=this.value"
+            >
               <option
                 value="/user/dashboard?search=<%= search %>&page=<%= page %>&order=desc"
               >
-                نزولی
+                مرتب سازی: از آخرین به اولین
               </option>
               <option
                 value="/user/dashboard?search=<%= search %>&page=<%= page %>&order=asc"
                 selected
               >
-                صعودی
+                مرتب سازی: از اولین به آخرین
               </option>
             </select>
             <% } %>
@@ -99,7 +105,7 @@
                 <div class="card position-relative">
                   <% if (index === 0 && (new
                   Date(articles[index].createdAt).getTime() >= Date.now() -
-                  172800000) && current < 2 && search === 'no') { %>
+                  172800000) && current < 2) { %>
                   <span
                     class="badge badge-danger rounded w-25 position-absolute"
                     style="top: -10px !important"
