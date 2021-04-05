@@ -47,9 +47,9 @@
               خطا
             </div>
             <% } %>
-            <% if (msg === "invalid") { %>
+            <% if (msg === "invalid-title") { %>
               <div class="alert alert-danger w-25" role="alert" id="alertDanger">
-                نام مقاله تکراری می باشد
+                عنوان مقاله تکراری می باشد
               </div>
               <% } %>
             <div class="form-group row w-50">
@@ -60,12 +60,11 @@
                 <input
                   type="text"
                   class="form-control"
-                  id="title"
+                  id="articleTitle"
                   name="title"
                   pattern=".{3,50}" required
                   oninvalid="setCustomValidity('عنوان مقاله را وارد کنید')" 
                   oninput="setCustomValidity('')" title="عنوان مقاله باید بین 3 تا 50 کاراکتر باشد"
-                  value="<%= form.title %>"
                 />
               </div>
             </div>
@@ -77,11 +76,11 @@
                 <input
                   type="text"
                   class="form-control"
+                  id="articleBrief"
                   name="brief"
                   pattern=".{5,100}" required
                   oninvalid="setCustomValidity('خلاصه مقاله را وارد کنید')" 
                   oninput="setCustomValidity('')" title="خلاصه مقاله باید بین 3 تا 50 کاراکتر باشد"
-                  value="<%= form.brief %>"
                   
                 />
               </div>
@@ -114,7 +113,7 @@
             />
           </form>
 
-          <input class="d-none" type="text" id="describeValue" value="<%= form.describe %>">
+          <input class="d-none" type="text" id="describeValue" >
           <div class="col-sm-12 w-75 mx-auto">
             <textarea name="editor1" required></textarea>
           </div>

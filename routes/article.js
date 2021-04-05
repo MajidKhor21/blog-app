@@ -11,11 +11,9 @@ const path = require("path");
 
 //get new article page
 router.get("/create", checker.loginChecker, (req, res) => {
-  form = req.session.form || req.body;
   res.render("article/new-article", {
     user: req.session.user,
     msg: req.query.msg,
-    form,
   });
 });
 
@@ -49,17 +47,15 @@ router.post("/create", (req, res) => {
               req.file.filename
             )
           );
-          req.session.form = req.body;
           return res.status(403).redirect(
             url.format({
               pathname: "/article/create",
               query: {
-                msg: "invalid",
+                msg: "invalid-title",
               },
             })
           );
         }
-        req.session.form = {};
         //create article object
         const newArticle = new Article({
           title: req.body.title,

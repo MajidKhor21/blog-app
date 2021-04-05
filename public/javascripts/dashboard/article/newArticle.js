@@ -11,10 +11,22 @@ $(document).ready(() => {
     });
   let text = $("#describeValue").val();
   CKEDITOR.instances["editor1"].setData(text);
+  let article = JSON.parse(localStorage.getItem("article"));
+  if (window.location.href.includes("msg=invalid-title")) {
+    $("#articleTitle").val(article.title);
+    $("#articleBrief").val(article.brief);
+    CKEDITOR.instances["editor1"].setData(article.describe);
+  }
 });
 
 function submitFunc() {
   let text = CKEDITOR.instances["editor1"].getData();
   $("#hiddenInput").val(text);
+  article = {
+    title: $("#articleTitle").val(),
+    brief: $("#articleBrief").val(),
+    describe: text,
+  };
+  localStorage.setItem("article", JSON.stringify(article));
   document.getElementById("submitBtn").click();
 }
