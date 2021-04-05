@@ -1,7 +1,7 @@
 const checker = {};
 
 checker.sessionChecker = function (req, res, next) {
-  if (req.cookies.user_sid && req.session.user) {
+  if (req.session.user && req.cookies.user_sid) {
     return res.redirect("/user/dashboard");
   }
 

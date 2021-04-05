@@ -35,7 +35,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 9000000,
+      maxAge: config.maxAge,
     },
   })
 );
@@ -51,8 +51,8 @@ app.use((req, res, next) => {
 app.use("/", require("./routes/api"));
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404));
+app.use("*", function (req, res, next) {
+  res.status(404).render("404");
 });
 
 // error handler

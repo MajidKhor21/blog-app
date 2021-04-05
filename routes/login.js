@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const checker = require("../tools/checker");
 
 //get login page
-router.get("/", checker.sessionChecker, (req, res, next) => {
+router.get("/", (req, res, next) => {
   res.render("login");
 });
 

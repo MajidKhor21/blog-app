@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const Article = require("../models/article");
-const checker = require("../tools/checker");
 const multer = require("multer");
 const moment = require("moment-jalaali");
 const generalTools = require("../tools/general-tools");
@@ -10,7 +9,7 @@ const fs = require("fs");
 const path = require("path");
 
 //get new article page
-router.get("/create", checker.loginChecker, (req, res) => {
+router.get("/create", (req, res) => {
   res.render("article/new-article", {
     user: req.session.user,
     msg: req.query.msg,
@@ -101,7 +100,7 @@ router.post("/uploader", (req, res) => {
 });
 
 //show user's article
-router.get("/my/:username", checker.loginChecker, (req, res) => {
+router.get("/my/:username", (req, res) => {
   let perPage = 6;
   let page = req.query.page || 1;
   //find all article's of this username
@@ -136,7 +135,7 @@ router.get("/my/:username", checker.loginChecker, (req, res) => {
 });
 
 //show article in a single page
-router.get("/view/:id", checker.loginChecker, (req, res) => {
+router.get("/view/:id", (req, res) => {
   //find that article's requested
   Article.findOne({ _id: req.params.id })
     .populate("author", {
@@ -171,7 +170,7 @@ router.get("/view/:id", checker.loginChecker, (req, res) => {
 });
 
 //get edit articles page
-router.get("/edit", checker.loginChecker, (req, res) => {
+router.get("/edit", (req, res) => {
   //paginate user articles per page 10
   let perPage = 10;
   let page = req.query.page || 1;
@@ -206,7 +205,7 @@ router.get("/edit", checker.loginChecker, (req, res) => {
 });
 
 //get edit article single page
-router.get("/edit/:id", checker.loginChecker, (req, res) => {
+router.get("/edit/:id", (req, res) => {
   Article.findById(req.params.id, (err, article) => {
     if (err) return res.status(500).json({ msg: "Server Error" });
     return res.status(200).render("article/edit-article", {

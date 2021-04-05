@@ -50,20 +50,27 @@
               </div>
             </div>
           </div>
-          <% if (msg === "successfully") { %>
-          <div class="alert alert-success w-25" role="alert" id="alertSuccess">
-            با موفقیت اضافه شد.
-          </div>
-          <% } %> <% if (msg === "successfully-deleted") { %>
-          <div class="alert alert-success w-25" role="alert" id="alertSuccess">
-            با موفقیت حذف شد.
-          </div>
-          <% } %>
         </section>
 
         <section class="content">
           <div class="container">
-            <% if (order === 'desc') { %>
+            <% if (msg === "successfully") { %>
+            <div
+              class="alert alert-success w-25"
+              role="alert"
+              id="alertSuccess"
+            >
+              با موفقیت اضافه شد.
+            </div>
+            <% } %> <% if (msg === "successfully-deleted") { %>
+            <div
+              class="alert alert-success w-25"
+              role="alert"
+              id="alertSuccess"
+            >
+              با موفقیت حذف شد.
+            </div>
+            <% } %> <% if (order === 'desc') { %>
             <select
               class="form-control col-3 w-75 mb-4"
               onChange="window.location.href=this.value"

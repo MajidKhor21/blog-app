@@ -4,7 +4,7 @@ const User = require("../models/user");
 const checker = require("../tools/checker");
 
 //get register page
-router.get("/", checker.sessionChecker, (req, res, next) => {
+router.get("/", (req, res, next) => {
   res.render("register");
 });
 

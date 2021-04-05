@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
 const Article = require("../models/article");
-const checker = require("../tools/checker");
 const moment = require("moment-jalaali");
 const multer = require("multer");
 const generalTools = require("../tools/general-tools");
@@ -11,7 +10,7 @@ const path = require("path");
 const { query } = require("express");
 
 //redirect user to dashboard page
-router.get("/dashboard", checker.loginChecker, async (req, res, next) => {
+router.get("/dashboard", async (req, res, next) => {
   let perPage = 6;
   let page = req.query.page || 1;
   let search = new RegExp(req.query.search, "i");
@@ -54,12 +53,12 @@ router.get("/dashboard", checker.loginChecker, async (req, res, next) => {
 });
 
 //user information page
-router.get("/info", checker.loginChecker, (req, res, next) => {
+router.get("/info", (req, res, next) => {
   res.render("user/user-info", { user: req.session.user });
 });
 
 //edit user information
-router.get("/edit", checker.loginChecker, (req, res, next) => {
+router.get("/edit", (req, res, next) => {
   req.session.user.lastUpdateDate = moment(req.session.user.lastUpdate).format(
     "jYYYY/jM/jD"
   );
@@ -100,12 +99,12 @@ router.put("/update", (req, res) => {
 });
 
 //display calendar in dashboard
-router.get("/calendar", checker.loginChecker, (req, res) => {
+router.get("/calendar", (req, res) => {
   res.render("user/user-calendar", { user: req.session.user });
 });
 
 //get avatar edit page
-router.get("/avatar", checker.loginChecker, (req, res) => {
+router.get("/avatar", (req, res) => {
   res.render("user/user-avatar", { user: req.session.user });
 });
 

@@ -8,13 +8,13 @@ router.get("/", (req, res) => {
 });
 
 // define register route
-router.use("/register", require("./register"));
+router.use("/register", checker.sessionChecker, require("./register"));
 
 // define login route
-router.use("/login", require("./login"));
+router.use("/login", checker.sessionChecker, require("./login"));
 
 //define user route
-router.use("/user", require("./user"));
+router.use("/user", checker.loginChecker, require("./user"));
 
 //logout
 router.get("/logout", (req, res) => {
@@ -23,7 +23,7 @@ router.get("/logout", (req, res) => {
 });
 
 //define article route
-router.use("/article", require("./article"));
+router.use("/article", checker.loginChecker, require("./article"));
 
 //create admin user at first
 router.post("/createAdmin", (req, res) => {
