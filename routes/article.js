@@ -254,7 +254,7 @@ router.post("/update", (req, res) => {
               url.format({
                 pathname: `/article/edit/${req.body.id}`,
                 query: {
-                  msg: "invalid title",
+                  msg: "invalid-title",
                 },
               })
             );

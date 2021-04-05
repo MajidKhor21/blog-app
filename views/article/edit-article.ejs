@@ -46,12 +46,12 @@
               خطا
             </div>
             <% } %>
-            <% if (msg === "invalid title") { %>
+            <% if (msg === "invalid-title") { %>
               <div class="alert alert-danger w-25" role="alert" id="alertDanger">
                 عنوان مقاله نامعتبر
               </div>
               <% } %>
-            <input class="d-none" type="text" name="id" value="<%= article._id %>">
+            <input class="d-none" type="text" name="id" id="articleId" value="<%= article._id %>">
             <div class="form-group row w-50">
               <label class="col-sm-2 col-form-label" for="title"
                 >عنوان مقاله:
@@ -61,6 +61,7 @@
                   type="text"
                   class="form-control"
                   name="title"
+                  id="articleTitle"
                   pattern=".{3,50}" required
                   oninvalid="setCustomValidity('عنوان مقاله را وارد کنید')" 
                   oninput="setCustomValidity('')" title="عنوان مقاله باید بین 3 تا 50 کاراکتر باشد"
@@ -77,6 +78,7 @@
                   type="text"
                   class="form-control"
                   name="brief"
+                  id="articleBrief"
                   pattern=".{5,100}" required
                   oninvalid="setCustomValidity('خلاصه مقاله را وارد کنید')" 
                   oninput="setCustomValidity('')" title="خلاصه مقاله باید بین 3 تا 50 کاراکتر باشد"
