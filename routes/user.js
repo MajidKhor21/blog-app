@@ -207,7 +207,10 @@ router.get("/all", uac.userManagement, async (req, res, next) => {
     order = -1;
   }
 
-  const users = await User.find({ role: { $ne: "admin" } })
+  const users = await User.find({
+    role: { $ne: "admin" },
+    $or: [{ firstName: search }, { lastName: search }, { username: search }],
+  })
     .skip(perPage * page - perPage)
     .limit(perPage)
     .sort({ createdAt: order });
@@ -218,7 +221,10 @@ router.get("/all", uac.userManagement, async (req, res, next) => {
       time: moment(users[index].createdAt).format("HH:mm"),
     };
   }
-  const count = await User.count().exec();
+  const count = await User.count({
+    role: { $ne: "admin" },
+    $or: [{ firstName: search }, { lastName: search }, { username: search }],
+  }).exec();
   return res.status(200).render("user/admin/all-users", {
     user: req.session.user,
     msg: req.query.msg,

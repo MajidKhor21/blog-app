@@ -16,34 +16,42 @@
         <section class="content-header">
           <div class="container-fluid">
             <div class="row mb-2">
-              <div class="col-sm-6">
-                <h3 class="d-inline-block ml-2">ویرایش مقالات</h3>
+              <div class="col-sm-4">
+                <% let { search, page, order } = req.query %>
+                <h3 class="d-inline-block ml-2">ویرایش کاربران</h3>
               </div>
-
-              <div class="col-sm-6">
+              <div class="col-sm-4">
+                <form
+                  class="input-group col-6 m-auto"
+                  style="direction: rtl"
+                  action="/user/all"
+                  method="GET"
+                >
+                  <input
+                    type="search"
+                    class="form-control rounded"
+                    placeholder="جستجو در کاربران..."
+                    aria-label="Search"
+                    aria-describedby="search-addon"
+                    name="search"
+                  />
+                </form>
+              </div>
+              <div class="col-sm-4">
                 <ol class="breadcrumb float-sm-left">
                   <li class="breadcrumb-item">
                     <a href="/user/dashboard">داشبورد</a>
                   </li>
-                  <li class="breadcrumb-item active">ویرایش مقالات</li>
+                  <li class="breadcrumb-item active">ویرایش کاربران</li>
                 </ol>
               </div>
             </div>
           </div>
         </section>
-
-        <% if (msg === "error") { %>
-        <div class="alert alert-warning w-25" role="alert" id="alertSuccess">
-          ویرایش ناموفق
-        </div>
-        <% } %> <% if (msg === "successfully") { %>
-        <div class="alert alert-success w-25" role="alert" id="alertSuccess">
-          ویرایش موفق
-        </div>
-        <% } %>
-
+        
         <section class="content mt-2">
           <div class="container">
+
             <table class="table">
               <thead
                 style="
@@ -105,7 +113,7 @@
                       <a
                         class="text-warning updateBtn"
                         href="/article/edit/<%= users[index]._id %> "
-                        ><i class="far fa-edit ml-4" style="font-size: 20px"></i
+                        ><i class="fas fa-redo ml-4" style="font-size: 20px"></i
                       ></a>
                       <a
                         class="text-danger"
@@ -131,7 +139,7 @@
           </li>
           <% } else { %>
           <li>
-            <a class="page-link" href="/article/edit?page=1">اولین</a>
+            <a class="page-link" href="/user/all?search=<%= search %>&page=1&order=<%= order %>">اولین</a>
           </li>
           <% } %> <% let i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
           <% if (i !== 1) { %>
@@ -143,7 +151,7 @@
           </li>
           <% } else { %>
           <li>
-            <a class="page-link" href="/article/edit?page=<%= i %>"
+            <a class="page-link" href="/user/all?search=<%= search %>&page=<%= i %>&order=<%= order %>"
               ><%= i %></a
             >
           </li>
@@ -155,7 +163,7 @@
           </li>
           <% } else { %>
           <li>
-            <a class="page-link" href="/article/edit?page=<%= pages %>"
+            <a class="page-link" href="/user/all?search=<%= search %>&page=<%= pages %>&order=<%= order %>"
               >آخرین</a
             >
           </li>
