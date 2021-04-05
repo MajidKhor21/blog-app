@@ -7,7 +7,7 @@ const multer = require("multer");
 const generalTools = require("../tools/general-tools");
 const fs = require("fs");
 const path = require("path");
-const { query } = require("express");
+const uac = require("../tools/uac");
 
 //redirect user to dashboard page
 router.get("/dashboard", async (req, res, next) => {
@@ -193,6 +193,41 @@ router.put("/removeAvatar", (req, res) => {
       }
     }
   );
+});
+
+router.get("/all", uac.userManagement, async (req, res, next) => {
+  let perPage = 10;
+  let page = req.query.page || 1;
+  let search = new RegExp(req.query.search, "i");
+  req.query.order = req.query.order || "desc";
+  let order = -1;
+  if (req.query.order === "asc") {
+    order = 1;
+  } else if (req.query.order === "desc") {
+    order = -1;
+  }
+
+  const users = await User.find({ role: { $ne: "admin" } })
+    .skip(perPage * page - perPage)
+    .limit(perPage)
+    .sort({ createdAt: order });
+  let createTime = [];
+  for (let index = 0; index < users.length; index++) {
+    createTime[index] = {
+      date: moment(users[index].createdAt).format("jYYYY/jM/jD"),
+      time: moment(users[index].createdAt).format("HH:mm"),
+    };
+  }
+  const count = await User.count().exec();
+  return res.status(200).render("user/admin/all-users", {
+    user: req.session.user,
+    msg: req.query.msg,
+    page: req.query.page,
+    users,
+    createTime,
+    current: page,
+    pages: Math.ceil(count / perPage),
+  });
 });
 
 module.exports = router;
