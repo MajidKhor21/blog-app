@@ -16,11 +16,28 @@
         <section class="content-header">
           <div class="container-fluid">
             <div class="row mb-2">
-              <div class="col-sm-6">
+              <div class="col-sm-4">
                 <h3 class="d-inline-block ml-2">ویرایش مقالات</h3>
+                <% let { search, page, order } = req.query %>
               </div>
-
-              <div class="col-sm-6">
+              <div class="col-sm-4">
+                <form
+                  class="input-group col-6 m-auto"
+                  style="direction: rtl"
+                  action="/article/edit"
+                  method="GET"
+                >
+                  <input
+                    type="search"
+                    class="form-control rounded"
+                    placeholder="جستجو در مقالات..."
+                    aria-label="Search"
+                    aria-describedby="search-addon"
+                    name="search"
+                  />
+                </form>
+              </div>
+              <div class="col-sm-4">
                 <ol class="breadcrumb float-sm-left">
                   <li class="breadcrumb-item">
                     <a href="/user/dashboard">داشبورد</a>
@@ -46,18 +63,25 @@
           <div class="container">
             <table class="table">
               <thead
-                style="
-                  background-color: #343a40;
-                  color: rgba(255, 255, 255, 0.75);
-                "
+              style="
+              background-color: #343a40;
+              color: #C2C7D0;
+            "
               >
                 <tr>
                   <th class="d-none" scope="col"></th>
-                  <th scope="col">#</th>
+                  <th class="d-none" scope="col"></th>
+                  <% if(order === 'desc') { %>
+                    <th scope="col"><a  href="/article/edit?search=<%= search %>&page=<%= page %>&order=asc" style="color: inherit"><i class="fas fa-sort"> #</i></a></th>
+                 <% } %>
+                 <% if(order === 'asc') { %>
+                  <th scope="col"><a href="/article/edit?search=<%= search %>&page=<%= page %>&order=desc" style="color: inherit"><i class="fas fa-sort"> #</i></a></th>
+                <% } %>
                   <th scope="col">عنوان مقاله</th>
                   <th scope="col">خلاصه مقاله</th>
                   <th scope="col">تصویر مقاله</th>
                   <th scope="col">تعداد بازدید</th>
+                  <th scope="col">تاریخ ایجاد</th>
                   <th scope="col">آخرین ویرایش</th>
                   <th scope="col"></th>
                 </tr>
@@ -82,7 +106,8 @@
                     />
                   </td>
                   <td><%= articles[index].viewCounter %></td>
-                  <td><%= lastUpdate[index].time %> - <%= lastUpdate[index].date %> </td>
+                  <td><%= createAt[index].time %> - <%= createAt[index].date %></td>
+                  <td><%= lastUpdate[index].time %> - <%= lastUpdate[index].date %></td>
                   <td>
                     <div>
                       <a
@@ -114,7 +139,7 @@
           </li>
           <% } else { %>
           <li>
-            <a class="page-link" href="/article/edit?page=1">اولین</a>
+            <a class="page-link" href="/article/edit?search=<%= search %>&page=1&order=<%= order %>">اولین</a>
           </li>
           <% } %> <% let i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
           <% if (i !== 1) { %>
@@ -126,7 +151,7 @@
           </li>
           <% } else { %>
           <li>
-            <a class="page-link" href="/article/edit?page=<%= i %>"
+            <a class="page-link" href="/article/edit?search=<%= search %>&page=<%= i %>&order=<%= order %>"
               ><%= i %></a
             >
           </li>
@@ -138,7 +163,7 @@
           </li>
           <% } else { %>
           <li>
-            <a class="page-link" href="/article/edit?page=<%= pages %>"
+            <a class="page-link" href="/article/edit?search=<%= search %>&page=<%= pages %>&order=<%= order %>"
               >آخرین</a
             >
           </li>

@@ -229,6 +229,7 @@ router.get("/all", uac.userManagement, async (req, res, next) => {
     user: req.session.user,
     msg: req.query.msg,
     page: req.query.page,
+    order: req.query.order,
     users,
     createTime,
     current: page,

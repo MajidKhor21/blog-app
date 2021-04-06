@@ -50,18 +50,24 @@
         </section>
         
         <section class="content mt-2">
-          <div class="container">
 
+          <div class="container">
+            
             <table class="table">
               <thead
                 style="
                   background-color: #343a40;
-                  color: rgba(255, 255, 255, 0.75);
+                  color: #C2C7D0;
                 "
               >
                 <tr>
                   <th class="d-none" scope="col"></th>
-                  <th scope="col">#</th>
+                  <% if(order === 'desc') { %>
+                    <th scope="col"><a  href="/user/all?search=<%= search %>&page=<%= page %>&order=asc" style="color: inherit"><i class="fas fa-sort"> #</i></a></th>
+                 <% } %>
+                 <% if(order === 'asc') { %>
+                  <th scope="col"><a href="/user/all?search=<%= search %>&page=<%= page %>&order=desc" style="color: inherit"><i class="fas fa-sort"> #</i></a></th>
+                <% } %>
                   <th scope="col">نام</th>
                   <th scope="col">نام خانوادگی</th>
                   <th scope="col">عکس آواتار</th>
@@ -79,7 +85,6 @@
                   <th scope="row"><%= index+1 %></th>
                   <td>
                     <%= users[index].firstName %>
-                    
                   </td>
                   <td><%= users[index].lastName %></td>
                   <td>
@@ -112,12 +117,12 @@
                     <div>
                       <a
                         class="text-warning updateBtn"
-                        href="/article/edit/<%= users[index]._id %> "
+                        href="/user/all/update/<%= users[index]._id %> "
                         ><i class="fas fa-redo ml-4" style="font-size: 20px"></i
                       ></a>
                       <a
                         class="text-danger"
-                        href="/article/delete/<%= users[index]._id %> "
+                        href="/user/all/delete/<%= users[index]._id %> "
                       >
                         <i class="far fa-trash-alt" style="font-size: 20px"></i></i
                       ></a>
