@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 
 //get login page
 router.get("/", (req, res, next) => {
-  res.render("login", { password: req.flash("password") });
+  res.render("auth/login", { password: req.flash("password") });
 });
 
 //login route

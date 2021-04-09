@@ -4,7 +4,7 @@ const User = require("../models/user");
 
 //get register page
 router.get("/", (req, res, next) => {
-  res.render("register");
+  res.render("auth/register");
 });
 
 //add a new user route
