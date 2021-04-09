@@ -17,7 +17,8 @@
           <div class="container-fluid">
             <div class="row mb-2">
               <div class="col-sm-6">
-                <% if (article.author._id == user._id) { %>
+                <% if (article.author._id == user._id || user.role === 'admin')
+                { %>
                 <a
                   class="btn text-warning"
                   href="/article/edit/<%= article._id %>"

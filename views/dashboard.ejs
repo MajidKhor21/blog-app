@@ -54,21 +54,35 @@
 
         <section class="content">
           <div class="container">
-            <% if (msg === "successfully") { %>
+            <% if (successfullyAdded) { %>
             <div
-              class="alert alert-success w-25"
+              class="alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
               role="alert"
-              id="alertSuccess"
             >
-              با موفقیت اضافه شد.
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <%= successfullyAdded %>
             </div>
-            <% } %> <% if (msg === "successfully-deleted") { %>
+            <% } %> <% if (remove) { %>
             <div
-              class="alert alert-success w-25"
+              class="alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
               role="alert"
-              id="alertSuccess"
             >
-              با موفقیت حذف شد.
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <%= remove %>
             </div>
             <% } %> <% if (order === 'desc') { %>
             <select
@@ -112,7 +126,7 @@
                 <div class="card position-relative">
                   <% if (index === 0 && (new
                   Date(articles[index].createdAt).getTime() >= Date.now() -
-                  172800000)) { %>
+                  172800000) && order === 'desc') { %>
                   <span
                     class="badge badge-danger rounded w-25 position-absolute"
                     style="top: -10px !important"

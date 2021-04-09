@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const { NetworkAuthenticationRequire } = require("http-errors");
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
@@ -68,13 +69,6 @@ const UserSchema = new Schema({
   },
 });
 
-UserSchema.methods.toJSON = function () {
-  let user = this.toObject();
-  delete user.__v;
-  delete user.password;
-  return user;
-};
-
 UserSchema.pre("save", function (next) {
   const user = this;
   if (this.isNew || this.isModified("password")) {
@@ -92,11 +86,23 @@ UserSchema.pre("save", function (next) {
 });
 
 UserSchema.pre("findOneAndUpdate", function (next) {
-  let salt = bcrypt.genSaltSync(10);
-  let hash = bcrypt.hashSync(this.getUpdate().$set.password, salt);
-  this.getUpdate().$set.password = hash;
+  console.log(this.getUpdate().$set);
+  if (this.getUpdate().$set) {
+    let salt = bcrypt.genSaltSync(10);
+    let hash = bcrypt.hashSync(this.getUpdate().$set.password, salt);
+    this.getUpdate().$set.password = hash;
 
-  next();
+    next();
+  } else {
+    next();
+  }
 });
+
+UserSchema.methods.toJSON = function () {
+  let user = this.toObject();
+  delete user.__v;
+  delete user.password;
+  return user;
+};
 
 module.exports = mongoose.model("User", UserSchema);

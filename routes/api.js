@@ -30,6 +30,7 @@ router.use("/article", checker.loginChecker, require("./article"));
 
 //create admin user at first
 router.post("/createAdmin", (req, res) => {
+  console.log(1);
   User.findOne({ role: "admin" }, (err, existAdmin) => {
     if (err) return res.status(500).send("err in create admin");
     if (existAdmin) return res.status(404).send("Not Found!");
@@ -37,13 +38,14 @@ router.post("/createAdmin", (req, res) => {
     new User({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
+      email: req.body.email,
       username: req.body.username,
       password: req.body.password,
       role: "admin",
       gender: req.body.gender,
       mobileNumber: req.body.mobileNumber,
     }).save((err) => {
-      if (err) return res.send("err in create admin");
+      if (err) return res.send("err in create admin2");
       return res.send("admin created successfully");
     });
   });

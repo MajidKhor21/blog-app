@@ -19,6 +19,13 @@
               <div class="col-sm-4">
                 <% let { search, page, order } = req.query %>
                 <h3 class="d-inline-block ml-2">ویرایش کاربران</h3>
+                <% if (users.length) { %>
+                  <span class="d-inline-block ml-1">صفحه</span>
+                  <% } %> <% if (page) { %>
+                  <span class="d-inline-block" id="articleSpan"><%= page %></span>
+                  <%} else if(!page && users.length) { %>
+                  <span class="d-inline-block" id="articleSpan">1</span>
+                  <% } %>
               </div>
               <div class="col-sm-4">
                 <form
@@ -71,6 +78,7 @@
                   <th scope="col">نام</th>
                   <th scope="col">نام خانوادگی</th>
                   <th scope="col">عکس آواتار</th>
+                  <th class="text-center" scope="col">آدرس ایمیل</th>
                   <th scope="col">نام کاربری</th>
                   <th scope="col">جنسیت</th>
                   <th scope="col">شماره موبایل</th>
@@ -104,7 +112,7 @@
                               />
                         <% } %>
                   </td>
-                  
+                  <td><%= users[index].email %> </td>
                   <td><%= users[index].username %> </td>
                   <% if (users[index].gender === "male") { %>
                     <td>مرد</td>

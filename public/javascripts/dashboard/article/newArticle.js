@@ -12,7 +12,7 @@ $(document).ready(() => {
   let text = $("#describeValue").val();
   CKEDITOR.instances["editor1"].setData(text);
   let article = JSON.parse(localStorage.getItem("article"));
-  if (window.location.href.includes("msg=invalid-title")) {
+  if ($("#localTitle").val().includes("عنوان")) {
     $("#articleTitle").val(article.title);
     $("#articleBrief").val(article.brief);
     CKEDITOR.instances["editor1"].setData(article.describe);

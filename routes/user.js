@@ -43,8 +43,9 @@ router.get("/dashboard", async (req, res, next) => {
     .exec();
   return res.status(200).render("dashboard", {
     user: req.session.user,
-    msg: req.query.msg,
     page: req.query.page,
+    successfullyAdded: req.flash("successfullyAdded"),
+    remove: req.flash("delete"),
     articles,
     createTime,
     current: page,
@@ -76,7 +77,8 @@ router.put("/update", (req, res) => {
     !req.body.lastName ||
     !req.body.mobileNumber ||
     !req.body.gender ||
-    !req.body.username
+    !req.body.username ||
+    !req.body.email
   ) {
     return res.status(400).json({ msg: "empty field" });
   }
@@ -84,9 +86,8 @@ router.put("/update", (req, res) => {
   User.findOne({ username: req.body.username }, (err, user) => {
     if (err) return res.status(500).json({ msg: "server error" });
     if (!user) return res.status(400).json({ msg: "not found" });
-    //find user by user._id and update with req.body
-    User.findByIdAndUpdate(
-      { _id: user._id },
+    User.findOneAndUpdate(
+      { username: req.body.username },
       req.body,
       { new: true },
       (err, user2) => {

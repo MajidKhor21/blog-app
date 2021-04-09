@@ -16,7 +16,7 @@ $(document).ready(() => {
   let article = JSON.parse(localStorage.getItem("article"));
 
   if (
-    window.location.href.includes("msg=invalid-title") &&
+    $("#localTitle").val().includes("عنوان") &&
     $("#articleId").val() == article.id
   ) {
     $("#articleTitle").val(article.title);

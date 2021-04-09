@@ -35,22 +35,30 @@
         </section>
 
         <section class="content mt-5 mb-5">
+
           <form
             method="post"
             action="/article/update"
             enctype="multipart/form-data"
             class="w-75 mx-auto mb-5"
           >
-            <% if (msg === "error") { %>
-            <div class="alert alert-danger w-25" role="alert" id="alertDanger">
-              خطا
+          <% if (title) { %>
+            <div
+              class="alert alert-warning alert-dismissible fade show w-75 text-right mx-auto"
+              role="alert"
+            >
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <%= title %>
             </div>
             <% } %>
-            <% if (msg === "invalid-title") { %>
-              <div class="alert alert-danger w-25" role="alert" id="alertDanger">
-                عنوان مقاله نامعتبر
-              </div>
-              <% } %>
+            <input class="d-none" type="text" value=<%- title %> id="localTitle">
             <input class="d-none" type="text" name="id" id="articleId" value="<%= article._id %>">
             <div class="form-group row w-50">
               <label class="col-sm-2 col-form-label" for="title"

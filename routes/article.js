@@ -12,7 +12,8 @@ const path = require("path");
 router.get("/create", (req, res) => {
   res.render("article/new-article", {
     user: req.session.user,
-    msg: req.query.msg,
+    empty: req.flash("empty"),
+    title: req.flash("title"),
   });
 });
 
@@ -22,15 +23,11 @@ router.post("/create", (req, res) => {
 
   upload(req, res, function (err) {
     //check article picture and describe is not empty
-    if (!req.file || !req.body.describe || !req.body.title || !req.body.brief)
-      return res.redirect(
-        url.format({
-          pathname: "/article/create",
-          query: {
-            msg: "error",
-          },
-        })
-      );
+    if (!req.file || !req.body.describe || !req.body.title || !req.body.brief) {
+      req.flash("empty", "ورودی های نامعتبر");
+      return res.redirect("/article/create");
+    }
+
     if (err instanceof multer.MulterError) {
       return res.status(500).json({ msg: "Server Error" });
     } else if (err) {
@@ -46,14 +43,8 @@ router.post("/create", (req, res) => {
               req.file.filename
             )
           );
-          return res.status(403).redirect(
-            url.format({
-              pathname: "/article/create",
-              query: {
-                msg: "invalid-title",
-              },
-            })
-          );
+          req.flash("title", "عنوان مقاله تکراری می باشد.");
+          return res.redirect("/article/create");
         }
         //create article object
         const newArticle = new Article({
@@ -66,14 +57,8 @@ router.post("/create", (req, res) => {
         //save new article to our database
         newArticle.save((err) => {
           if (err) return res.status(500).json({ msg: "Server Error" });
-          return res.redirect(
-            url.format({
-              pathname: "/user/dashboard",
-              query: {
-                msg: "successfully",
-              },
-            })
-          );
+          req.flash("successfullyAdded", "با موفقیت اضافه شد.");
+          return res.redirect("/user/dashboard");
         });
       });
     }
@@ -213,8 +198,8 @@ router.get("/edit", async (req, res) => {
     articles,
     lastUpdate,
     createAt,
+    successfullyEdit: req.flash("successfullyEdit"),
     user: req.session.user,
-    msg: req.query.msg,
     page: req.query.page,
     order: req.query.order,
     current: page,
@@ -229,7 +214,7 @@ router.get("/edit/:id", (req, res) => {
     return res.status(200).render("article/edit-article", {
       article,
       user: req.session.user,
-      msg: req.query.msg,
+      title: req.flash("title"),
     });
   });
 });
@@ -263,14 +248,8 @@ router.post("/update", (req, res) => {
         (err, article) => {
           if (err) return res.status(500).json({ msg: "Server Error" });
           if (article) {
-            return res.redirect(
-              url.format({
-                pathname: `/article/edit/${req.body.id}`,
-                query: {
-                  msg: "invalid-title",
-                },
-              })
-            );
+            req.flash("title", "عنوان مقاله تکراری می باشد.");
+            return res.redirect(`/article/edit/${req.body.id}`);
           } else if (req.file) {
             //update article where update article's picture
             Article.findById(req.body.id, (err, article) => {
@@ -295,14 +274,8 @@ router.post("/update", (req, res) => {
                   (err) => {
                     if (err)
                       return res.status(500).json({ msg: "Server Error" });
-                    return res.redirect(
-                      url.format({
-                        pathname: "/article/edit",
-                        query: {
-                          msg: "successfully",
-                        },
-                      })
-                    );
+                    req.flash("successfullyEdit", "مقاله با موفقیت ویرایش شد.");
+                    return res.redirect("/article/edit");
                   }
                 );
               }
@@ -319,14 +292,8 @@ router.post("/update", (req, res) => {
               },
               (err) => {
                 if (err) return res.status(500).json({ msg: "Server Error" });
-                return res.redirect(
-                  url.format({
-                    pathname: "/article/edit",
-                    query: {
-                      msg: "successfully",
-                    },
-                  })
-                );
+                req.flash("successfullyEdit", "مقاله با موفقیت ویرایش شد.");
+                return res.redirect("/article/edit");
               }
             );
           }
@@ -361,14 +328,8 @@ router.get("/delete/:id", async (req, res) => {
 
   //find and delete article
   await Article.findByIdAndDelete(req.params.id);
-  return res.redirect(
-    url.format({
-      pathname: "/user/dashboard",
-      query: {
-        msg: "successfully-deleted",
-      },
-    })
-  );
+  req.flash("delete", "مقاله با موفقیت حذف شد.");
+  return res.redirect("/user/dashboard");
 });
 
 module.exports = router;

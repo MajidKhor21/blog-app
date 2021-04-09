@@ -31,6 +31,7 @@ $(document).ready(() => {
           gender: $("#gender2").val(),
           mobileNumber: $("#mobileNumber").val(),
           username: $("#username").val(),
+          email: $("#email").val(),
           lastUpdate: Date.now(),
         },
         success: function (response) {
@@ -40,6 +41,7 @@ $(document).ready(() => {
           }, 2500);
         },
         error: function (err) {
+          console.log(err);
           $("#msgAlert").removeClass("d-none");
         },
       });
