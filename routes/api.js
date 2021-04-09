@@ -13,6 +13,9 @@ router.use("/register", checker.sessionChecker, require("./register"));
 // define login route
 router.use("/login", checker.sessionChecker, require("./login"));
 
+//define reset password route
+router.use("/reset", checker.sessionChecker, require("./reset"));
+
 //define user route
 router.use("/user", checker.loginChecker, require("./user"));
 

@@ -17,12 +17,14 @@ $(document).ready(() => {
           },
           success: function (response) {
             $("#msg").removeClass("d-none");
+            $("#passDiv").addClass("d-none");
             setTimeout(function () {
               window.location.href = "/user/dashboard";
             }, 2500);
           },
           error: function (err) {
             $("#msg2").removeClass("d-none");
+            $("#passDiv").addClass("d-none");
           },
         });
       }

@@ -2,11 +2,10 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
-const checker = require("../tools/checker");
 
 //get login page
 router.get("/", (req, res, next) => {
-  res.render("login");
+  res.render("login", { password: req.flash("password") });
 });
 
 //login route

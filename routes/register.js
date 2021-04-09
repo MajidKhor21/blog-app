@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
-const checker = require("../tools/checker");
 
 //get register page
 router.get("/", (req, res, next) => {
@@ -10,10 +9,12 @@ router.get("/", (req, res, next) => {
 
 //add a new user route
 router.post("/", (req, res, next) => {
+  console.log(req.body);
   //check request body is not empty
   if (
     !req.body.firstName ||
     !req.body.lastName ||
+    !req.body.email ||
     !req.body.username ||
     !req.body.password ||
     !req.body.gender ||
@@ -29,17 +30,23 @@ router.post("/", (req, res, next) => {
     User.findOne({ mobileNumber: req.body.mobileNumber }, (err, user) => {
       if (err) return res.status(500).json({ msg: "server error" });
       if (user) return res.status(400).json({ msg: "phone number" });
-      //save req.body into a new object of user and save it into database
-      new User({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        username: req.body.username,
-        password: req.body.password,
-        mobileNumber: req.body.mobileNumber,
-        gender: req.body.gender,
-      }).save((err) => {
+      //check that requested email address is not valid in our database
+      User.findOne({ email: req.body.email }, (err, user) => {
         if (err) return res.status(500).json({ msg: "server error" });
-        return res.status(200).json({ msg: "successfully added" });
+        if (user) return res.status(400).json({ msg: "email exist" });
+        //save req.body into a new object of user and save it into database
+        new User({
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          email: req.body.email,
+          username: req.body.username,
+          password: req.body.password,
+          mobileNumber: req.body.mobileNumber,
+          gender: req.body.gender,
+        }).save((err) => {
+          if (err) return res.status(500).json({ msg: "server error" });
+          return res.status(200).json({ msg: "successfully added" });
+        });
       });
     });
   });

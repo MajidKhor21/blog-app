@@ -37,6 +37,18 @@ $(document).ready(() => {
           $("#msg2").removeClass("d-none");
           $("#msg2").text("رمزهای وارد شده یکسان نیستند");
         } else if (
+          !$("#email")
+            .val()
+            .match(
+              /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+            ) &&
+          $("#email").val() !== ""
+        ) {
+          $("#msg2").removeClass("d-none");
+          $("#msg2").text(
+            "رمز عبور باید حداقل شامل 6 کاراکتر و حداقل یک حرف و یک عدد باشد"
+          );
+        } else if (
           !$("#password")
             .val()
             .match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/) &&
@@ -62,6 +74,12 @@ $(document).ready(() => {
       $("#firstName").val().length <= 30 &&
       $("#lastName").val().length >= 3 &&
       $("#lastName").val().length <= 30 &&
+      $("#email")
+        .val()
+        .match(
+          /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+        ) &&
+      $("email").val() !== "" &&
       $("#username").val().length >= 3 &&
       $("#username").val().length <= 30 &&
       $("#password").val() === $("#rePassword").val() &&
@@ -78,6 +96,7 @@ $(document).ready(() => {
         data: {
           firstName: $("#firstName").val().trim(),
           lastName: $("#lastName").val().trim(),
+          email: $("#email").val().trim(),
           username: $("#username").val().trim(),
           password: $("#password").val(),
           gender: $("#radioBtn input[type='radio']:checked").val(),
@@ -99,6 +118,10 @@ $(document).ready(() => {
           if (error.msg == "phone number") {
             $("#msg2").removeClass("d-none");
             $("#msg2").text("شماره موبایل معتبر نمی باشد");
+          }
+          if (error.msg == "email exist") {
+            $("#msg2").removeClass("d-none");
+            $("#msg2").text("ایمیل معتبر نمی باشد");
           }
         },
       });

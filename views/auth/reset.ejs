@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>بازیابی رمز عبور</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=0.86, maximum-scale=5.0, minimum-scale=0.86"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+      integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/stylesheets/reset.css" />
+  </head>
+  <body>
+    <div>
+      <%- include('../partials/login-navbar') %>
+
+      <div class="container">
+        <form action="/reset" method="post">
+          <div class="center form col-11">
+            <p class="title">بازیابی رمز عبور</p>
+            <% if (errors) { %>
+            <div
+              class="alert alert-warning alert-dismissible fade show w-75 text-right mx-auto"
+              role="alert"
+            >
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <%= errors %>
+            </div>
+            <% } %> <% if (success) { %>
+            <div
+              class="alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
+              role="alert"
+            >
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <%= success %>
+            </div>
+            <% } %>
+            <div class="text-input">
+              <i class="fas fa-envelope"></i>
+              <input
+                type="email"
+                name="email"
+                required
+                placeholder="آدرس ایمیل"
+              />
+            </div>
+
+            <input
+              type="submit"
+              class="submitBtn btn btn-success mb-5"
+              value="ارسال درخواست"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+    crossorigin="anonymous"
+  ></script>
+</html>

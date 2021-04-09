@@ -47,6 +47,23 @@
           >
             خطا
           </div>
+          <% if (password) { %>
+          <div
+            class="alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
+            id="passDiv"
+            role="alert"
+          >
+            <button
+              type="button"
+              class="close"
+              data-dismiss="alert"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <%= password %>
+          </div>
+          <% } %>
           <div class="text-input">
             <i class="fas fa-id-card-alt"></i>
             <input type="text" id="username" placeholder="نام کاربری" />
@@ -60,6 +77,9 @@
 
           <p class="signup">
             حساب کاربری ندارید؟ <a href="/register">ثبت نام</a>
+          </p>
+          <p>
+            <a href="/reset/">فراموشی رمز عبور</a>
           </p>
         </div>
       </div>

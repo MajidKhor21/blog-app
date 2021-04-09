@@ -6,6 +6,7 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 const config = require("./config/config");
 const session = require("express-session");
+const flash = require("req-flash");
 require("./tools/initialization");
 
 const app = express();
@@ -39,6 +40,8 @@ app.use(
     },
   })
 );
+
+app.use(flash());
 
 app.use((req, res, next) => {
   if (req.cookies.user_sid && !req.session.user) {

@@ -17,6 +17,12 @@ const UserSchema = new Schema({
     minlength: 3,
     maxlength: 30,
   },
+  email: {
+    type: String,
+    required: true,
+    trim: true,
+    match: [/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/i],
+  },
   username: {
     type: String,
     required: true,
@@ -83,6 +89,14 @@ UserSchema.pre("save", function (next) {
   } else {
     return next();
   }
+});
+
+UserSchema.pre("findOneAndUpdate", function (next) {
+  let salt = bcrypt.genSaltSync(10);
+  let hash = bcrypt.hashSync(this.getUpdate().$set.password, salt);
+  this.getUpdate().$set.password = hash;
+
+  next();
 });
 
 module.exports = mongoose.model("User", UserSchema);
