@@ -196,7 +196,8 @@ router.put("/removeAvatar", (req, res) => {
   );
 });
 
-router.get("/all", uac.userManagement, async (req, res, next) => {
+//manage all users route
+router.get("/manage", uac.userManagement, async (req, res, next) => {
   let perPage = 10;
   let page = req.query.page || 1;
   let search = new RegExp(req.query.search, "i");
@@ -231,10 +232,32 @@ router.get("/all", uac.userManagement, async (req, res, next) => {
     msg: req.query.msg,
     page: req.query.page,
     order: req.query.order,
+    invalid: req.flash("invalid"),
     users,
     createTime,
     current: page,
     pages: Math.ceil(count / perPage),
+  });
+});
+
+//edit users by admin
+router.get("/manage/edit/:id", uac.userManagement, (req, res, next) => {
+  User.find({ _id: req.params.id }, (err, member) => {
+    if (err) return res.status(500).json({ msg: "Server Error" });
+    if (member.length === 0) {
+      req.flash("invalid", "کاربر مد نظر وجود ندارد");
+      return res.status(403).redirect("/user/manage");
+    }
+    member[0].lastUpdateDate = moment(req.session.user.lastUpdate).format(
+      "jYYYY/jM/jD"
+    );
+    member[0].lastUpdateTime = moment(req.session.user.lastUpdate).format(
+      "HH:mm"
+    );
+    return res.render("user/admin/edit-user", {
+      member: member,
+      user: req.session.user,
+    });
   });
 });
 

@@ -31,7 +31,7 @@
                 <form
                   class="input-group col-6 m-auto"
                   style="direction: rtl"
-                  action="/user/all"
+                  action="/user/manage"
                   method="GET" 
                 >
                   <input
@@ -57,7 +57,22 @@
         </section>
         
         <section class="content mt-2">
-
+          <% if (invalid) { %>
+            <div
+              class="alert alert-danger alert-dismissible fade show w-50 text-right mx-auto"
+              role="alert"
+            >
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <%= invalid %>
+            </div>
+            <% } %>
           <div class="container">
             
             <table class="table table-hover table-fixed">
@@ -70,10 +85,10 @@
                 <tr>
                   <th class="d-none" scope="col"></th>
                   <% if(order === 'desc') { %>
-                    <th scope="col"><a  href="/user/all?search=<%= search %>&page=<%= page %>&order=asc" style="color: inherit"><i class="fas fa-sort"> #</i></a></th>
+                    <th scope="col"><a  href="/user/manage?search=<%= search %>&page=<%= page %>&order=asc" style="color: inherit"><i class="fas fa-sort"> #</i></a></th>
                  <% } %>
                  <% if(order === 'asc') { %>
-                  <th scope="col"><a href="/user/all?search=<%= search %>&page=<%= page %>&order=desc" style="color: inherit"><i class="fas fa-sort"> #</i></a></th>
+                  <th scope="col"><a href="/user/manage?search=<%= search %>&page=<%= page %>&order=desc" style="color: inherit"><i class="fas fa-sort"> #</i></a></th>
                 <% } %>
                   <th scope="col">نام</th>
                   <th scope="col">نام خانوادگی</th>
@@ -124,13 +139,18 @@
                   <td>
                     <div>
                       <a
-                        class="text-warning updateBtn"
-                        href="/user/all/update/<%= users[index]._id %> "
-                        ><i class="fas fa-redo ml-4" style="font-size: 20px"></i
+                        class="text-info updateBtn"
+                        href="/user/manage/update/<%= users[index]._id %> "
+                        ><i class="fas fa-redo ml-2" style="font-size: 20px"></i
                       ></a>
                       <a
+                      class="text-warning updateBtn"
+                      href="/user/manage/edit/<%= users[index]._id %> "
+                      ><i class="far fa-edit ml-2" style="font-size: 20px"></i
+                    ></a>
+                      <a
                         class="text-danger"
-                        href="/user/all/delete/<%= users[index]._id %> "
+                        href="/user/manage/delete/<%= users[index]._id %> "
                       >
                         <i class="far fa-trash-alt" style="font-size: 20px"></i></i
                       ></a>

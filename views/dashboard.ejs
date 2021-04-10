@@ -3,8 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <% if(user.role === 'admin') { %>
+    <title>پنل مدیریت</title>
+    <% } else { %>
     <title>پنل کاربری</title>
-    <%- include('partials/dashboard/scripts-header') %>
+    <% } %> <%- include('partials/dashboard/scripts-header') %>
   </head>
   <body class="hold-transition sidebar-mini">
     <div class="wrapper">

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>ویرایش مشخصات</title>
+    <%- include('../../partials/dashboard/scripts-header') %>
+  </head>
+  <body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+      <%- include('../../partials/dashboard/navbar') %> <%-
+      include('../../partials/dashboard/sidebar') %>
+
+      <div class="content-wrapper">
+        <section class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h3 class="d-inline-block">ویرایش مشخصات</h3>
+                <p class="d-inline-block">
+                  <%= member[0].firstName %> <%= member[0].lastName %>
+                </p>
+              </div>
+              <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                  <li class="breadcrumb-item">
+                    <a href="/member[0]/dashboard">داشبورد</a>
+                  </li>
+                  <li class="breadcrumb-item active">ویرایش مشخصات</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="content">
+          <div class="text-center w-50 m-auto">
+            <div class="mt-5">
+              <form action="/user/manage/edit" method="post">
+                <input type="text" value="<%= member[0]._id %>" name="id" />
+                <div class="form-group row">
+                  <label for="firstName" class="col-sm-2 col-form-label"
+                    >نام</label
+                  >
+                  <div class="col-sm-10">
+                    <input
+                      type="text"
+                      class="form-control plc"
+                      id="firstName"
+                      name="firstName"
+                      value="<%= member[0].firstName %>"
+                    />
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="lastName" class="col-sm-2 col-form-label"
+                    >نام خانوادگی</label
+                  >
+                  <div class="col-sm-10">
+                    <input
+                      type="text"
+                      class="form-control plc"
+                      id="lastName"
+                      name="lastName"
+                      value="<%= member[0].lastName %>"
+                    />
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="email" class="col-sm-2 col-form-label"
+                    >آدرس ایمیل</label
+                  >
+                  <div class="col-sm-10">
+                    <input
+                      type="text"
+                      class="form-control plc"
+                      id="email"
+                      name="email"
+                      value="<%= member[0].email %>"
+                    />
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="username" class="col-sm-2 col-form-label"
+                    >نام کاربری</label
+                  >
+                  <div class="col-sm-10">
+                    <input
+                      type="text"
+                      class="form-control plc"
+                      id="username"
+                      name="username"
+                      value="<%= member[0].username %>"
+                    />
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="gender" class="col-sm-2 col-form-label"
+                    >جنسیت</label
+                  >
+                  <div class="col-sm-10">
+                    <% if (member[0].gender === 'male') { %>
+                    <select
+                      class="custom-select d-inline-block"
+                      id="gender2"
+                      name="gender"
+                    >
+                      <option value="male" selected>مرد</option>
+                      <option value="female">زن</option>
+                    </select>
+                    <%} else { %>
+                    <select
+                      class="custom-select d-inline-block"
+                      id="gender2"
+                      name="gender"
+                    >
+                      <option value="female" selected>زن</option>
+                      <option value="male">مرد</option>
+                    </select>
+                    <% } %>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="mobileNumber" class="col-sm-2 col-form-label"
+                    >شماره موبایل</label
+                  >
+                  <div class="col-sm-10">
+                    <input
+                      type="text"
+                      class="form-control plc"
+                      id="mobileNumber"
+                      name="mobileNumber"
+                      value="<%= member[0].mobileNumber %>"
+                    />
+                  </div>
+                </div>
+                <div class="form-group row float-left" style="font-size: 14px">
+                  <p class="font-weight-bolder">
+                    آخرین ویرایش:
+                    <span class="font-weight-lighter"
+                      ><%= member[0].lastUpdateTime %> - <%=
+                      member[0].lastUpdateDate %></span
+                    >
+                  </p>
+                </div>
+                <input type="submit" />
+              </form>
+              <button type="submit" class="btn btn-primary mt-5" id="editBtn">
+                ویرایش
+              </button>
+              <button
+                type="submit"
+                class="btn btn-secondary mt-5"
+                id="cancelBtn"
+              >
+                لغو
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <%- include('../../partials/dashboard/footer') %>
+
+      <aside
+        class="control-sidebar control-sidebar-dark control-sidebar-animate"
+      ></aside>
+    </div>
+    <%- include('../../partials/dashboard/scripts-footer') %>
+  </body>
+</html>
