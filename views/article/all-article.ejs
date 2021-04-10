@@ -28,12 +28,12 @@
                   method="GET"
                 >
                   <input
-                    type="search"
+                    type="text"
                     class="form-control rounded"
                     placeholder="جستجو در مقالات..."
                     aria-label="Search"
                     aria-describedby="search-addon"
-                    name="search"
+                    name="search" id="searchBar"
                   />
                 </form>
               </div>
@@ -68,7 +68,7 @@
 
         <section class="content mt-2">
           <div class="container">
-            <table class="table">
+            <table class="table table-hover table-fixed">
               <thead
               style="
               background-color: #343a40;
@@ -87,6 +87,9 @@
                   <th scope="col">عنوان مقاله</th>
                   <th scope="col">خلاصه مقاله</th>
                   <th scope="col">تصویر مقاله</th>
+                  <% if(user.role === 'admin') { %>
+                    <th scope="col">نام نویسنده</th>
+                  <% } %>
                   <th scope="col">تعداد بازدید</th>
                   <th scope="col">تاریخ ایجاد</th>
                   <th scope="col">آخرین ویرایش</th>
@@ -112,6 +115,9 @@
                       height="40px;"
                     />
                   </td>
+                  <% if(user.role === 'admin') { %>
+                    <td><%= articles[index].author.firstName %> <%= articles[index].author.lastName %></th>
+                  <% } %>
                   <td><%= articles[index].viewCounter %></td>
                   <td><%= createAt[index].time %> - <%= createAt[index].date %></td>
                   <td><%= lastUpdate[index].time %> - <%= lastUpdate[index].date %></td>

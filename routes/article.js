@@ -167,44 +167,87 @@ router.get("/edit", async (req, res) => {
   } else if (req.query.order === "desc") {
     order = -1;
   }
-  const articles = await Article.find({
-    author: req.session.user._id,
-    $or: [{ title: search }, { brief: search }],
-  })
-    .skip(perPage * page - perPage)
-    .limit(perPage)
-    .sort({ createdAt: order });
-  let lastUpdate = [];
-  let createAt = [];
-  for (let index = 0; index < articles.length; index++) {
-    lastUpdate[index] = {
-      date: moment(articles[index].lastUpdate).format("jYYYY/jM/jD"),
-      time: moment(articles[index].lastUpdate).format("HH:mm"),
-    };
-    createAt[index] = {
-      date: moment(articles[index].createdAt).format("jYYYY/jM/jD"),
-      time: moment(articles[index].createdAt).format("HH:mm"),
-    };
+  //show all articles if user === admin
+  if (req.session.user.role === "admin") {
+    const articles = await Article.find({
+      $or: [{ title: { $regex: search } }, { brief: { $regex: search } }],
+    })
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .populate("author", { firstName: 1, lastName: 1, avatar: 1, _id: 0 })
+      .sort({ createdAt: order });
+    let lastUpdate = [];
+    let createAt = [];
+    for (let index = 0; index < articles.length; index++) {
+      lastUpdate[index] = {
+        date: moment(articles[index].lastUpdate).format("jYYYY/jM/jD"),
+        time: moment(articles[index].lastUpdate).format("HH:mm"),
+      };
+      createAt[index] = {
+        date: moment(articles[index].createdAt).format("jYYYY/jM/jD"),
+        time: moment(articles[index].createdAt).format("HH:mm"),
+      };
+    }
+
+    const count = await Article.find({
+      $or: [{ title: search }, { brief: search }],
+    })
+      .count()
+      .exec();
+
+    return res.status(200).render("article/all-article", {
+      articles,
+      lastUpdate,
+      createAt,
+      successfullyEdit: req.flash("successfullyEdit"),
+      user: req.session.user,
+      page: req.query.page,
+      order: req.query.order,
+      current: page,
+      pages: Math.ceil(count / perPage),
+    });
   }
+  //show only author's articles if user !== admin
+  else {
+    const articles = await Article.find({
+      author: req.session.user._id,
+      $or: [{ title: search }, { brief: search }],
+    })
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .sort({ createdAt: order });
+    let lastUpdate = [];
+    let createAt = [];
+    for (let index = 0; index < articles.length; index++) {
+      lastUpdate[index] = {
+        date: moment(articles[index].lastUpdate).format("jYYYY/jM/jD"),
+        time: moment(articles[index].lastUpdate).format("HH:mm"),
+      };
+      createAt[index] = {
+        date: moment(articles[index].createdAt).format("jYYYY/jM/jD"),
+        time: moment(articles[index].createdAt).format("HH:mm"),
+      };
+    }
 
-  const count = await Article.find({
-    author: req.session.user._id,
-    $or: [{ title: search }, { brief: search }],
-  })
-    .count()
-    .exec();
+    const count = await Article.find({
+      author: req.session.user._id,
+      $or: [{ title: search }, { brief: search }],
+    })
+      .count()
+      .exec();
 
-  return res.status(200).render("article/all-article", {
-    articles,
-    lastUpdate,
-    createAt,
-    successfullyEdit: req.flash("successfullyEdit"),
-    user: req.session.user,
-    page: req.query.page,
-    order: req.query.order,
-    current: page,
-    pages: Math.ceil(count / perPage),
-  });
+    return res.status(200).render("article/all-article", {
+      articles,
+      lastUpdate,
+      createAt,
+      successfullyEdit: req.flash("successfullyEdit"),
+      user: req.session.user,
+      page: req.query.page,
+      order: req.query.order,
+      current: page,
+      pages: Math.ceil(count / perPage),
+    });
+  }
 });
 
 //get edit article single page

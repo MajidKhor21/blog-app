@@ -14,7 +14,7 @@
         <section class="content-header">
           <div class="container-fluid">
             <div class="row mb-2">
-              <div class="col-sm-4">
+              <div class="col-12 col-sm-4 col-md-4 col-lg-4">
                 <% let { search, page, order } = req.query %>
                 <h3 class="d-inline-block ml-2">مقالات</h3>
                 <% if (articles.length) { %>
@@ -25,24 +25,25 @@
                 <span class="d-inline-block" id="articleSpan">1</span>
                 <% } %>
               </div>
-              <div class="col-sm-4">
+              <div class="col-12 col-sm-8 col-md-8 col-lg-4 mb-2">
                 <form
-                  class="input-group col-6 m-auto"
+                  class="input-group col-12 col-xl-8 m-auto"
                   style="direction: rtl"
                   action="/user/dashboard"
                   method="GET"
                 >
                   <input
-                    type="search"
+                    type="text"
                     class="form-control rounded"
                     placeholder="جستجو در مقالات..."
                     aria-label="Search"
                     aria-describedby="search-addon"
                     name="search"
+                    id="searchBar"
                   />
                 </form>
               </div>
-              <div class="col-sm-4">
+              <div class="d-none d-lg-block col-lg-4">
                 <ol class="breadcrumb float-sm-left">
                   <li class="breadcrumb-item"><a href="#">خانه</a></li>
                   <li class="breadcrumb-item active">داشبورد</li>
@@ -86,7 +87,7 @@
             </div>
             <% } %> <% if (order === 'desc') { %>
             <select
-              class="form-control col-3 w-75 mb-4"
+              class="form-control col-11 col-sm-6 col-lg-4 w-100 mb-4"
               onChange="window.location.href=this.value"
             >
               <option
@@ -103,7 +104,7 @@
             </select>
             <%} else if(order === 'asc') { %>
             <select
-              class="form-control col-3 w-75 mb-4"
+              class="form-control col-11 col-sm-6 col-lg-4 w-100 mb-4"
               onChange="window.location.href=this.value"
             >
               <option
@@ -122,7 +123,7 @@
 
             <div class="card-deck">
               <% for( let index = 0; index < articles.length; index++ ) { %>
-              <div class="col-10 col-md-6 col-lg-4">
+              <div class="col-12 col-md-6 col-lg-4">
                 <div class="card position-relative">
                   <% if (index === 0 && (new
                   Date(articles[index].createdAt).getTime() >= Date.now() -
@@ -202,7 +203,7 @@
 
       <nav aria-label="Page navigation example d-flex">
         <% if (pages > 0) { %>
-        <ul class="pagination text-center justify-content-center">
+        <ul class="pagination justify-content-center">
           <% if (current == 1) { %>
           <li class="page-item disabled">
             <a class="page-link">اولین</a>

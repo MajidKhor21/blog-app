@@ -32,15 +32,15 @@
                   class="input-group col-6 m-auto"
                   style="direction: rtl"
                   action="/user/all"
-                  method="GET"
+                  method="GET" 
                 >
                   <input
-                    type="search"
+                    type="text"
                     class="form-control rounded"
                     placeholder="جستجو در کاربران..."
                     aria-label="Search"
                     aria-describedby="search-addon"
-                    name="search"
+                    name="search" id="searchBar"
                   />
                 </form>
               </div>
@@ -60,7 +60,7 @@
 
           <div class="container">
             
-            <table class="table">
+            <table class="table table-hover table-fixed">
               <thead
                 style="
                   background-color: #343a40;
@@ -108,7 +108,7 @@
                                 src="/images/avatars/<%= users[index].avatar %>"
                                 alt="تصویر کاربر"
                                 width="60px"
-                                height="40px"
+                                height="50px"
                               />
                         <% } %>
                   </td>
