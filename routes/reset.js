@@ -46,8 +46,6 @@ router.post("/", async (req, res, next) => {
     },
   });
 
-  console.log(setPassword.email);
-
   // send mail with defined transport object
   let info = await transporter.sendMail({
     from: '"مکتب بلاگ 👻" <manager@maktab.info>', // sender address
@@ -56,8 +54,6 @@ router.post("/", async (req, res, next) => {
     text: "از طریق لینک زیر می توانید رمز عبور خود را تغییر دهید?", // plain text body
     html: `<a href="${req.headers.referer}/password/${setPassword.token}">لینک بازیابی رمز عبور</a>`, // html body
   });
-
-  console.log(info);
 
   await transporter.sendMail(info, (err) => {
     if (err) console.log(err.message);

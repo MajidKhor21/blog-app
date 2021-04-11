@@ -10,6 +10,9 @@ body {
   font-style: normal;
   font-weight: 200;
 }
+.close{
+  padding: 0.45rem 1.25rem !important;
+}
 ul {
   padding-inline-start: 0;
 }

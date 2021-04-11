@@ -37,7 +37,12 @@
           <div class="text-center w-50 m-auto">
             <div class="mt-5">
               <form action="/user/manage/edit" method="post">
-                <input type="text" value="<%= member[0]._id %>" name="id" />
+                <input
+                  type="text"
+                  class="d-none"
+                  value="<%= member[0]._id %>"
+                  name="id"
+                />
                 <div class="form-group row">
                   <label for="firstName" class="col-sm-2 col-form-label"
                     >نام</label
@@ -48,6 +53,7 @@
                       class="form-control plc"
                       id="firstName"
                       name="firstName"
+                      required
                       value="<%= member[0].firstName %>"
                     />
                   </div>
@@ -62,6 +68,7 @@
                       class="form-control plc"
                       id="lastName"
                       name="lastName"
+                      required
                       value="<%= member[0].lastName %>"
                     />
                   </div>
@@ -76,6 +83,7 @@
                       class="form-control plc"
                       id="email"
                       name="email"
+                      required
                       value="<%= member[0].email %>"
                     />
                   </div>
@@ -90,6 +98,7 @@
                       class="form-control plc"
                       id="username"
                       name="username"
+                      required
                       value="<%= member[0].username %>"
                     />
                   </div>
@@ -128,9 +137,11 @@
                     <input
                       type="text"
                       class="form-control plc"
+                      pattern="^\d{11}"
                       id="mobileNumber"
                       name="mobileNumber"
                       value="<%= member[0].mobileNumber %>"
+                      required
                     />
                   </div>
                 </div>
@@ -143,7 +154,7 @@
                     >
                   </p>
                 </div>
-                <input type="submit" />
+                <input type="submit" class="d-none" id="submitForm" />
               </form>
               <button type="submit" class="btn btn-primary mt-5" id="editBtn">
                 ویرایش
@@ -167,5 +178,15 @@
       ></aside>
     </div>
     <%- include('../../partials/dashboard/scripts-footer') %>
+    <script>
+      $(document).ready(() => {
+        $("#editBtn").click(() => {
+          $("#submitForm").click();
+        });
+        $("#cancelBtn").click(() => {
+          location.reload();
+        });
+      });
+    </script>
   </body>
 </html>

@@ -8,6 +8,8 @@ const generalTools = require("../tools/general-tools");
 const fs = require("fs");
 const path = require("path");
 const uac = require("../tools/uac");
+const userEditValidate = require("../tools/validator/userEditValidate");
+const { body, validationResult } = require("express-validator");
 
 //redirect user to dashboard page
 router.get("/dashboard", async (req, res, next) => {
@@ -66,36 +68,65 @@ router.get("/edit", (req, res, next) => {
   req.session.user.lastUpdateTime = moment(req.session.user.lastUpdate).format(
     "HH:mm"
   );
-  res.render("user/user-edit", { user: req.session.user });
+  res.render("user/user-edit", {
+    user: req.session.user,
+    success: req.flash("success"),
+    messages: req.flash("messages"),
+    invalid: req.flash("invalid"),
+  });
 });
 
 //update route
-router.put("/update", (req, res) => {
-  //check request body is not empty
-  if (
-    !req.body.firstName ||
-    !req.body.lastName ||
-    !req.body.mobileNumber ||
-    !req.body.gender ||
-    !req.body.username ||
-    !req.body.email
-  ) {
-    return res.status(400).json({ msg: "empty field" });
+router.post("/update", userEditValidate.handle(), (req, res) => {
+  //check request body is valid
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+    const errors = result.array();
+    const messages = [];
+    errors.forEach((err) => {
+      messages.push(err.msg);
+    });
+    req.flash("messages", messages);
+    return res.redirect(`/user/edit`);
   }
   //find user by username and check this username exist in our database
   User.findOne({ username: req.body.username }, (err, user) => {
     if (err) return res.status(500).json({ msg: "server error" });
-    if (!user) return res.status(400).json({ msg: "not found" });
-    User.findOneAndUpdate(
-      { username: req.body.username },
-      req.body,
-      { new: true },
-      (err, user2) => {
-        if (err) return res.status(500).json({ msg: "server error" });
-        req.session.user = user2;
-        return res.status(200).json({ msg: "ok" });
+    //if username is not valid, logout and login page
+    if (!user) return res.status(403).redirect("/logout");
+    //find all user's with this requested mobile number
+    User.find({ mobileNumber: req.body.mobileNumber }, (err, temp) => {
+      if (err) return res.status(500).json({ msg: "Server Error" });
+      //check all user's that find with requested user id and check equal
+      if (temp.length !== 0) {
+        for (const key in temp) {
+          if (String(user._id) !== String(temp[key]._id)) {
+            req.flash("invalid", "شماره موبایل وارد شده معتبر نمی باشد.");
+            return res.redirect(`/user/edit/`);
+          }
+        }
       }
-    );
+      if (
+        user.firstName === req.body.firstName &&
+        user.lastName === req.body.lastName &&
+        user.gender === req.body.gender &&
+        user.mobileNumber === req.body.mobileNumber
+      ) {
+        return res.redirect(`/user/edit`);
+      }
+      //if temp is empty or requested user id equal with temps id, update user
+      User.findOneAndUpdate(
+        { username: req.body.username },
+        req.body,
+        { new: true },
+        (err, user2) => {
+          if (err) return res.status(500).json({ msg: "server error" });
+          req.session.user = user2;
+          req.flash("success", "مشخصات کاربری با موفقیت ویرایش شد.");
+          return res.redirect(`/user/edit`);
+        }
+      );
+    });
   });
 });
 
@@ -233,6 +264,7 @@ router.get("/manage", uac.userManagement, async (req, res, next) => {
     page: req.query.page,
     order: req.query.order,
     invalid: req.flash("invalid"),
+    error: req.flash("error"),
     users,
     createTime,
     current: page,
@@ -258,6 +290,33 @@ router.get("/manage/edit/:id", uac.userManagement, (req, res, next) => {
       member: member,
       user: req.session.user,
     });
+  });
+});
+
+router.post("/manage/edit", uac.userManagement, (req, res) => {
+  console.log(req.body);
+  User.findOne({ _id: req.body.id }, (err, user) => {
+    if (err) return res.status(500).json({ msg: "Server Error" });
+    User.find(
+      {
+        $or: [
+          { email: req.body.email },
+          { username: req.body.username },
+          { mobileNumber: req.body.mobileNumber },
+        ],
+      },
+      (err, temp) => {
+        if (err) return res.status(500).json({ msg: "Server Error" });
+        if (temp.length !== 0) {
+          for (const index in temp) {
+            if (user._id !== temp[index]._id) {
+              req.flash("error", "خطا در انجام ویرایش");
+              return res.redirect("/user/manage");
+            }
+          }
+        }
+      }
+    );
   });
 });
 

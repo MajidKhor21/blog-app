@@ -52,7 +52,7 @@ const UserSchema = new Schema({
     type: String,
     unique: true,
     required: true,
-    match: /^\d{11}$/,
+    match: /^(\+98|0098|0)?9\d{9}$/,
   },
   lastUpdate: {
     type: Date,
