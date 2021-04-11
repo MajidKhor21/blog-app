@@ -15,7 +15,6 @@ router.get("/", (req, res, next) => {
 
 //reset pass route
 router.post("/", async (req, res, next) => {
-  console.log(req.headers.referer);
   //check req.body is not empty
   if (!req.body.email) {
     req.flash("error", "ایمیل خود را وارد کنید");
@@ -66,7 +65,12 @@ router.post("/", async (req, res, next) => {
   });
 });
 
-router.get("/password/:token", (req, res) => {
+router.get("/password/:token", async (req, res) => {
+  //check token is valid
+  const result = await ResetPassowrd.findOne({ token: req.params.token });
+  if (!result) {
+    return res.status(400).redirect("/404");
+  }
   return res.render("auth/reset-password", {
     token: req.params.token,
     password: req.flash("password"),
@@ -76,13 +80,9 @@ router.get("/password/:token", (req, res) => {
 router.post("/password", async (req, res) => {
   const token = req.body.token.trim();
   const regex = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/);
-
+  //get token is valid
   const result = await ResetPassowrd.findOne({ token });
   if (!result) {
-    req.flash("error", "درخواست نامعتبر");
-    return res.redirect("/reset");
-  }
-  if (result.used) {
     req.flash("error", "درخواست نامعتبر");
     return res.redirect("/reset");
   }
@@ -101,7 +101,7 @@ router.post("/password", async (req, res) => {
     req.flash("error", "کاربری با آدرس ایمیل وارد شده یافت نشد");
     return res.redirect("/reset");
   }
-  await result.updateOne({ used: true });
+  await result.remove({ token: req.params.token });
   req.flash("password", "رمز عبور با موفقیت تغییر کرد");
   return res.redirect("/login");
 });

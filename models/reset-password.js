@@ -14,10 +14,6 @@ const ResetPasswordSchema = new Schema({
     type: String,
     required: true,
   },
-  used: {
-    type: Boolean,
-    default: false,
-  },
 });
 
 module.exports = mongoose.model("reset-password", ResetPasswordSchema);

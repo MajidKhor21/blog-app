@@ -52,6 +52,7 @@ router.post("/createAdmin", (req, res) => {
 });
 
 router.get("/404", (req, res) => {
+  res.status("404");
   return res.render("404");
 });
 
