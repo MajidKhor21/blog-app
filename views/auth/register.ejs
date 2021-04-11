@@ -26,15 +26,6 @@
       <div class="container">
         <div class="center form col-11">
           <p class="title">ثبت نام</p>
-
-          <div
-            class="alert alert-danger w-75 mx-auto d-none"
-            role="alert"
-            id="alertMsg"
-          >
-            الزامی
-          </div>
-
           <div
             class="alert alert-warning w-75 mx-auto d-none"
             role="alert"
@@ -42,80 +33,140 @@
           >
             خطا
           </div>
-
-          <div
-            class="alert alert-success w-75 mx-auto d-none"
-            role="alert"
-            id="msg"
-          >
-            حساب کاربری با موفقیت ایجاد شد
-          </div>
-
-          <div class="text-input">
-            <i class="fas fa-user"></i>
-            <input type="text" id="firstName" placeholder="نام" />
-          </div>
-          <div class="text-input">
-            <i class="fas fa-user"></i>
-            <input type="text" id="lastName" placeholder="نام خانوادگی" />
-          </div>
-          <div class="text-input">
-            <i class="fas fa-envelope"></i>
-            <input type="email" id="email" placeholder="آدرس ایمیل" />
-          </div>
-          <div class="text-input">
-            <i class="fas fa-id-card-alt"></i>
-            <input type="text" id="username" placeholder="نام کاربری" />
-          </div>
-
-          <div class="text-input">
-            <i class="fas fa-lock"></i>
-            <input type="password" id="password" placeholder="رمز عبور" />
-          </div>
-          <div class="text-input">
-            <i class="fas fa-redo"></i>
-            <input
-              type="password"
-              id="rePassword"
-              placeholder="تکرار رمز عبور"
-            />
-          </div>
-          <div class="text-input">
-            <i class="fas fa-mobile-alt"></i>
-            <input type="text" id="mobileNumber" placeholder="شماره موبایل" />
-          </div>
-
-          <div class="text-input">
-            <i class="fas fa-venus-mars" id="gen"></i>
-            <div class="form-check text-light" id="radioBtn">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="exampleRadios"
-                value="male"
-                checked
-              />
-              <label
-                class="form-check-label mr-4"
-                for="exampleRadios1"
-                style="margin-left: 15px"
+          <form action="/register" method="post">
+            <% if(messages) { %>
+            <div class="alert alert-danger alert-dismissible">
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
               >
-                مرد
-              </label>
-              <input
-                class="form-check-input"
-                type="radio"
-                name="exampleRadios"
-                id="exampleRadios1"
-                value="female"
-              />
-              <label class="form-check-label mr-4" for="exampleRadios1">
-                زن
-              </label>
+                <span>×</span>
+              </button>
+              <% messages.forEach(msg =>{ %> <%- msg %> <br />
+              <% }) %>
             </div>
-          </div>
+            <% } %> <% if(error) { %>
+            <div class="alert alert-danger alert-dismissible">
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+              >
+                <span>×</span>
+              </button>
+              <%= error %>
+            </div>
+            <% } %>
+            <div class="text-input">
+              <i class="fas fa-user"></i>
+              <input
+                type="text"
+                id="firstName"
+                name="firstName"
+                placeholder="نام"
+                required
+              />
+            </div>
+            <div class="text-input">
+              <i class="fas fa-user"></i>
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                placeholder="نام خانوادگی"
+                required
+              />
+            </div>
+            <div class="text-input">
+              <i class="fas fa-envelope"></i>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="آدرس ایمیل"
+                required
+              />
+            </div>
+            <div class="text-input">
+              <i class="fas fa-id-card-alt"></i>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                placeholder="نام کاربری"
+                required
+              />
+            </div>
+            <div class="text-input">
+              <i class="fas fa-lock"></i>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="رمز عبور"
+                required
+              />
+            </div>
+            <div class="text-input">
+              <i class="fas fa-redo"></i>
+              <input
+                type="password"
+                id="rePassword"
+                placeholder="تکرار رمز عبور"
+                required
+              />
+            </div>
+            <div class="text-input">
+              <i class="fas fa-mobile-alt"></i>
+              <input
+                type="text"
+                id="mobileNumber"
+                name="mobileNumber"
+                placeholder="شماره موبایل"
+                required
+              />
+            </div>
+            <div class="text-input">
+              <i class="fas fa-venus-mars" id="gen"></i>
+              <div class="form-check text-light" id="radioBtn">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="gender"
+                  value="male"
+                  checked
+                />
+                <label
+                  class="form-check-label mr-4"
+                  for="exampleRadios1"
+                  style="margin-left: 15px"
+                >
+                  مرد
+                </label>
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="gender"
+                  id="exampleRadios1"
+                  value="female"
+                />
+                <label class="form-check-label mr-4" for="exampleRadios1">
+                  زن
+                </label>
+              </div>
+            </div>
+            <input
+              type="submit"
+              class="d-none"
+              value="ثبت نام"
+              id="submitBtn"
+            />
+          </form>
 
-          <button class="submitBtn btn btn-success" id="submitBtn">
+          <button class="submitBtn btn btn-success" id="registerBtn">
             ثبت نام
           </button>
 

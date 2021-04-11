@@ -10,6 +10,7 @@ router.get("/", (req, res, next) => {
   res.render("auth/login", {
     password: req.flash("password"),
     messages: req.flash("messages"),
+    registered: req.flash("registered"),
   });
 });
 
@@ -17,7 +18,6 @@ router.get("/", (req, res, next) => {
 router.post("/", userLoginValidate.handle(), (req, res, next) => {
   //check req.body is valid
   const result = validationResult(req);
-  console.log(result);
   if (!result.isEmpty()) {
     const errors = result.array();
     const messages = [];

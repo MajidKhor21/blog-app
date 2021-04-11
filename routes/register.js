@@ -1,39 +1,56 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
+const userRegisterValidate = require("../tools/validator/userRegisterValidate");
+const { validationResult } = require("express-validator");
 
 //get register page
 router.get("/", (req, res, next) => {
-  res.render("auth/register");
+  console.log(req.flash);
+  res.render("auth/register", {
+    messages: req.flash("errors"),
+    error: req.flash("error"),
+  });
 });
 
 //add a new user route
-router.post("/", (req, res, next) => {
-  console.log(req.body);
-  //check request body is not empty
-  if (
-    !req.body.firstName ||
-    !req.body.lastName ||
-    !req.body.email ||
-    !req.body.username ||
-    !req.body.password ||
-    !req.body.gender ||
-    !req.body.mobileNumber
-  ) {
-    return res.status(400).json({ msg: "empty field" });
+router.post("/", userRegisterValidate.handle(), (req, res, next) => {
+  //check request body is valid
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+    const errors = result.array();
+    const messages = [];
+    errors.forEach((err) => {
+      messages.push(err.msg);
+    });
+    req.flash("errors", messages);
+    res.status(404);
+    return res.redirect("/register");
   }
   //check that requested username is not valid in our database
   User.findOne({ username: req.body.username.trim() }, (err, existUser) => {
     if (err) return res.status(500).json({ msg: "server error" });
-    if (existUser) return res.status(400).json({ msg: "user exist" });
+    if (existUser) {
+      req.flash("error", "نام کاربری وارد شده معتبر نمی باشد.");
+      res.status(404);
+      return res.redirect("/register");
+    }
     //check that requested mobile number is not valid in our database
     User.findOne({ mobileNumber: req.body.mobileNumber }, (err, user) => {
       if (err) return res.status(500).json({ msg: "server error" });
-      if (user) return res.status(400).json({ msg: "phone number" });
+      if (user) {
+        req.flash("error", "شماره موبایل وارد شده معتبر نمی باشد.");
+        res.status(404);
+        return res.redirect("/register");
+      }
       //check that requested email address is not valid in our database
       User.findOne({ email: req.body.email }, (err, user) => {
         if (err) return res.status(500).json({ msg: "server error" });
-        if (user) return res.status(400).json({ msg: "email exist" });
+        if (user) {
+          req.flash("error", "آدرس ایمیل وارد شده معتبر نمی باشد.");
+          res.status(404);
+          return res.redirect("/register");
+        }
         //save req.body into a new object of user and save it into database
         new User({
           firstName: req.body.firstName,
@@ -45,7 +62,8 @@ router.post("/", (req, res, next) => {
           gender: req.body.gender,
         }).save((err) => {
           if (err) return res.status(500).json({ msg: "server error" });
-          return res.status(200).json({ msg: "successfully added" });
+          req.flash("registered", "عملیات ثبت نام با موفقیت انجام شد.");
+          return res.status(200).redirect("/login");
         });
       });
     });
