@@ -48,6 +48,7 @@ router.get("/dashboard", async (req, res, next) => {
     page: req.query.page,
     successfullyAdded: req.flash("successfullyAdded"),
     remove: req.flash("delete"),
+    login: req.flash("login"),
     articles,
     createTime,
     current: page,

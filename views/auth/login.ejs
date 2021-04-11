@@ -26,27 +26,6 @@
       <div class="container">
         <div class="center form col-11">
           <p class="title">ورود به پنل کاربری</p>
-          <div
-            class="alert alert-danger w-75 mx-auto d-none"
-            role="alert"
-            id="alertMsg"
-          >
-            الزامی
-          </div>
-          <div
-            class="alert alert-success w-75 mx-auto d-none"
-            role="alert"
-            id="msg"
-          >
-            ورود موفقیت آمیز
-          </div>
-          <div
-            class="alert alert-warning w-75 mx-auto d-none"
-            role="alert"
-            id="msg2"
-          >
-            خطا
-          </div>
           <% if (password) { %>
           <div
             class="alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
@@ -64,14 +43,40 @@
             <%= password %>
           </div>
           <% } %>
-          <div class="text-input">
-            <i class="fas fa-id-card-alt"></i>
-            <input type="text" id="username" placeholder="نام کاربری" />
-          </div>
-          <div class="text-input">
-            <i class="fas fa-lock"></i>
-            <input type="password" id="password" placeholder="رمز عبور" />
-          </div>
+          <form action="/login" method="post">
+            <% if(messages) { %>
+            <div class="alert alert-danger alert-dismissible w-75 mx-auto">
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+              >
+                <span>×</span>
+              </button>
+              خطا
+            </div>
+            <% } %>
+            <div class="text-input">
+              <i class="fas fa-id-card-alt"></i>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                placeholder="نام کاربری"
+              />
+            </div>
+            <div class="text-input">
+              <i class="fas fa-lock"></i>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="رمز عبور"
+              />
+            </div>
+            <input type="submit" class="d-none" id="submitBtn" />
+          </form>
 
           <button class="submitBtn btn btn-success" id="loginBtn">ورود</button>
 
