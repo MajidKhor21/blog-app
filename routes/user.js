@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
 const Article = require("../models/article");
+const ResetPassowrd = require("../models/reset-password");
 const moment = require("moment-jalaali");
 const multer = require("multer");
 const generalTools = require("../tools/general-tools");
@@ -9,7 +10,9 @@ const fs = require("fs");
 const path = require("path");
 const uac = require("../tools/uac");
 const userEditValidate = require("../tools/validator/userEditValidate");
-const { body, validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
+const uniqueString = require("unique-string");
+const nodemailer = require("nodemailer");
 
 //redirect user to dashboard page
 router.get("/dashboard", async (req, res, next) => {
@@ -266,6 +269,7 @@ router.get("/manage", uac.userManagement, async (req, res, next) => {
     order: req.query.order,
     invalid: req.flash("invalid"),
     error: req.flash("error"),
+    resetPassword: req.flash("resetPassword"),
     users,
     createTime,
     current: page,
@@ -273,51 +277,46 @@ router.get("/manage", uac.userManagement, async (req, res, next) => {
   });
 });
 
-//edit users by admin
-router.get("/manage/edit/:id", uac.userManagement, (req, res, next) => {
-  User.find({ _id: req.params.id }, (err, member) => {
-    if (err) return res.status(500).json({ msg: "Server Error" });
-    if (member.length === 0) {
-      req.flash("invalid", "کاربر مد نظر وجود ندارد");
-      return res.status(403).redirect("/user/manage");
-    }
-    member[0].lastUpdateDate = moment(req.session.user.lastUpdate).format(
-      "jYYYY/jM/jD"
-    );
-    member[0].lastUpdateTime = moment(req.session.user.lastUpdate).format(
-      "HH:mm"
-    );
-    return res.render("user/admin/edit-user", {
-      member: member,
-      user: req.session.user,
-    });
+router.get("/manage/reset/:id", uac.userManagement, async (req, res, next) => {
+  const user = await User.find({ _id: req.params.id });
+  const setPassword = new ResetPassowrd({
+    email: user[0].email,
+    token: uniqueString(),
   });
-});
 
-router.post("/manage/edit", uac.userManagement, (req, res) => {
-  console.log(req.body);
-  User.findOne({ _id: req.body.id }, (err, user) => {
-    if (err) return res.status(500).json({ msg: "Server Error" });
-    User.find(
-      {
-        $or: [
-          { email: req.body.email },
-          { username: req.body.username },
-          { mobileNumber: req.body.mobileNumber },
-        ],
-      },
-      (err, temp) => {
-        if (err) return res.status(500).json({ msg: "Server Error" });
-        if (temp.length !== 0) {
-          for (const index in temp) {
-            if (user._id !== temp[index]._id) {
-              req.flash("error", "خطا در انجام ویرایش");
-              return res.redirect("/user/manage");
-            }
-          }
-        }
-      }
+  await setPassword.save((err) => {
+    console.log(err);
+  });
+  console.log(setPassword);
+
+  // create reusable transporter object using the default SMTP transport
+  let transporter = await nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true, // use SSL
+    auth: {
+      user: "m.requiem21@gmail.com", // user
+      pass: "464794646a", // password
+    },
+  });
+
+  // send mail with defined transport object
+  let info = await transporter.sendMail({
+    from: '"مکتب بلاگ 👻" <manager@maktab.info>', // sender address
+    to: `${setPassword.email}`, // list of receivers
+    subject: "بازیابی رمز عبور ✔", // Subject line
+    text: "از طریق لینک زیر می توانید رمز عبور خود را تغییر دهید?", // plain text body
+    html: `<a href="http://${req.headers.host}/reset/password/${setPassword.token}">لینک بازیابی رمز عبور</a>`, // html body
+  });
+
+  await transporter.sendMail(info, (err) => {
+    if (err) console.log(err.message);
+
+    req.flash(
+      "resetPassword",
+      "لینک بازیابی رمز عبور به آدرس ایمیل کاربر مورد نظر وارد شده ارسال شد."
     );
+    return res.redirect("/user/manage");
   });
 });
 

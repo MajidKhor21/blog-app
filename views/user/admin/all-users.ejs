@@ -89,6 +89,22 @@
                 <%= error %>
               </div>
               <% } %>
+              <% if (resetPassword) { %>
+                <div
+                  class="alert alert-success alert-dismissible fade show w-50 text-right mx-auto"
+                  role="alert"
+                >
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="alert"
+                    aria-label="Close"
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <%= resetPassword %>
+                </div>
+                <% } %>
           <div class="container">
             
             <table class="table table-hover table-fixed">
@@ -156,14 +172,9 @@
                     <div>
                       <a
                         class="text-info updateBtn"
-                        href="/user/manage/update/<%= users[index]._id %> "
-                        ><i class="fas fa-redo ml-2" style="font-size: 20px"></i
+                        href="/user/manage/reset/<%= users[index]._id %>"
+                        ><i class="fas fa-redo ml-2" style="font-size: 18px"></i
                       ></a>
-                      <a
-                      class="text-warning updateBtn"
-                      href="/user/manage/edit/<%= users[index]._id %> "
-                      ><i class="far fa-edit ml-2" style="font-size: 20px"></i
-                    ></a>
                       <a
                         class="text-danger"
                         href="/user/manage/delete/<%= users[index]._id %> "
@@ -188,7 +199,7 @@
           </li>
           <% } else { %>
           <li>
-            <a class="page-link" href="/user/all?search=<%= search %>&page=1&order=<%= order %>">اولین</a>
+            <a class="page-link" href="/user/manage?search=<%= search %>&page=1&order=<%= order %>">اولین</a>
           </li>
           <% } %> <% let i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
           <% if (i !== 1) { %>
@@ -200,7 +211,7 @@
           </li>
           <% } else { %>
           <li>
-            <a class="page-link" href="/user/all?search=<%= search %>&page=<%= i %>&order=<%= order %>"
+            <a class="page-link" href="/user/manage?search=<%= search %>&page=<%= i %>&order=<%= order %>"
               ><%= i %></a
             >
           </li>
@@ -212,7 +223,7 @@
           </li>
           <% } else { %>
           <li>
-            <a class="page-link" href="/user/all?search=<%= search %>&page=<%= pages %>&order=<%= order %>"
+            <a class="page-link" href="/user/manage?search=<%= search %>&page=<%= pages %>&order=<%= order %>"
               >آخرین</a
             >
           </li>

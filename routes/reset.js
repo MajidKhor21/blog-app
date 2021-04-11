@@ -59,7 +59,7 @@ router.post("/", async (req, res, next) => {
 
     req.flash(
       "success",
-      "لینک تغییر رمز عبور به آدرس ایمیل وارد شده ارسال شد."
+      "لینک بازیابی رمز عبور به آدرس ایمیل وارد شده ارسال شد."
     );
     return res.redirect("/reset");
   });
