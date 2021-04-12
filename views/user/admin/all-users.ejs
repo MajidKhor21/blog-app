@@ -31,7 +31,7 @@
                 <form
                   class="input-group col-6 m-auto"
                   style="direction: rtl"
-                  action="/user/manage"
+                  action="/user/manage/members"
                   method="GET" 
                 >
                   <input
@@ -121,9 +121,9 @@
                     <%= deleted %>
                   </div>
                   <% } %>
-          <div class="container">
+          <div class="container-fluid">
             
-            <table class="table table-hover table-fixed">
+            <table class="table table-hover table-fixed w-75 mx-auto">
               <thead
                 style="
                   background-color: #343a40;
@@ -133,16 +133,17 @@
                 <tr>
                   <th class="d-none" scope="col"></th>
                   <% if(order === 'desc') { %>
-                    <th scope="col"><a  href="/user/manage?search=<%= search %>&page=<%= page %>&order=asc" style="color: inherit"><i class="fas fa-sort"> #</i></a></th>
+                    <th scope="col"><a  href="/user/manage/members?search=<%= search %>&page=<%= page %>&order=asc" style="color: inherit"><i class="fas fa-sort"> #</i></a></th>
                  <% } %>
                  <% if(order === 'asc') { %>
-                  <th scope="col"><a href="/user/manage?search=<%= search %>&page=<%= page %>&order=desc" style="color: inherit"><i class="fas fa-sort"> #</i></a></th>
+                  <th scope="col"><a href="/user/manage/members?search=<%= search %>&page=<%= page %>&order=desc" style="color: inherit"><i class="fas fa-sort"> #</i></a></th>
                 <% } %>
                   <th scope="col">نام</th>
                   <th scope="col">نام خانوادگی</th>
                   <th scope="col">عکس آواتار</th>
                   <th class="text-center" scope="col">آدرس ایمیل</th>
                   <th scope="col">نام کاربری</th>
+                  <th scope="col">تعداد مقالات</th>
                   <th scope="col">جنسیت</th>
                   <th scope="col">شماره موبایل</th>
                   <th scope="col">تاریخ عضویت</th>
@@ -175,8 +176,9 @@
                               />
                         <% } %>
                   </td>
-                  <td><%= users[index].email %> </td>
-                  <td><%= users[index].username %> </td>
+                  <td><%= users[index].email %></td>
+                  <td><%= users[index].username %></td>
+                  <td><%= users[index].articleCounter %></td>
                   <% if (users[index].gender === "male") { %>
                     <td>مرد</td>
                     <%} else { %>
@@ -188,12 +190,12 @@
                     <div>
                       <a
                         class="text-info updateBtn"
-                        href="/user/manage/reset/<%= users[index]._id %>"
+                        href="/user/manage/members/reset/<%= users[index]._id %>"
                         ><i class="fas fa-redo ml-2" style="font-size: 18px"></i
                       ></a>
                       <a
                         class="text-danger"
-                        href="/user/manage/delete/<%= users[index]._id %>"
+                        href="/user/manage/members/delete/<%= users[index]._id %>"
                       >
                         <i class="far fa-trash-alt" style="font-size: 20px"></i></i
                       ></a>
@@ -215,7 +217,7 @@
           </li>
           <% } else { %>
           <li>
-            <a class="page-link" href="/user/manage?search=<%= search %>&page=1&order=<%= order %>">اولین</a>
+            <a class="page-link" href="/user/manage/members?search=<%= search %>&page=1&order=<%= order %>">اولین</a>
           </li>
           <% } %> <% let i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
           <% if (i !== 1) { %>
@@ -227,7 +229,7 @@
           </li>
           <% } else { %>
           <li>
-            <a class="page-link" href="/user/manage?search=<%= search %>&page=<%= i %>&order=<%= order %>"
+            <a class="page-link" href="/user/manage/members?search=<%= search %>&page=<%= i %>&order=<%= order %>"
               ><%= i %></a
             >
           </li>
@@ -239,7 +241,7 @@
           </li>
           <% } else { %>
           <li>
-            <a class="page-link" href="/user/manage?search=<%= search %>&page=<%= pages %>&order=<%= order %>"
+            <a class="page-link" href="/user/manage/members?search=<%= search %>&page=<%= pages %>&order=<%= order %>"
               >آخرین</a
             >
           </li>

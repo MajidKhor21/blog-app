@@ -10,7 +10,7 @@ const uniqueString = require("unique-string");
 const nodemailer = require("nodemailer");
 
 //manage all users route
-router.get("/", async (req, res, next) => {
+router.get("/members", async (req, res, next) => {
   let perPage = 10;
   let page = req.query.page || 1;
   let search = new RegExp(req.query.search, "i");
@@ -29,6 +29,7 @@ router.get("/", async (req, res, next) => {
     .skip(perPage * page - perPage)
     .limit(perPage)
     .sort({ createdAt: order });
+  console.log(users);
   let createTime = [];
   for (let index = 0; index < users.length; index++) {
     createTime[index] = {
@@ -57,7 +58,7 @@ router.get("/", async (req, res, next) => {
 });
 
 //reset password route for admin only
-router.get("/reset/:id", async (req, res, next) => {
+router.get("/members/reset/:id", async (req, res, next) => {
   const user = await User.find({ _id: req.params.id });
   const setPassword = new ResetPassowrd({
     email: user[0].email,
@@ -96,12 +97,12 @@ router.get("/reset/:id", async (req, res, next) => {
       "resetPassword",
       "لینک بازیابی رمز عبور به آدرس ایمیل کاربر مورد نظر وارد شده ارسال شد."
     );
-    return res.redirect("/user/manage");
+    return res.redirect("/user/manage/members");
   });
 });
 
 //delete user with articles route for admin only
-router.get("/delete/:id", async (req, res, next) => {
+router.get("/members/delete/:id", async (req, res, next) => {
   console.log(req.cookies);
   const articles = await Article.find({ author: req.params.id });
   const user = await User.find({ _id: req.params.id });
@@ -139,7 +140,57 @@ router.get("/delete/:id", async (req, res, next) => {
   }
   await User.deleteOne({ _id: req.params.id });
   req.flash("deleted", "کاربر مد نظر با موفقیت حذف شد.");
-  return res.status(200).redirect("/user/manage");
+  return res.status(200).redirect("/user/manage/members");
+});
+
+router.get("/articles", async (req, res, next) => {
+  //paginate user articles per page 10
+  let perPage = 10;
+  let page = req.query.page || 1;
+  let search = new RegExp(req.query.search, "i");
+  req.query.order = req.query.order || "desc";
+  let order = -1;
+  if (req.query.order === "asc") {
+    order = 1;
+  } else if (req.query.order === "desc") {
+    order = -1;
+  }
+  //show only author's articles
+  const articles = await Article.find({
+    $or: [{ title: search }, { brief: search }],
+  })
+    .skip(perPage * page - perPage)
+    .limit(perPage)
+    .populate("author", { firstName: 1, lastName: 1, _id: 0 })
+    .sort({ createdAt: order });
+  let lastUpdate = [];
+  let createAt = [];
+  for (let index = 0; index < articles.length; index++) {
+    lastUpdate[index] = {
+      date: moment(articles[index].lastUpdate).format("jYYYY/jM/jD"),
+      time: moment(articles[index].lastUpdate).format("HH:mm"),
+    };
+    createAt[index] = {
+      date: moment(articles[index].createdAt).format("jYYYY/jM/jD"),
+      time: moment(articles[index].createdAt).format("HH:mm"),
+    };
+  }
+  const count = await Article.find({
+    $or: [{ title: search }, { brief: search }],
+  })
+    .count()
+    .exec();
+  return res.status(200).render("user/admin/user-articles", {
+    articles,
+    lastUpdate,
+    createAt,
+    successfullyEdit: req.flash("successfullyEdit"),
+    user: req.session.user,
+    page: req.query.page,
+    order: req.query.order,
+    current: page,
+    pages: Math.ceil(count / perPage),
+  });
 });
 
 module.exports = router;

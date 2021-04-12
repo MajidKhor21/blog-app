@@ -3,14 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>مقالات من</title>
-    <%- include('../partials/dashboard/scripts-header') %>
+    <title>مقالات کاربران</title>
+    <%- include('../../partials/dashboard/scripts-header') %>
     <link rel="stylesheet" href="/stylesheets/dashboard/article.css" />
   </head>
   <body class="hold-transition sidebar-mini">
     <div class="wrapper">
-      <%- include('../partials/dashboard/navbar') %> <%-
-      include('../partials/dashboard/sidebar') %>
+      <%- include('../../partials/dashboard/navbar') %> <%-
+      include('../../partials/dashboard/sidebar') %>
 
       <div class="content-wrapper mb-5">
         <section class="content-header">
@@ -24,7 +24,7 @@
                 <form
                   class="input-group col-6 m-auto"
                   style="direction: rtl"
-                  action="/article/edit"
+                  action="/user/manage/articles"
                   method="GET"
                 >
                   <input
@@ -79,14 +79,15 @@
                   <th class="d-none" scope="col"></th>
                   <th class="d-none" scope="col"></th>
                   <% if(order === 'desc') { %>
-                    <th scope="col"><a  href="/article/edit?search=<%= search %>&page=<%= page %>&order=asc" style="color: inherit"><i class="fas fa-sort"> #</i></a></th>
+                    <th scope="col"><a  href="/user/manage/articles?search=<%= search %>&page=<%= page %>&order=asc" style="color: inherit"><i class="fas fa-sort"> #</i></a></th>
                  <% } %>
                  <% if(order === 'asc') { %>
-                  <th scope="col"><a href="/article/edit?search=<%= search %>&page=<%= page %>&order=desc" style="color: inherit"><i class="fas fa-sort"> #</i></a></th>
+                  <th scope="col"><a href="/user/manage/articles?search=<%= search %>&page=<%= page %>&order=desc" style="color: inherit"><i class="fas fa-sort"> #</i></a></th>
                 <% } %>
                   <th scope="col">عنوان مقاله</th>
                   <th scope="col">خلاصه مقاله</th>
                   <th scope="col">تصویر مقاله</th>
+                  <th scope="col">نویسنده</th>
                   <th scope="col">تعداد بازدید</th>
                   <th scope="col">تاریخ ایجاد</th>
                   <th scope="col">آخرین ویرایش</th>
@@ -112,16 +113,12 @@
                       height="40px;"
                     />
                   </td>
+                  <td><%= articles[index].author.firstName %> <%= articles[index].author.lastName %></td>
                   <td><%= articles[index].viewCounter %></td>
                   <td><%= createAt[index].time %> - <%= createAt[index].date %></td>
                   <td><%= lastUpdate[index].time %> - <%= lastUpdate[index].date %></td>
                   <td>
                     <div>
-                      <a
-                        class="text-warning updateBtn"
-                        href="/article/edit/<%= articles[index]._id %> "
-                        ><i class="far fa-edit ml-4" style="font-size: 20px"></i
-                      ></a>
                       <a
                         class="text-danger"
                         href="/article/delete/<%= articles[index]._id %> "
@@ -146,7 +143,7 @@
           </li>
           <% } else { %>
           <li>
-            <a class="page-link" href="/article/edit?search=<%= search %>&page=1&order=<%= order %>">اولین</a>
+            <a class="page-link" href="/user/manage/articles?search=<%= search %>&page=1&order=<%= order %>">اولین</a>
           </li>
           <% } %> <% let i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
           <% if (i !== 1) { %>
@@ -158,7 +155,7 @@
           </li>
           <% } else { %>
           <li>
-            <a class="page-link" href="/article/edit?search=<%= search %>&page=<%= i %>&order=<%= order %>"
+            <a class="page-link" href="/user/manage/articles?search=<%= search %>&page=<%= i %>&order=<%= order %>"
               ><%= i %></a
             >
           </li>
@@ -170,7 +167,7 @@
           </li>
           <% } else { %>
           <li>
-            <a class="page-link" href="/article/edit?search=<%= search %>&page=<%= pages %>&order=<%= order %>"
+            <a class="page-link" href="/user/manage/articles?search=<%= search %>&page=<%= pages %>&order=<%= order %>"
               >آخرین</a
             >
           </li>
@@ -178,13 +175,13 @@
         </ul>
         <% } %>
       </nav>
-      <%- include('../partials/dashboard/footer') %>
+      <%- include('../../partials/dashboard/footer') %>
 
       <aside
         class="control-sidebar control-sidebar-dark control-sidebar-animate"
       ></aside>
     </div>
-    <%- include('../partials/dashboard/scripts-footer') %>
+    <%- include('../../partials/dashboard/scripts-footer') %>
     <script src="/javascripts/dashboard/article/updateArticle.js"></script>
     <script>
       $("#alertSuccess")

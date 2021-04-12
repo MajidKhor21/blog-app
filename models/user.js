@@ -67,6 +67,10 @@ const UserSchema = new Schema({
     type: String,
     default: "default",
   },
+  articleCounter: {
+    type: Number,
+    default: 0,
+  },
 });
 
 UserSchema.pre("save", function (next) {

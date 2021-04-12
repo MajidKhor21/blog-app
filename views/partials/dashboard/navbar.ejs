@@ -12,11 +12,15 @@
       <a href="/article/create" class="nav-link">ایجاد مقاله جدید</a>
     </li>
     <li class="nav-item d-none d-xl-inline-block">
-      <a href="/article/edit" class="nav-link">ویرایش مقالات</a>
+      <a href="/article/edit" class="nav-link">مقالات من</a>
     </li>
     <% if (user.role === 'admin') { %>
     <li class="nav-item d-none d-xl-inline-block">
-      <a href="/user/manage" class="nav-link">کاربران</a>
+      <a href="/user/manage/articles" class="nav-link">مقالات کاربران</a>
+    </li>
+    <% } %> <% if (user.role === 'admin') { %>
+    <li class="nav-item d-none d-xl-inline-block">
+      <a href="/user/manage/members" class="nav-link">مدیریت کاربران</a>
     </li>
     <% } %>
   </ul>

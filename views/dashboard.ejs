@@ -103,7 +103,8 @@
               </button>
               <%= login %>
             </div>
-            <% } %> <% if (order === 'desc') { %>
+            <% } %> <% if(articles.length > 0) { %> <% if (order === 'desc') {
+            %>
             <select
               class="form-control col-11 col-sm-6 col-lg-4 w-100 mb-4"
               onChange="window.location.href=this.value"
@@ -137,7 +138,7 @@
                 مرتب سازی: از اولین به آخرین
               </option>
             </select>
-            <% } %>
+            <% } %> <% } %>
 
             <div class="card-deck">
               <% for( let index = 0; index < articles.length; index++ ) { %>
