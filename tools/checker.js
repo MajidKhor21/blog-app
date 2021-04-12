@@ -1,3 +1,4 @@
+const User = require("../models/user");
 const checker = {};
 
 checker.sessionChecker = function (req, res, next) {
@@ -8,9 +9,13 @@ checker.sessionChecker = function (req, res, next) {
   return next();
 };
 
-checker.loginChecker = function (req, res, next) {
+checker.loginChecker = async (req, res, next) => {
+  const exist = await User.findOne({ _id: req.session.user._id });
   if (!req.session.user) {
     return res.redirect("/login");
+  }
+  if (!exist) {
+    return res.redirect("/logout");
   }
 
   return next();

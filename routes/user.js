@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
 const Article = require("../models/article");
-const ResetPassowrd = require("../models/reset-password");
 const moment = require("moment-jalaali");
 const multer = require("multer");
 const generalTools = require("../tools/general-tools");
@@ -11,8 +10,6 @@ const path = require("path");
 const uac = require("../tools/uac");
 const userEditValidate = require("../tools/validator/userEditValidate");
 const { validationResult } = require("express-validator");
-const uniqueString = require("unique-string");
-const nodemailer = require("nodemailer");
 
 //redirect user to dashboard page
 router.get("/dashboard", async (req, res, next) => {
@@ -231,93 +228,7 @@ router.put("/removeAvatar", (req, res) => {
   );
 });
 
-//manage all users route
-router.get("/manage", uac.userManagement, async (req, res, next) => {
-  let perPage = 10;
-  let page = req.query.page || 1;
-  let search = new RegExp(req.query.search, "i");
-  req.query.order = req.query.order || "desc";
-  let order = -1;
-  if (req.query.order === "asc") {
-    order = 1;
-  } else if (req.query.order === "desc") {
-    order = -1;
-  }
-
-  const users = await User.find({
-    role: { $ne: "admin" },
-    $or: [{ firstName: search }, { lastName: search }, { username: search }],
-  })
-    .skip(perPage * page - perPage)
-    .limit(perPage)
-    .sort({ createdAt: order });
-  let createTime = [];
-  for (let index = 0; index < users.length; index++) {
-    createTime[index] = {
-      date: moment(users[index].createdAt).format("jYYYY/jM/jD"),
-      time: moment(users[index].createdAt).format("HH:mm"),
-    };
-  }
-  const count = await User.count({
-    role: { $ne: "admin" },
-    $or: [{ firstName: search }, { lastName: search }, { username: search }],
-  }).exec();
-  return res.status(200).render("user/admin/all-users", {
-    user: req.session.user,
-    msg: req.query.msg,
-    page: req.query.page,
-    order: req.query.order,
-    invalid: req.flash("invalid"),
-    error: req.flash("error"),
-    resetPassword: req.flash("resetPassword"),
-    users,
-    createTime,
-    current: page,
-    pages: Math.ceil(count / perPage),
-  });
-});
-
-router.get("/manage/reset/:id", uac.userManagement, async (req, res, next) => {
-  const user = await User.find({ _id: req.params.id });
-  const setPassword = new ResetPassowrd({
-    email: user[0].email,
-    token: uniqueString(),
-  });
-
-  await setPassword.save((err) => {
-    console.log(err);
-  });
-  console.log(setPassword);
-
-  // create reusable transporter object using the default SMTP transport
-  let transporter = await nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true, // use SSL
-    auth: {
-      user: "m.requiem21@gmail.com", // user
-      pass: "464794646a", // password
-    },
-  });
-
-  // send mail with defined transport object
-  let info = await transporter.sendMail({
-    from: '"مکتب بلاگ 👻" <manager@maktab.info>', // sender address
-    to: `${setPassword.email}`, // list of receivers
-    subject: "بازیابی رمز عبور ✔", // Subject line
-    text: "از طریق لینک زیر می توانید رمز عبور خود را تغییر دهید?", // plain text body
-    html: `<a href="http://${req.headers.host}/reset/password/${setPassword.token}">لینک بازیابی رمز عبور</a>`, // html body
-  });
-
-  await transporter.sendMail(info, (err) => {
-    if (err) console.log(err.message);
-
-    req.flash(
-      "resetPassword",
-      "لینک بازیابی رمز عبور به آدرس ایمیل کاربر مورد نظر وارد شده ارسال شد."
-    );
-    return res.redirect("/user/manage");
-  });
-});
+//manage route only for admin
+router.use("/manage", uac.userManagement, require("./admin"));
 
 module.exports = router;

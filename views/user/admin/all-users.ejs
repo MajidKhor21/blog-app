@@ -105,6 +105,22 @@
                   <%= resetPassword %>
                 </div>
                 <% } %>
+                <% if (deleted) { %>
+                  <div
+                    class="alert alert-success alert-dismissible fade show w-50 text-right mx-auto"
+                    role="alert"
+                  >
+                    <button
+                      type="button"
+                      class="close"
+                      data-dismiss="alert"
+                      aria-label="Close"
+                    >
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                    <%= deleted %>
+                  </div>
+                  <% } %>
           <div class="container">
             
             <table class="table table-hover table-fixed">
@@ -177,7 +193,7 @@
                       ></a>
                       <a
                         class="text-danger"
-                        href="/user/manage/delete/<%= users[index]._id %> "
+                        href="/user/manage/delete/<%= users[index]._id %>"
                       >
                         <i class="far fa-trash-alt" style="font-size: 20px"></i></i
                       ></a>
