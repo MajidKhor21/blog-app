@@ -15,95 +15,101 @@ router.get("/", (req, res, next) => {
 
 //reset pass route
 router.post("/", async (req, res, next) => {
-  //check req.body is not empty
-  if (!req.body.email) {
-    req.flash("error", "ایمیل خود را وارد کنید");
-    return res.redirect("/reset");
-  }
-  const user = await User.findOne({ email: req.body.email });
-  if (!user) {
-    req.flash("error", "کاربری با آدرس ایمیل وارد شده یافت نشد");
-    return res.redirect("/reset");
-  }
-  const setPassword = new ResetPassowrd({
-    email: req.body.email,
-    token: uniqueString(),
-  });
+  try {
+    //check req.body is not empty
+    if (!req.body.email) {
+      req.flash("error", "ایمیل خود را وارد کنید");
+      return res.redirect("/reset");
+    }
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      req.flash("error", "کاربری با آدرس ایمیل وارد شده یافت نشد");
+      return res.redirect("/reset");
+    }
+    const setPassword = new ResetPassowrd({
+      email: req.body.email,
+      token: uniqueString(),
+    });
 
-  await setPassword.save((err) => {
-    console.log(err);
-  });
+    await setPassword.save();
 
-  // create reusable transporter object using the default SMTP transport
-  let transporter = await nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true, // use SSL
-    auth: {
-      user: "m.requiem21@gmail.com", // user
-      pass: "464794646a", // password
-    },
-  });
+    // create reusable transporter object using the default SMTP transport
+    let transporter = await nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true, // use SSL
+      auth: {
+        user: "m.requiem21@gmail.com", // user
+        pass: "464794646a", // password
+      },
+    });
 
-  // send mail with defined transport object
-  let info = await transporter.sendMail({
-    from: '"مکتب بلاگ 👻" <manager@maktab.info>', // sender address
-    to: `${setPassword.email}`, // list of receivers
-    subject: "بازیابی رمز عبور ✔", // Subject line
-    text: "از طریق لینک زیر می توانید رمز عبور خود را تغییر دهید?", // plain text body
-    html: `<a href="${req.headers.referer}/password/${setPassword.token}">لینک بازیابی رمز عبور</a>`, // html body
-  });
+    // send mail with defined transport object
+    let info = await transporter.sendMail({
+      from: '"مکتب بلاگ 👻" <manager@maktab.info>', // sender address
+      to: `${setPassword.email}`, // list of receivers
+      subject: "بازیابی رمز عبور ✔", // Subject line
+      text: "از طریق لینک زیر می توانید رمز عبور خود را تغییر دهید?", // plain text body
+      html: `<a href="${req.headers.referer}/password/${setPassword.token}">لینک بازیابی رمز عبور</a>`, // html body
+    });
 
-  await transporter.sendMail(info, (err) => {
-    if (err) console.log(err.message);
+    await transporter.sendMail(info);
 
     req.flash(
       "success",
       "لینک بازیابی رمز عبور به آدرس ایمیل وارد شده ارسال شد."
     );
-    return res.redirect("/reset");
-  });
+    res.redirect("/reset");
+  } catch {
+    res.status(500).json({ msg: "Server Error" });
+  }
 });
 
-router.get("/password/:token", async (req, res) => {
+router.get("/password/:token", (req, res) => {
   //check token is valid
-  const result = await ResetPassowrd.findOne({ token: req.params.token });
-  if (!result) {
-    return res.status(400).redirect("/404");
-  }
-  return res.render("auth/reset-password", {
-    token: req.params.token,
-    password: req.flash("password"),
+  ResetPassowrd.findOne({ token: req.params.token }, (err, result) => {
+    if (err) return res.status(500).json({ msg: "Server Error" });
+    if (!result) {
+      return res.status(400).redirect("/404");
+    }
+    return res.render("auth/reset-password", {
+      token: req.params.token,
+      password: req.flash("password"),
+    });
   });
 });
 
 router.post("/password", async (req, res) => {
-  const token = req.body.token.trim();
-  const regex = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/);
-  //get token is valid
-  const result = await ResetPassowrd.findOne({ token });
-  if (!result) {
-    req.flash("error", "درخواست نامعتبر");
-    return res.redirect("/reset");
-  }
-  if (!req.body.password || !regex.test(req.body.password)) {
-    req.flash(
-      "password",
-      "رمز عبور باید شامل 6 کاراکتر و یک حرف بزرگ و کوچک باشد"
+  try {
+    const token = req.body.token.trim();
+    const regex = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/);
+    //get token is valid
+    const result = await ResetPassowrd.findOne({ token });
+    if (!result) {
+      req.flash("error", "درخواست نامعتبر");
+      return res.redirect("/reset");
+    }
+    if (!req.body.password || !regex.test(req.body.password)) {
+      req.flash(
+        "password",
+        "رمز عبور باید شامل 6 کاراکتر و یک حرف بزرگ و کوچک باشد"
+      );
+      return res.redirect(`/reset/password/${token}`);
+    }
+    const user = await User.findOneAndUpdate(
+      { email: result.email },
+      { $set: { password: req.body.password } }
     );
-    return res.redirect(`/reset/password/${token}`);
+    if (!user) {
+      req.flash("error", "کاربری با آدرس ایمیل وارد شده یافت نشد");
+      return res.redirect("/reset");
+    }
+    await result.remove({ token: req.params.token });
+    req.flash("password", "رمز عبور با موفقیت تغییر کرد");
+    res.redirect("/login");
+  } catch (err) {
+    res.status(500).json({ msg: "Server Error" });
   }
-  const user = await User.findOneAndUpdate(
-    { email: result.email },
-    { $set: { password: req.body.password } }
-  );
-  if (!user) {
-    req.flash("error", "کاربری با آدرس ایمیل وارد شده یافت نشد");
-    return res.redirect("/reset");
-  }
-  await result.remove({ token: req.params.token });
-  req.flash("password", "رمز عبور با موفقیت تغییر کرد");
-  return res.redirect("/login");
 });
 
 module.exports = router;

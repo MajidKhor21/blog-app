@@ -166,56 +166,60 @@ router.get("/view/:id", (req, res) => {
 
 //get edit articles page
 router.get("/edit", async (req, res) => {
-  //paginate user articles per page 10
-  let perPage = 10;
-  let page = req.query.page || 1;
-  let search = new RegExp(req.query.search, "i");
-  req.query.order = req.query.order || "desc";
-  let order = -1;
-  if (req.query.order === "asc") {
-    order = 1;
-  } else if (req.query.order === "desc") {
-    order = -1;
-  }
-  //show only author's articles
-  const articles = await Article.find({
-    author: req.session.user._id,
-    $or: [{ title: search }, { brief: search }],
-  })
-    .skip(perPage * page - perPage)
-    .limit(perPage)
-    .sort({ createdAt: order });
-  let lastUpdate = [];
-  let createAt = [];
-  for (let index = 0; index < articles.length; index++) {
-    lastUpdate[index] = {
-      date: moment(articles[index].lastUpdate).format("jYYYY/jM/jD"),
-      time: moment(articles[index].lastUpdate).format("HH:mm"),
-    };
-    createAt[index] = {
-      date: moment(articles[index].createdAt).format("jYYYY/jM/jD"),
-      time: moment(articles[index].createdAt).format("HH:mm"),
-    };
-  }
+  try {
+    //paginate user articles per page 10
+    let perPage = 10;
+    let page = req.query.page || 1;
+    let search = new RegExp(req.query.search, "i");
+    req.query.order = req.query.order || "desc";
+    let order = -1;
+    if (req.query.order === "asc") {
+      order = 1;
+    } else if (req.query.order === "desc") {
+      order = -1;
+    }
+    //show only author's articles
+    const articles = await Article.find({
+      author: req.session.user._id,
+      $or: [{ title: search }, { brief: search }],
+    })
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .sort({ createdAt: order });
+    let lastUpdate = [];
+    let createAt = [];
+    for (let index = 0; index < articles.length; index++) {
+      lastUpdate[index] = {
+        date: moment(articles[index].lastUpdate).format("jYYYY/jM/jD"),
+        time: moment(articles[index].lastUpdate).format("HH:mm"),
+      };
+      createAt[index] = {
+        date: moment(articles[index].createdAt).format("jYYYY/jM/jD"),
+        time: moment(articles[index].createdAt).format("HH:mm"),
+      };
+    }
 
-  const count = await Article.find({
-    author: req.session.user._id,
-    $or: [{ title: search }, { brief: search }],
-  })
-    .count()
-    .exec();
+    const count = await Article.find({
+      author: req.session.user._id,
+      $or: [{ title: search }, { brief: search }],
+    })
+      .count()
+      .exec();
 
-  return res.status(200).render("article/all-article", {
-    articles,
-    lastUpdate,
-    createAt,
-    successfullyEdit: req.flash("successfullyEdit"),
-    user: req.session.user,
-    page: req.query.page,
-    order: req.query.order,
-    current: page,
-    pages: Math.ceil(count / perPage),
-  });
+    res.status(200).render("article/all-article", {
+      articles,
+      lastUpdate,
+      createAt,
+      successfullyEdit: req.flash("successfullyEdit"),
+      user: req.session.user,
+      page: req.query.page,
+      order: req.query.order,
+      current: page,
+      pages: Math.ceil(count / perPage),
+    });
+  } catch (err) {
+    res.status(500).json({ msg: "Server Error" });
+  }
 });
 
 //get edit article single page
@@ -316,34 +320,40 @@ router.post("/update", (req, res) => {
 
 //delete article
 router.get("/delete/:id", async (req, res) => {
-  //get article's requested
-  let article = await Article.findById(req.params.id);
-  if (!article) {
-    return res.status(500).json({ msg: "error" });
+  try {
+    //get article's requested
+    let article = await Article.findById(req.params.id);
+    if (!article) throw new Error("article not found");
+    //check if who is requested for delete this article is admin or author of this article
+    if (
+      article.author == req.session.user._id ||
+      req.session.user.role === "admin"
+    ) {
+      //delete picture of article from our host
+      fs.unlinkSync(
+        path.join(__dirname, "../public/images/articles/", article.picture)
+      );
+      //find source of images that uses in describe and delete them from our host
+      let regex = new RegExp("<" + "img" + " .*?" + "src" + '="(.*?)"', "gi"),
+        result,
+        articlePic = [];
+      while ((result = regex.exec(article.describe))) {
+        articlePic.push(result[1]);
+      }
+      articlePic.forEach((element) => {
+        fs.unlinkSync(path.join(__dirname, "../public/", element));
+      });
+      //find and delete article
+      await Article.findByIdAndDelete(req.params.id);
+      await User.findByIdAndUpdate(req.session.user._id, {
+        $inc: { articleCounter: -1 },
+      });
+      req.flash("delete", "مقاله با موفقیت حذف شد.");
+      res.redirect("/user/dashboard");
+    }
+  } catch (err) {
+    res.status(500).json({ msg: "Server Error" });
   }
-  //delete picture of article from our host
-  fs.unlinkSync(
-    path.join(__dirname, "../public/images/articles/", article.picture)
-  );
-  //find source of images that uses in describe and delete them from our host
-  let regex = new RegExp("<" + "img" + " .*?" + "src" + '="(.*?)"', "gi"),
-    result,
-    articlePic = [];
-
-  while ((result = regex.exec(article.describe))) {
-    articlePic.push(result[1]);
-  }
-  articlePic.forEach((element) => {
-    fs.unlinkSync(path.join(__dirname, "../public/", element));
-  });
-
-  //find and delete article
-  await Article.findByIdAndDelete(req.params.id);
-  await User.findByIdAndUpdate(req.session.user._id, {
-    $inc: { articleCounter: -1 },
-  });
-  req.flash("delete", "مقاله با موفقیت حذف شد.");
-  return res.redirect("/user/dashboard");
 });
 
 module.exports = router;

@@ -13,47 +13,51 @@ const { validationResult } = require("express-validator");
 
 //redirect user to dashboard page
 router.get("/dashboard", async (req, res, next) => {
-  let perPage = 6;
-  let page = req.query.page || 1;
-  let search = new RegExp(req.query.search, "i");
-  req.query.order = req.query.order || "desc";
-  let order = -1;
-  if (req.query.order === "asc") {
-    order = 1;
-  } else if (req.query.order === "desc") {
-    order = -1;
-  }
+  try {
+    let perPage = 6;
+    let page = req.query.page || 1;
+    let search = new RegExp(req.query.search, "i");
+    req.query.order = req.query.order || "desc";
+    let order = -1;
+    if (req.query.order === "asc") {
+      order = 1;
+    } else if (req.query.order === "desc") {
+      order = -1;
+    }
 
-  const articles = await Article.find({
-    $or: [{ title: { $regex: search } }, { brief: { $regex: search } }],
-  })
-    .skip(perPage * page - perPage)
-    .limit(perPage)
-    .populate("author", { firstName: 1, lastName: 1, avatar: 1, _id: 0 })
-    .sort({ createdAt: order });
-  let createTime = [];
-  for (let index = 0; index < articles.length; index++) {
-    createTime[index] = {
-      date: moment(articles[index].createdAt).format("jYYYY/jM/jD"),
-      time: moment(articles[index].createdAt).format("HH:mm"),
-    };
+    const articles = await Article.find({
+      $or: [{ title: { $regex: search } }, { brief: { $regex: search } }],
+    })
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .populate("author", { firstName: 1, lastName: 1, avatar: 1, _id: 0 })
+      .sort({ createdAt: order });
+    let createTime = [];
+    for (let index = 0; index < articles.length; index++) {
+      createTime[index] = {
+        date: moment(articles[index].createdAt).format("jYYYY/jM/jD"),
+        time: moment(articles[index].createdAt).format("HH:mm"),
+      };
+    }
+    const count = await Article.find({
+      $or: [{ title: { $regex: search } }, { brief: { $regex: search } }],
+    })
+      .count()
+      .exec();
+    return res.status(200).render("dashboard", {
+      user: req.session.user,
+      page: req.query.page,
+      successfullyAdded: req.flash("successfullyAdded"),
+      remove: req.flash("delete"),
+      login: req.flash("login"),
+      articles,
+      createTime,
+      current: page,
+      pages: Math.ceil(count / perPage),
+    });
+  } catch (err) {
+    res.status(500).json({ msg: "Server error" });
   }
-  const count = await Article.find({
-    $or: [{ title: { $regex: search } }, { brief: { $regex: search } }],
-  })
-    .count()
-    .exec();
-  return res.status(200).render("dashboard", {
-    user: req.session.user,
-    page: req.query.page,
-    successfullyAdded: req.flash("successfullyAdded"),
-    remove: req.flash("delete"),
-    login: req.flash("login"),
-    articles,
-    createTime,
-    current: page,
-    pages: Math.ceil(count / perPage),
-  });
 });
 
 //user information page
