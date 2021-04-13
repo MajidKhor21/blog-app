@@ -8,6 +8,7 @@ const fs = require("fs");
 const path = require("path");
 const uniqueString = require("unique-string");
 const nodemailer = require("nodemailer");
+const config = require("../config/config");
 
 //manage all users route
 router.get("/members", async (req, res, next) => {
@@ -73,12 +74,12 @@ router.get("/members/reset/:id", async (req, res, next) => {
 
     // create reusable transporter object using the default SMTP transport
     let transporter = await nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
+      host: config.emailHost,
+      port: config.emailPort,
       secure: true, // use SSL
       auth: {
-        user: "m.requiem21@gmail.com", // user
-        pass: "464794646a", // password
+        user: config.emailUser, // user
+        pass: config.emailPass, // password
       },
     });
 
@@ -88,7 +89,10 @@ router.get("/members/reset/:id", async (req, res, next) => {
       to: `${setPassword.email}`, // list of receivers
       subject: "بازیابی رمز عبور ✔", // Subject line
       text: "از طریق لینک زیر می توانید رمز عبور خود را تغییر دهید?", // plain text body
-      html: `<a href="http://${req.headers.host}/reset/password/${setPassword.token}">لینک بازیابی رمز عبور</a>`, // html body
+      html: `<p>با سلام</p></ br>
+      <a href="http://${req.headers.host}/reset/password/${setPassword.token}">لینک بازیابی رمز عبور</a>
+      </ br></ br>
+      <p> اگر شما درخواست بازیابی رمز عبور را ندادید، لطفا این ایمیل را نادیده بگیرید.</p>`, // html body
     });
 
     await transporter.sendMail(info);
@@ -108,7 +112,8 @@ router.get("/members/delete/:id", async (req, res, next) => {
   try {
     const articles = await Article.find({ author: req.params.id });
     const user = await User.find({ _id: req.params.id });
-    if (!user) throw new Error("user not found");
+    console.log(user);
+    if (!user.length > 0) return res.status(404).redirect("/404");
     if (articles) {
       //delete picture of article from our host
       for (let index = 0; index < articles.length; index++) {
@@ -142,7 +147,7 @@ router.get("/members/delete/:id", async (req, res, next) => {
       );
     }
     await User.deleteOne({ _id: req.params.id });
-    req.flash("deleted", "کاربر مد نظر با موفقیت حذف شد.");
+    req.flash("deleted", "کاربر مورد نظر با موفقیت حذف شد.");
     return res.status(200).redirect("/user/manage/members");
   } catch (err) {
     res.status(500).json({ msg: "Server error" });

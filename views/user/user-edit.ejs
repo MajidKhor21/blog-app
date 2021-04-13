@@ -265,6 +265,11 @@
     <%- include('../partials/dashboard/scripts-footer') %>
     <script>
       $(document).ready(() => {
+        $(".alert")
+          .fadeTo(4000, 500)
+          .slideUp(500, function () {
+            $(".alert").slideUp(500);
+          });
         $("#editBtn").click(() => {
           $("input").each(function () {
             if (!$(this).val()) {

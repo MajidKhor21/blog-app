@@ -4,6 +4,8 @@ const User = require("../models/user");
 const ResetPassowrd = require("../models/reset-password");
 const uniqueString = require("unique-string");
 const nodemailer = require("nodemailer");
+const config = require("../config/config");
+const { countDocuments } = require("../models/user");
 
 //get reset password page
 router.get("/", (req, res, next) => {
@@ -35,12 +37,12 @@ router.post("/", async (req, res, next) => {
 
     // create reusable transporter object using the default SMTP transport
     let transporter = await nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
+      host: config.emailHost,
+      port: config.emailPort,
       secure: true, // use SSL
       auth: {
-        user: "m.requiem21@gmail.com", // user
-        pass: "464794646a", // password
+        user: config.emailUser, // user
+        pass: config.emailPass, // password
       },
     });
 
@@ -50,7 +52,10 @@ router.post("/", async (req, res, next) => {
       to: `${setPassword.email}`, // list of receivers
       subject: "بازیابی رمز عبور ✔", // Subject line
       text: "از طریق لینک زیر می توانید رمز عبور خود را تغییر دهید?", // plain text body
-      html: `<a href="${req.headers.referer}/password/${setPassword.token}">لینک بازیابی رمز عبور</a>`, // html body
+      html: `<p>با سلام</p></ br>
+      <a href="${req.headers.referer}/password/${setPassword.token}">لینک بازیابی رمز عبور</a>
+      </ br></ br>
+      <p> اگر شما درخواست بازیابی رمز عبور را ندادید، لطفا این ایمیل را نادیده بگیرید.</p>`, // html body
     });
 
     await transporter.sendMail(info);

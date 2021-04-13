@@ -50,6 +50,7 @@ router.get("/dashboard", async (req, res, next) => {
       successfullyAdded: req.flash("successfullyAdded"),
       remove: req.flash("delete"),
       login: req.flash("login"),
+      avatar: req.flash("avatar"),
       articles,
       createTime,
       current: page,
@@ -184,15 +185,15 @@ router.post("/uploadAvatar", (req, res) => {
                     res.status(500).json({ msg: "Server Error!" });
                   } else {
                     req.session.user = user;
-
-                    res.redirect("/user/dashboard");
+                    req.flash("avatar", "عکس آواتار با موفقیت تغییر کرد.");
+                    return res.redirect("/user/dashboard");
                   }
                 }
               );
             } else {
               req.session.user = user;
-
-              res.redirect("/user/dashboard");
+              req.flash("avatar", "عکس آواتار با موفقیت تغییر کرد.");
+              return res.redirect("/user/dashboard");
             }
           }
         }
@@ -203,6 +204,7 @@ router.post("/uploadAvatar", (req, res) => {
 
 //delete user's avatar
 router.put("/removeAvatar", (req, res) => {
+  console.log("this route");
   //find user in our database and change avatar to default
   User.findByIdAndUpdate(
     req.session.user._id,
@@ -221,11 +223,13 @@ router.put("/removeAvatar", (req, res) => {
           (err) => {
             if (err) return res.status(500).json({ msg: "Server Error" });
             req.session.user = user;
+            req.flash("avatar", "عکس آواتار با موفقیت تغییر کرد.");
             return res.status(200).json({ msg: "ok" });
           }
         );
       } else {
         req.session.user = user;
+        req.flash("avatar", "عکس آواتار با موفقیت تغییر کرد.");
         return res.status(200).json({ msg: "ok" });
       }
     }

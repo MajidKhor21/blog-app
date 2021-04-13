@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const config = require("./config/config");
 const session = require("express-session");
 const flash = require("req-flash");
+const favicon = require("serve-favicon");
 require("./tools/initialization");
 
 const app = express();
@@ -53,6 +54,8 @@ app.use((req, res, next) => {
 
 app.use("/", require("./routes/api"));
 
+app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
+
 // catch 404 and forward to error handler
 app.use("*", function (req, res, next) {
   res.status(404).render("404");
@@ -61,12 +64,13 @@ app.use("*", function (req, res, next) {
 // error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
+
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
   // render the error page
   res.status(err.status || 500);
-  res.render("error");
+  res.redirect("/404");
 });
 
 module.exports = app;

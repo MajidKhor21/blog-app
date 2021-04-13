@@ -9,16 +9,12 @@ checker.sessionChecker = function (req, res, next) {
   return next();
 };
 
-checker.loginChecker = async (req, res, next) => {
-  const exist = await User.findOne({ _id: req.session.user._id });
+checker.loginChecker = (req, res, next) => {
   if (!req.session.user) {
     return res.redirect("/login");
   }
-  if (!exist) {
-    return res.redirect("/logout");
-  }
 
-  return next();
+  next();
 };
 
 module.exports = checker;

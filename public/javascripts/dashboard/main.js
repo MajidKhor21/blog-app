@@ -1,8 +1,8 @@
 $(document).ready(() => {
-  $("#alertSuccess")
-    .fadeTo(2000, 500)
+  $(".alert")
+    .fadeTo(4000, 500)
     .slideUp(500, function () {
-      $("#alertSuccess").slideUp(500);
+      $(".alert").slideUp(500);
     });
 
   let all = $("#allArticle").text();

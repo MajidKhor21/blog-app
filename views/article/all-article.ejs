@@ -51,7 +51,7 @@
 
         <% if (successfullyEdit) { %>
           <div
-            class="alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
+            class="alert alert-success alert-dismissible fade show w-50 text-right mx-auto"
             role="alert"
           >
             <button
@@ -187,10 +187,10 @@
     <%- include('../partials/dashboard/scripts-footer') %>
     <script src="/javascripts/dashboard/article/updateArticle.js"></script>
     <script>
-      $("#alertSuccess")
-        .fadeTo(2000, 500)
+      $(".alert")
+        .fadeTo(4000, 500)
         .slideUp(500, function () {
-          $("#alertSuccess").slideUp(500);
+          $(".alert").slideUp(500);
         });
     </script>
   </body>
