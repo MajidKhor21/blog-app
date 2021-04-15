@@ -88,7 +88,7 @@ router.post("/uploader", (req, res) => {
       return res.json({
         uploaded: 1,
         filename: req.file.filename,
-        url: `${req.file.destination}/${req.file.filename}`.substring(8),
+        url: `/images/uploads/${req.file.filename}`,
       });
     }
   });

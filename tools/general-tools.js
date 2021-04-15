@@ -3,14 +3,6 @@ const multer = require("multer");
 
 let generalTools = {};
 
-const getDir = () => {
-  let year = new Date().getFullYear();
-  let month = new Date().getMonth() + 1;
-  let day = new Date().getDate();
-
-  return `./public/images/uploads/${year}/${month}/${day}/`;
-};
-
 const avatarStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(__dirname, "../public/images/avatars"));
@@ -30,9 +22,16 @@ const articlePicStorage = multer.diskStorage({
 });
 
 const describePicStorage = multer.diskStorage({
-  destination: getDir(),
+  destination: function (req, file, cb) {
+    console.log(file.mimetype);
+    cb(null, path.join(__dirname, "../public/images/uploads"));
+  },
   filename: function (req, file, cb) {
-    cb(null, `${Date.now()}-${file.originalname}`);
+    console.log(file);
+    cb(
+      null,
+      `${req.session.user.username}-${Date.now()}.${file.mimetype.substring(6)}`
+    );
   },
 });
 

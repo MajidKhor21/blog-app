@@ -1,4 +1,3 @@
-const createError = require("http-errors");
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
@@ -9,6 +8,10 @@ const session = require("express-session");
 const flash = require("req-flash");
 const favicon = require("serve-favicon");
 require("./tools/initialization");
+const {
+  deleteArticlePicture,
+  deleteDescribePicture,
+} = require("./tools/cleaner");
 
 const app = express();
 
