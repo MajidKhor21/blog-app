@@ -90,7 +90,6 @@ UserSchema.pre("save", function (next) {
 });
 
 UserSchema.pre("findOneAndUpdate", function (next) {
-  console.log(this.getUpdate().$set);
   if (this.getUpdate().$set) {
     let salt = bcrypt.genSaltSync(10);
     let hash = bcrypt.hashSync(this.getUpdate().$set.password, salt);

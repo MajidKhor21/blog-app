@@ -48,26 +48,41 @@
             </div>
           </div>
         </section>
-
-        <% if (successfullyEdit) { %>
-          <div
-            class="alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
-            role="alert"
-          >
-            <button
-              type="button"
-              class="close"
-              data-dismiss="alert"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <%= successfullyEdit %>
-          </div>
-          <% } %>
-
         <section class="content mt-2">
           <div class="container">
+            <% if (successfullyEdit) { %>
+              <div
+                class="alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
+                role="alert"
+              >
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="alert"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <%= successfullyEdit %>
+              </div>
+              <% } %>
+    
+              <% if (successfullyDelete) { %>
+                <div
+                  class="alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
+                  role="alert"
+                >
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="alert"
+                    aria-label="Close"
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <%= successfullyDelete %>
+                </div>
+                <% } %>
             <table class="table table-hover table-fixed">
               <thead
               style="
@@ -95,6 +110,11 @@
                 </tr>
               </thead>
               <tbody>
+                <% if(articles.length == 0) { %>
+                  <tr class="text-right">
+                   <td> مقاله ای وجود ندارد.</td>
+                  </tr>
+               <% } %>
                 <% for( let index = 0; index < articles.length; index++ ) { %>
                 <tr class="text-right">
                   <th class="d-none"><%= articles[index]._id %></th>
@@ -121,7 +141,7 @@
                     <div>
                       <a
                         class="text-danger"
-                        href="/article/delete/<%= articles[index]._id %> "
+                        href="/user/manage/articles/delete/<%= articles[index]._id %>"
                       >
                         <i class="far fa-trash-alt" style="font-size: 20px"></i></i
                       ></a>
@@ -184,10 +204,10 @@
     <%- include('../../partials/dashboard/scripts-footer') %>
     <script src="/javascripts/dashboard/article/updateArticle.js"></script>
     <script>
-      $("#alertSuccess")
+      $(".alert")
         .fadeTo(2000, 500)
         .slideUp(500, function () {
-          $("#alertSuccess").slideUp(500);
+          $(".alert").slideUp(500);
         });
     </script>
   </body>

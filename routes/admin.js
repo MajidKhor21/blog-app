@@ -198,6 +198,7 @@ router.get("/articles", async (req, res, next) => {
       lastUpdate,
       createAt,
       successfullyEdit: req.flash("successfullyEdit"),
+      successfullyDelete: req.flash("delete"),
       user: req.session.user,
       page: req.query.page,
       order: req.query.order,
@@ -206,6 +207,47 @@ router.get("/articles", async (req, res, next) => {
     });
   } catch (err) {
     res.status(500).json({ msg: "Server error" });
+  }
+});
+
+router.get("/articles/delete/:id", async (req, res, next) => {
+  console.log(req.params.id);
+  try {
+    //get article's requested
+    let article = await Article.findById(req.params.id);
+    if (!article) throw new Error("article not found");
+    //check if who is requested for delete this article is admin!!
+    if (req.session.user.role === "admin") {
+      //delete picture of article from our host
+      fs.unlinkSync(
+        path.join(__dirname, "../public/images/articles/", article.picture)
+      );
+      //find source of images that uses in describe and delete them from our host
+      let regex = new RegExp("<" + "img" + " .*?" + "src" + '="(.*?)"', "gi"),
+        result,
+        articlePic = [];
+      while ((result = regex.exec(article.describe))) {
+        articlePic.push(result[1]);
+      }
+      articlePic.forEach((element) => {
+        fs.unlinkSync(path.join(__dirname, "../public", element));
+      });
+      //find and delete article
+      await Article.findByIdAndDelete(req.params.id);
+      await User.findOneAndUpdate(
+        { _id: article.author },
+        { $inc: { articleCounter: -1 } }
+      );
+      // const user = await User.findOne({ _id: article.author });
+      // user.update({ $inc: { articleCounter: -1 } });
+      // await User.findByIdAndUpdate(article.author, {
+      //   $inc: { articleCounter: -1 },
+      // });
+      req.flash("delete", "مقاله با موفقیت حذف شد.");
+      res.redirect("/user/manage/articles");
+    }
+  } catch (err) {
+    res.status(500).json({ msg: "Server Error" });
   }
 });
 

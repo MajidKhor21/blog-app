@@ -5,7 +5,6 @@ const User = require("../models/user");
 const multer = require("multer");
 const moment = require("moment-jalaali");
 const generalTools = require("../tools/general-tools");
-const url = require("url");
 const fs = require("fs");
 const path = require("path");
 
@@ -34,41 +33,47 @@ router.post("/create", (req, res) => {
     } else if (err) {
       res.status(406).send(err.message);
     } else {
-      Article.findOne({ title: req.body.title }, (err, article) => {
+      User.findOne({ _id: req.session.user._id }, (err, user) => {
         if (err) return res.status(500).json({ msg: "Server Error" });
-        if (article) {
-          fs.unlinkSync(
-            path.join(
-              __dirname,
-              "../public/images/articles/",
-              req.file.filename
-            )
-          );
-          req.flash("title", "عنوان مقاله تکراری می باشد.");
-          return res.redirect("/article/create");
+        if (!user) {
+          return res.status(404).redirect("/logout");
         }
-        //create article object
-        const newArticle = new Article({
-          title: req.body.title,
-          brief: req.body.brief,
-          describe: req.body.describe,
-          picture: req.file.filename,
-          author: req.session.user._id,
-        });
-        //save new article to our database
-        newArticle.save((err) => {
+        Article.findOne({ title: req.body.title }, (err, article) => {
           if (err) return res.status(500).json({ msg: "Server Error" });
-          User.findByIdAndUpdate(
-            req.session.user._id,
-            { $inc: { articleCounter: 1 } },
-            { new: true },
-            (err, user) => {
-              if (err) return res.status(500).json({ msg: "Server Error" });
-              req.session.user = user;
-              req.flash("successfullyAdded", "با موفقیت اضافه شد.");
-              return res.redirect("/user/dashboard");
-            }
-          );
+          if (article) {
+            fs.unlinkSync(
+              path.join(
+                __dirname,
+                "../public/images/articles/",
+                req.file.filename
+              )
+            );
+            req.flash("title", "عنوان مقاله تکراری می باشد.");
+            return res.redirect("/article/create");
+          }
+          //create article object
+          const newArticle = new Article({
+            title: req.body.title,
+            brief: req.body.brief,
+            describe: req.body.describe,
+            picture: req.file.filename,
+            author: req.session.user._id,
+          });
+          //save new article to our database
+          newArticle.save((err) => {
+            if (err) return res.status(500).json({ msg: "Server Error" });
+            User.findByIdAndUpdate(
+              req.session.user._id,
+              { $inc: { articleCounter: 1 } },
+              { new: true },
+              (err, user) => {
+                if (err) return res.status(500).json({ msg: "Server Error" });
+                req.session.user = user;
+                req.flash("successfullyAdded", "با موفقیت اضافه شد.");
+                return res.redirect("/user/dashboard");
+              }
+            );
+          });
         });
       });
     }

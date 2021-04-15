@@ -151,57 +151,62 @@
                 </tr>
               </thead>
               <tbody>
+                <% if(users.length == 0) { %>
+                  <tr class="text-right">
+                   <td> کاربری وجود ندارد.</td>
+                  </tr>
+               <% } %>
                 <% for( let index = 0; index < users.length; index++ ) { %>
-                <tr class="text-right">
-                  <th class="d-none"><%= users[index]._id %></th>
-                  <th scope="row"><%= index+1 %></th>
-                  <td>
-                    <%= users[index].firstName %>
-                  </td>
-                  <td><%= users[index].lastName %></td>
-                  <td>
-                    <% if (users[index].avatar === "default") { %>
-                        <img
-                            src="/images/avatar.png"
-                            alt="تصویر کاربر"
-                            width="60px"
-                            height="40px"
-                          />
-                        <%} else { %>
-                            <img
-                                src="/images/avatars/<%= users[index].avatar %>"
-                                alt="تصویر کاربر"
-                                width="60px"
-                                height="50px"
-                              />
-                        <% } %>
-                  </td>
-                  <td><%= users[index].email %></td>
-                  <td><%= users[index].username %></td>
-                  <td><%= users[index].articleCounter %></td>
-                  <% if (users[index].gender === "male") { %>
-                    <td>مرد</td>
-                    <%} else { %>
-                        <td>زن</td>
-                    <% } %>
-                    <td><%= users[index].mobileNumber %> </td>
-                  <td><%= createTime[index].time %> - <%= createTime[index].date %> </td>
-                  <td>
-                    <div>
-                      <a
-                        class="text-info updateBtn"
-                        href="/user/manage/members/reset/<%= users[index]._id %>"
-                        ><i class="fas fa-redo ml-2" style="font-size: 18px"></i
-                      ></a>
-                      <a
-                        class="text-danger"
-                        href="/user/manage/members/delete/<%= users[index]._id %>"
-                      >
-                        <i class="far fa-trash-alt" style="font-size: 20px"></i></i
-                      ></a>
-                    </div>
-                  </td>
-                </tr>
+                  <tr class="text-right">
+                    <th class="d-none"><%= users[index]._id %></th>
+                    <th scope="row"><%= index+1 %></th>
+                    <td>
+                      <%= users[index].firstName %>
+                    </td>
+                    <td><%= users[index].lastName %></td>
+                    <td>
+                      <% if (users[index].avatar === "default") { %>
+                          <img
+                              src="/images/avatar.png"
+                              alt="تصویر کاربر"
+                              width="60px"
+                              height="40px"
+                            />
+                          <%} else { %>
+                              <img
+                                  src="/images/avatars/<%= users[index].avatar %>"
+                                  alt="تصویر کاربر"
+                                  width="60px"
+                                  height="50px"
+                                />
+                          <% } %>
+                    </td>
+                    <td><%= users[index].email %></td>
+                    <td><%= users[index].username %></td>
+                    <td><%= users[index].articleCounter %></td>
+                    <% if (users[index].gender === "male") { %>
+                      <td>مرد</td>
+                      <%} else { %>
+                          <td>زن</td>
+                      <% } %>
+                      <td><%= users[index].mobileNumber %> </td>
+                    <td><%= createTime[index].time %> - <%= createTime[index].date %> </td>
+                    <td>
+                      <div>
+                        <a
+                          class="text-info updateBtn"
+                          href="/user/manage/members/reset/<%= users[index]._id %>"
+                          ><i class="fas fa-redo ml-2" style="font-size: 18px"></i
+                        ></a>
+                        <a
+                          class="text-danger"
+                          href="/user/manage/members/delete/<%= users[index]._id %>"
+                        >
+                          <i class="far fa-trash-alt" style="font-size: 20px"></i></i
+                        ></a>
+                      </div>
+                    </td>
+                  </tr>
                 <% } %>
               </tbody>
             </table>
