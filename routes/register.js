@@ -6,7 +6,6 @@ const { validationResult } = require("express-validator");
 
 //get register page
 router.get("/", (req, res, next) => {
-  console.log(req.flash);
   res.render("auth/register", {
     messages: req.flash("errors"),
     error: req.flash("error"),

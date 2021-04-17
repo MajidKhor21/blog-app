@@ -33,7 +33,8 @@
                     placeholder="جستجو در مقالات..."
                     aria-label="Search"
                     aria-describedby="search-addon"
-                    name="search" id="searchBar"
+                    name="search"
+                    id="searchBar"
                   />
                 </form>
               </div>
@@ -51,54 +52,58 @@
         <section class="content mt-2">
           <div class="container">
             <% if (successfullyEdit) { %>
-              <div
-                class="alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
-                role="alert"
+            <div
+              class="alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
+              role="alert"
+            >
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
               >
-                <button
-                  type="button"
-                  class="close"
-                  data-dismiss="alert"
-                  aria-label="Close"
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
-                <%= successfullyEdit %>
-              </div>
-              <% } %>
-    
-              <% if (successfullyDelete) { %>
-                <div
-                  class="alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
-                  role="alert"
-                >
-                  <button
-                    type="button"
-                    class="close"
-                    data-dismiss="alert"
-                    aria-label="Close"
-                  >
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                  <%= successfullyDelete %>
-                </div>
-                <% } %>
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <%= successfullyEdit %>
+            </div>
+            <% } %> <% if (successfullyDelete) { %>
+            <div
+              class="alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
+              role="alert"
+            >
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <%= successfullyDelete %>
+            </div>
+            <% } %>
             <table class="table table-hover table-fixed">
-              <thead
-              style="
-              background-color: #343a40;
-              color: #C2C7D0;
-            "
-              >
+              <thead style="background-color: #343a40; color: #c2c7d0">
                 <tr>
                   <th class="d-none" scope="col"></th>
                   <th class="d-none" scope="col"></th>
                   <% if(order === 'desc') { %>
-                    <th scope="col"><a  href="/user/manage/articles?search=<%= search %>&page=<%= page %>&order=asc" style="color: inherit"><i class="fas fa-sort"> #</i></a></th>
-                 <% } %>
-                 <% if(order === 'asc') { %>
-                  <th scope="col"><a href="/user/manage/articles?search=<%= search %>&page=<%= page %>&order=desc" style="color: inherit"><i class="fas fa-sort"> #</i></a></th>
-                <% } %>
+                  <th scope="col">
+                    <a
+                      href="/user/manage/articles?search=<%= search %>&page=<%= page %>&order=asc"
+                      style="color: inherit"
+                      ><i class="fas fa-sort"> #</i></a
+                    >
+                  </th>
+                  <% } %> <% if(order === 'asc') { %>
+                  <th scope="col">
+                    <a
+                      href="/user/manage/articles?search=<%= search %>&page=<%= page %>&order=desc"
+                      style="color: inherit"
+                      ><i class="fas fa-sort"> #</i></a
+                    >
+                  </th>
+                  <% } %>
                   <th scope="col">عنوان مقاله</th>
                   <th scope="col">خلاصه مقاله</th>
                   <th scope="col">تصویر مقاله</th>
@@ -111,16 +116,16 @@
               </thead>
               <tbody>
                 <% if(articles.length == 0) { %>
-                  <tr class="text-right">
-                   <td> مقاله ای وجود ندارد.</td>
-                  </tr>
-               <% } %>
-                <% for( let index = 0; index < articles.length; index++ ) { %>
+                <tr class="text-right">
+                  <td>مقاله ای وجود ندارد.</td>
+                </tr>
+                <% } %> <% for( let index = 0; index < articles.length; index++
+                ) { %>
                 <tr class="text-right">
                   <th class="d-none"><%= articles[index]._id %></th>
                   <th scope="row"><%= index+1 %></th>
                   <td>
-                    <a href="/article/view/<%= articles[index]._id %>"
+                    <a href="/article/<%= articles[index]._id %>"
                       ><%= articles[index].title %></a
                     >
                   </td>
@@ -130,21 +135,40 @@
                       src="/images/articles/<%= articles[index].picture %>"
                       alt="تصویر مقاله"
                       width="60px"
-                      height="40px;"
+                      height="40px"
+                      style="border-radius: 15%"
                     />
                   </td>
-                  <td><%= articles[index].author.firstName %> <%= articles[index].author.lastName %></td>
+                  <td>
+                    <%= articles[index].author.firstName %> <%=
+                    articles[index].author.lastName %>
+                  </td>
                   <td><%= articles[index].viewCounter %></td>
-                  <td><%= createAt[index].time %> - <%= createAt[index].date %></td>
-                  <td><%= lastUpdate[index].time %> - <%= lastUpdate[index].date %></td>
+                  <td>
+                    <%= createAt[index].time %> - <%= createAt[index].date %>
+                  </td>
+                  <td>
+                    <%= lastUpdate[index].time %> - <%= lastUpdate[index].date
+                    %>
+                  </td>
                   <td>
                     <div>
-                      <a
-                        class="text-danger"
-                        href="/user/manage/articles/delete/<%= articles[index]._id %>"
+                      <form
+                        action="/user/manage/articles/<%= articles[index]._id %>?_method=DELETE"
+                        method="POST"
+                        enctype="application/x-www-form-urlencoded"
                       >
-                        <i class="far fa-trash-alt" style="font-size: 20px"></i></i
-                      ></a>
+                        <input type="hidden" name="_method" value="DELETE" />
+                        <input
+                          type="text"
+                          class="d-none"
+                          name="article_id"
+                          value="<%= articles[index]._id %>"
+                        />
+                        <button class="btn" type="submit">
+                          <i class="text-danger far fa-trash-alt"></i>
+                        </button>
+                      </form>
                     </div>
                   </td>
                 </tr>
@@ -163,7 +187,11 @@
           </li>
           <% } else { %>
           <li>
-            <a class="page-link" href="/user/manage/articles?search=<%= search %>&page=1&order=<%= order %>">اولین</a>
+            <a
+              class="page-link"
+              href="/user/manage/articles?search=<%= search %>&page=1&order=<%= order %>"
+              >اولین</a
+            >
           </li>
           <% } %> <% let i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
           <% if (i !== 1) { %>
@@ -175,7 +203,9 @@
           </li>
           <% } else { %>
           <li>
-            <a class="page-link" href="/user/manage/articles?search=<%= search %>&page=<%= i %>&order=<%= order %>"
+            <a
+              class="page-link"
+              href="/user/manage/articles?search=<%= search %>&page=<%= i %>&order=<%= order %>"
               ><%= i %></a
             >
           </li>
@@ -187,7 +217,9 @@
           </li>
           <% } else { %>
           <li>
-            <a class="page-link" href="/user/manage/articles?search=<%= search %>&page=<%= pages %>&order=<%= order %>"
+            <a
+              class="page-link"
+              href="/user/manage/articles?search=<%= search %>&page=<%= pages %>&order=<%= order %>"
               >آخرین</a
             >
           </li>
@@ -203,12 +235,5 @@
     </div>
     <%- include('../../partials/dashboard/scripts-footer') %>
     <script src="/javascripts/dashboard/article/updateArticle.js"></script>
-    <script>
-      $(".alert")
-        .fadeTo(2000, 500)
-        .slideUp(500, function () {
-          $(".alert").slideUp(500);
-        });
-    </script>
   </body>
 </html>

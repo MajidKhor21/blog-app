@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title><%= article.title %></title>
     <%- include('../partials/dashboard/scripts-header') %>
-    <script src="/ckeditor/ckeditor.js"></script>
+    <link rel="stylesheet" href="/stylesheets/emojionearea.css" />
   </head>
   <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -16,17 +16,7 @@
         <section class="content-header">
           <div class="container-fluid">
             <div class="row mb-2">
-              <div class="col-sm-6">
-                <% if (article.author._id == user._id || user.role === 'admin')
-                { %>
-                <a
-                  class="btn text-warning"
-                  href="/article/edit/<%= article._id %>"
-                  style="background-color: #343a40"
-                  >ویرایش</a
-                >
-                <% } %>
-              </div>
+              <div class="col-sm-6"></div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-left">
                   <li class="breadcrumb-item">
@@ -259,27 +249,37 @@
                         <textarea
                           class="form-control ml-1 shadow-none textarea"
                           name="comment"
+                          id="example1"
                         ></textarea>
-                        <% if (user.avatar === "default") { %>
-                        <img
-                          src="/images/avatar.png"
-                          alt="تصویر پروفایل نظر دهنده"
-                          style="
-                            width: 30px !important;
-                            border-radius: 50% !important;
-                          "
-                        />
-                        <%} else { %>
-                        <img
-                          src="/images/avatars/<%= user.avatar %>"
-                          alt="تصویر پروفایل نظر دهنده"
-                          class="m-3"
-                          style="
-                            width: 30px !important;
-                            border-radius: 50% !important;
-                          "
-                        />
-                        <% } %>
+                        <div class="row">
+                          <div class="col">
+                            <% if (user.avatar === "default") { %>
+                            <img
+                              src="/images/avatar.png"
+                              alt="تصویر پروفایل نظر دهنده"
+                              style="
+                                width: 30px !important;
+                                border-radius: 50% !important;
+                              "
+                            />
+
+                            <%} else { %>
+                            <img
+                              src="/images/avatars/<%= user.avatar %>"
+                              alt="تصویر پروفایل نظر دهنده"
+                              class=""
+                              style="
+                                width: 30px !important;
+                                border-radius: 50% !important;
+                              "
+                            />
+                            <% } %>
+                          </div>
+                          <div class="w-100"></div>
+                          <div class="col">
+                            <div id="divOutside" class="divOutside mt-2"></div>
+                          </div>
+                        </div>
                         <input
                           type="submit"
                           class="d-none"
@@ -288,6 +288,7 @@
                         />
                       </div>
                     </form>
+
                     <div class="mt-2 text-right">
                       <button
                         class="btn btn-primary btn-sm ml-2 shadow-none"
@@ -318,21 +319,7 @@
       ></aside>
     </div>
     <%- include('../partials/dashboard/scripts-footer') %>
+    <script src="/javascripts/emojionearea.min.js"></script>
     <script src="/javascripts/dashboard/article/singleArticle.js"></script>
-    <script>
-      $(document).ready(() => {
-        $(".alert")
-          .fadeTo(4000, 500)
-          .slideUp(500, function () {
-            $(".alert").slideUp(500);
-          });
-        $("#submitBtn").click(() => {
-          $("#submit").click();
-        });
-        $("#cancelBtn").click(() => {
-          location.reload();
-        });
-      });
-    </script>
   </body>
 </html>

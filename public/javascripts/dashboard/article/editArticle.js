@@ -1,6 +1,6 @@
 CKEDITOR.replace("editor1", {
   filebrowserUploadUrl: "/article/uploader",
-  height: 350,
+  height: 300,
 });
 
 let user = {};

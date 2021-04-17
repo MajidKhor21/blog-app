@@ -109,11 +109,10 @@ router.get("/members/reset/:id", async (req, res, next) => {
 });
 
 //delete user with articles route for admin only
-router.get("/members/delete/:id", async (req, res, next) => {
+router.delete("/members/:id", async (req, res, next) => {
   try {
     const articles = await Article.find({ author: req.params.id });
     const user = await User.find({ _id: req.params.id });
-    console.log(user);
     if (!user.length > 0) return res.status(404).redirect("/404");
     if (articles) {
       //delete picture of article from our host
@@ -141,6 +140,9 @@ router.get("/members/delete/:id", async (req, res, next) => {
         fs.unlinkSync(path.join(__dirname, "../public/", element));
       });
       await Article.deleteMany({ author: req.params.id });
+      for (let index = 0; index < articles.length; index++) {
+        await Comment.deleteMany({ article: articles[index]._id });
+      }
     }
     if (user[0].avatar !== "default") {
       fs.unlinkSync(
@@ -148,7 +150,6 @@ router.get("/members/delete/:id", async (req, res, next) => {
       );
     }
     await User.deleteOne({ _id: req.params.id });
-    await Comment.deleteMany({ author: req.params.id });
     req.flash("deleted", "کاربر مورد نظر با موفقیت حذف شد.");
     return res.status(200).redirect("/user/manage/members");
   } catch (err) {
@@ -212,8 +213,8 @@ router.get("/articles", async (req, res, next) => {
   }
 });
 
-router.get("/articles/delete/:id", async (req, res, next) => {
-  console.log(req.params.id);
+//delete user's articles by admin
+router.delete("/articles/:id", async (req, res, next) => {
   try {
     //get article's requested
     let article = await Article.findById(req.params.id);

@@ -108,7 +108,7 @@
                   <th class="d-none"><%= comments[index]._id %></th>
                   <th scope="row"><%= index+1 %></th>
                   <td>
-                    <a href="/article/view/<%= comments[index].article._id %>"
+                    <a href="/article/<%= comments[index].article._id %>"
                       ><%= comments[index].article.title %></a
                     >
                   </td>
@@ -237,11 +237,13 @@
     </div>
     <%- include('../../partials/dashboard/scripts-footer') %>
     <script>
-      $(".alert")
-        .fadeTo(2000, 500)
-        .slideUp(500, function () {
-          $(".alert").slideUp(500);
-        });
+      $(document).ready(() => {
+        $(".alert")
+          .fadeTo(2000, 500)
+          .slideUp(500, function () {
+            $(".alert").slideUp(500);
+          });
+      });
     </script>
   </body>
 </html>

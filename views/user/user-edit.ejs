@@ -33,7 +33,12 @@
         <section class="content">
           <div class="text-center w-50 m-auto">
             <div class="mt-5">
-              <form action="/user/update" method="post">
+              <form
+                action="/user?_method=PUT"
+                method="post"
+                enctype="application/x-www-form-urlencoded"
+              >
+                <input type="hidden" name="_method" value="PUT" />
                 <% if (success) { %>
                 <div
                   class="alert alert-success alert-dismissible fade show w-75 text-right mx-auto"

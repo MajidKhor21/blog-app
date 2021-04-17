@@ -85,7 +85,6 @@ router.post("/create", (req, res) => {
 router.post("/uploader", (req, res) => {
   const upload = generalTools.uploadDescribePic.single("upload");
   upload(req, res, function (err) {
-    console.log(req.file);
     if (err instanceof multer.MulterError) {
       return res.status(500).json({ msg: "Server Error" });
     } else if (err) {
@@ -136,7 +135,7 @@ router.get("/my/:username", (req, res) => {
 });
 
 //show article in a single page
-router.get("/view/:id", (req, res) => {
+router.get("/:id", (req, res) => {
   let perPage = 2;
   let page = req.query.page || 1;
   //find that article's requested
@@ -178,7 +177,6 @@ router.get("/view/:id", (req, res) => {
                 .count()
                 .exec((err, commentCount) => {
                   if (err) return res.status(500).json({ msg: "Server Error" });
-                  console.log(commentCount);
                   res.render("article/single-article", {
                     user: req.session.user,
                     messages: req.flash("messages"),
@@ -199,8 +197,8 @@ router.get("/view/:id", (req, res) => {
     });
 });
 
-//get edit articles page
-router.get("/edit", async (req, res) => {
+//get all articles in a page
+router.get("/", async (req, res) => {
   try {
     //paginate user articles per page 10
     let perPage = 10;
@@ -246,6 +244,7 @@ router.get("/edit", async (req, res) => {
       lastUpdate,
       createAt,
       successfullyEdit: req.flash("successfullyEdit"),
+      successfullyDelete: req.flash("delete"),
       user: req.session.user,
       page: req.query.page,
       order: req.query.order,
@@ -270,7 +269,7 @@ router.get("/edit/:id", (req, res) => {
 });
 
 //update article route
-router.post("/update", (req, res) => {
+router.put("/", (req, res) => {
   //update article's picture
   const upload = generalTools.uploadArticlePic.single("picture");
 
@@ -279,7 +278,7 @@ router.post("/update", (req, res) => {
     if (!req.body.title || !req.body.brief || !req.body.describe)
       return res.redirect(
         url.format({
-          pathname: "/article/edit",
+          pathname: "/article",
           query: {
             msg: "error",
           },
@@ -321,11 +320,12 @@ router.post("/update", (req, res) => {
                     picture: req.file.filename,
                     lastUpdate: Date.now(),
                   },
+                  { new: true },
                   (err) => {
                     if (err)
                       return res.status(500).json({ msg: "Server Error" });
                     req.flash("successfullyEdit", "مقاله با موفقیت ویرایش شد.");
-                    return res.redirect("/article/edit");
+                    return res.redirect("/article");
                   }
                 );
               }
@@ -340,10 +340,11 @@ router.post("/update", (req, res) => {
                 describe: req.body.describe,
                 lastUpdate: Date.now(),
               },
+              { new: true },
               (err) => {
                 if (err) return res.status(500).json({ msg: "Server Error" });
                 req.flash("successfullyEdit", "مقاله با موفقیت ویرایش شد.");
-                return res.redirect("/article/edit");
+                return res.redirect("/article");
               }
             );
           }
@@ -354,7 +355,7 @@ router.post("/update", (req, res) => {
 });
 
 //delete article
-router.get("/delete/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     //get article's requested
     let article = await Article.findById(req.params.id);
@@ -385,7 +386,7 @@ router.get("/delete/:id", async (req, res) => {
       });
       await Comment.deleteMany({ article: req.params.id });
       req.flash("delete", "مقاله با موفقیت حذف شد.");
-      res.redirect("/user/dashboard");
+      res.redirect("/article");
     }
   } catch (err) {
     res.status(500).json({ msg: "Server Error" });

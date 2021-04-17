@@ -38,10 +38,10 @@
 
           <form
             method="post"
-            action="/article/update"
-            enctype="multipart/form-data"
-            class="w-75 mx-auto mb-5"
+            action="/article?_method=PUT"
+            class="w-75 mx-auto mb-5" enctype="multipart/form-data"
           >
+          <input type="hidden" name="_method" value="PUT" />
           <% if (title) { %>
             <div
               class="alert alert-warning alert-dismissible fade show w-75 text-right mx-auto"

@@ -7,7 +7,7 @@ const moment = require("moment-jalaali");
 const commentValidate = require("../tools/validator/commentValidate");
 const { validationResult } = require("express-validator");
 
-router.get("/", (req, res, next) => {
+router.get("/all", (req, res, next) => {
   let perPage = 10;
   let page = req.query.page || 1;
   let search = new RegExp(req.query.search, "i");
@@ -30,7 +30,7 @@ router.get("/", (req, res, next) => {
     })
     .sort({ createdAt: order })
     .exec((err, comments) => {
-      if (err) return res.status(500).json({ msg: "Server Error" });
+      if (err) return res.status(500).json({ msg: "Server Error1" });
       let createTime = [];
       for (let index = 0; index < comments.length; index++) {
         createTime[index] = {
@@ -41,7 +41,7 @@ router.get("/", (req, res, next) => {
       Comment.find({ body: { $regex: search } })
         .count()
         .exec((err, commentCount) => {
-          if (err) return res.status(500).json({ msg: "Server Error" });
+          if (err) return res.status(500).json({ msg: "Server Error2" });
           return res.render("user/admin/comments", {
             user: req.session.user,
             page: req.query.page,
@@ -64,7 +64,7 @@ router.post("/", commentValidate.handle(), (req, res, next) => {
       messages.push(err.msg);
     });
     req.flash("messages", messages);
-    return res.redirect(`/article/view/${req.body.article_id}`);
+    return res.redirect(`/article/${req.body.article_id}`);
   }
   const comment = new Comment({
     body: req.body.comment,
@@ -80,8 +80,8 @@ router.post("/", commentValidate.handle(), (req, res, next) => {
     { new: true },
     (err) => {
       if (err) return res.status(500).json({ msg: "Server Error" });
-      req.flash("successfullyAdded", "نظر شما با موفقیت ثبت شد");
-      return res.redirect(`/article/view/${req.body.article_id}`);
+      req.flash("successfullyAdded", "نظر شما با موفقیت ثبت شد.");
+      return res.redirect(`/article/${req.body.article_id}`);
     }
   );
 });
@@ -96,7 +96,7 @@ router.delete("/:id", (req, res, next) => {
       (err) => {
         if (err) return res.status(500).json({ msg: "Server Error" });
         req.flash("successfullyDelete", "نظر مورد نظر با موفقیت حذف شد.");
-        return res.redirect("/article/comment");
+        return res.redirect("/article/comment/all");
       }
     );
   });
