@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Article = require("../models/article");
 const User = require("../models/user");
+const Comment = require("../models/comment");
 const multer = require("multer");
 const moment = require("moment-jalaali");
 const generalTools = require("../tools/general-tools");
@@ -157,13 +158,28 @@ router.get("/view/:id", (req, res) => {
             date: moment(article.createdAt).format("jYYYY/jM/jD"),
             time: moment(article.createdAt).format("HH:mm"),
           };
-          console.log(req.session.user, article.author);
-          res.render("article/single-article", {
-            user: req.session.user,
-            article,
-            createTime,
-            art,
-          });
+          Comment.find({ article: req.params.id })
+            .populate("author", { firstName: 1, lastName: 1, avatar: 1 })
+            .exec((err, comments) => {
+              if (err) return res.status(500).json({ msg: "Server Error" });
+              const commentCreateTime = [];
+              for (let index = 0; index < comments.length; index++) {
+                commentCreateTime[index] = {
+                  date: moment(comments[index].createdAt).format("jYYYY/jM/jD"),
+                  time: moment(comments[index].createdAt).format("HH:mm"),
+                };
+              }
+              res.render("article/single-article", {
+                user: req.session.user,
+                messages: req.flash("messages"),
+                successfullyAdded: req.flash("successfullyAdded"),
+                article,
+                createTime,
+                art,
+                comments,
+                commentCreateTime,
+              });
+            });
         }
       );
     });
@@ -360,5 +376,8 @@ router.get("/delete/:id", async (req, res) => {
     res.status(500).json({ msg: "Server Error" });
   }
 });
+
+//comment route
+router.use("/comment", require("./comment"));
 
 module.exports = router;

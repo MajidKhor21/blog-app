@@ -27,9 +27,9 @@
                   <span class="d-inline-block" id="articleSpan">1</span>
                   <% } %>
               </div>
-              <div class="col-sm-4">
+              <div class="col-12 col-sm-8 col-md-8 col-lg-4 mb-2">
                 <form
-                  class="input-group col-6 m-auto"
+                  class="input-group col-12 col-xl-8 m-auto"
                   style="direction: rtl"
                   action="/user/manage/members"
                   method="GET" 
@@ -171,13 +171,14 @@
                               alt="تصویر کاربر"
                               width="60px"
                               height="40px"
+                              style="border-radius: 40%;"
                             />
                           <%} else { %>
                               <img
                                   src="/images/avatars/<%= users[index].avatar %>"
                                   alt="تصویر کاربر"
                                   width="60px"
-                                  height="50px"
+                                  height="50px" style="border-radius: 40%;"
                                 />
                           <% } %>
                     </td>

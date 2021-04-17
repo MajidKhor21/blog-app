@@ -41,6 +41,37 @@
 
         <section class="content m-auto text-center">
           <div class="container">
+            <% if (messages) { %>
+            <div
+              class="alert alert-danger alert-dismissible fade show w-50 text-right mx-auto"
+              role="alert"
+            >
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <%= messages %>
+            </div>
+            <% } %> <% if (successfullyAdded) { %>
+            <div
+              class="alert alert-success alert-dismissible fade show w-50 text-right mx-auto"
+              role="alert"
+            >
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <%= successfullyAdded %>
+            </div>
+            <% } %>
             <div class="row">
               <div class="col-lg-12">
                 <h1 class="mt-4"><%= article.title %></h1>
@@ -107,6 +138,117 @@
               </div>
             </div>
           </div>
+
+          <div class="container mt-5">
+            <hr />
+            <% for( let index = 0; index < comments.length; index++) { %>
+            <div class="p-2">
+              <div class="d-flex flex-row user-info">
+                <% if (comments[index].author.avatar === "default") { %>
+                <img
+                  src="/images/avatar.png"
+                  alt="تصویر پروفایل نظر دهنده"
+                  style="
+                    width: 40px !important;
+                    height: 40px !important;
+                    border-radius: 50% !important;
+                  "
+                />
+                <%} else { %>
+                <img
+                  src="/images/avatars/<%= comments[index].author.avatar %>"
+                  class="ml-3"
+                  alt="تصویر پروفایل نظر دهنده"
+                  style="
+                    width: 40px !important;
+                    height: 40px !important;
+                    border-radius: 50% !important;
+                  "
+                />
+                <% } %>
+                <div class="d-flex flex-column justify-content-start ml-2">
+                  <span class="d-block font-weight-bold name"
+                    ><%= comments[index].author.firstName %> <%-
+                    comments[index].author.lastName %></span
+                  ><span class="date text-black-50"
+                    ><%= commentCreateTime[index].time %> - <%=
+                    commentCreateTime[index].date %></span
+                  >
+                </div>
+              </div>
+              <div class="mt-2">
+                <p class="comment-text text-right">
+                  <%= comments[index].body %>
+                </p>
+              </div>
+            </div>
+            <% } %>
+          </div>
+          <div class="container mt-5">
+            <div class="d-flex justify-content-center row">
+              <div class="col-md-8">
+                <div class="d-flex flex-column comment-section">
+                  <div class="p-2">
+                    <form action="/article/comment" method="post">
+                      <div class="d-flex flex-row align-items-start">
+                        <input
+                          type="text"
+                          class="d-none"
+                          name="article_id"
+                          value="<%= article._id %>"
+                        />
+                        <textarea
+                          class="form-control ml-1 shadow-none textarea"
+                          name="comment"
+                        ></textarea>
+                        <% if (user.avatar === "default") { %>
+                        <img
+                          src="/images/avatar.png"
+                          alt="تصویر پروفایل نظر دهنده"
+                          style="
+                            width: 30px !important;
+                            border-radius: 50% !important;
+                          "
+                        />
+                        <%} else { %>
+                        <img
+                          src="/images/avatars/<%= user.avatar %>"
+                          alt="تصویر پروفایل نظر دهنده"
+                          class="m-3"
+                          style="
+                            width: 30px !important;
+                            border-radius: 50% !important;
+                          "
+                        />
+                        <% } %>
+                        <input
+                          type="submit"
+                          class="d-none"
+                          value="submit"
+                          id="submit"
+                        />
+                      </div>
+                    </form>
+                    <div class="mt-2 text-right">
+                      <button
+                        class="btn btn-primary btn-sm ml-2 shadow-none"
+                        type="button"
+                        id="submitBtn"
+                      >
+                        ارسال نظر</button
+                      ><button
+                        class="btn btn-outline-primary btn-sm shadow-none"
+                        type="button"
+                        id="cancelBtn"
+                      >
+                        لغو
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
       </div>
 
@@ -118,5 +260,15 @@
     </div>
     <%- include('../partials/dashboard/scripts-footer') %>
     <script src="/javascripts/dashboard/article/singleArticle.js"></script>
+    <script>
+      $(document).ready(() => {
+        $("#submitBtn").click(() => {
+          $("#submit").click();
+        });
+        $("#cancelBtn").click(() => {
+          location.reload();
+        });
+      });
+    </script>
   </body>
 </html>
