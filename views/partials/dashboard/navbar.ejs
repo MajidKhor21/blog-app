@@ -20,6 +20,10 @@
     </li>
     <% } %> <% if (user.role === 'admin') { %>
     <li class="nav-item d-none d-xl-inline-block">
+      <a href="/article/comment" class="nav-link">نظرات کاربران</a>
+    </li>
+    <% } %> <% if (user.role === 'admin') { %>
+    <li class="nav-item d-none d-xl-inline-block">
       <a href="/user/manage/members" class="nav-link">مدیریت کاربران</a>
     </li>
     <% } %>

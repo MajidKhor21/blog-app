@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>نظرات</title>
+    <%- include('../../partials/dashboard/scripts-header') %>
+    <link rel="stylesheet" href="/stylesheets/dashboard/article.css" />
+  </head>
+  <body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+      <%- include('../../partials/dashboard/navbar') %> <%-
+      include('../../partials/dashboard/sidebar') %>
+
+      <div class="content-wrapper mb-5">
+        <section class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-4">
+                <h3 class="d-inline-block ml-2">نظرات</h3>
+                <% let { search, page, order } = req.query %>
+              </div>
+              <div class="col-12 col-sm-8 col-md-8 col-lg-4 mb-2">
+                <form
+                  class="input-group col-12 col-xl-8 m-auto"
+                  style="direction: rtl"
+                  action="/article/comment"
+                  method="GET"
+                >
+                  <input
+                    type="text"
+                    class="form-control rounded"
+                    placeholder="جستجو در نظرات..."
+                    aria-label="Search"
+                    aria-describedby="search-addon"
+                    name="search"
+                    id="searchBar"
+                  />
+                </form>
+              </div>
+              <div class="col-sm-4">
+                <ol class="breadcrumb float-sm-left">
+                  <li class="breadcrumb-item">
+                    <a href="/user/dashboard">داشبورد</a>
+                  </li>
+                  <li class="breadcrumb-item active">نظرات</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="content mt-2">
+          <div class="container">
+            <table class="table table-hover table-fixed">
+              <thead style="background-color: #343a40; color: #c2c7d0">
+                <tr>
+                  <th class="d-none" scope="col"></th>
+                  <% if(order === 'desc') { %>
+                  <th scope="col">
+                    <a
+                      href="/article/comment?search=<%= search %>&page=<%= page %>&order=asc"
+                      style="color: inherit"
+                      ><i class="fas fa-sort"> #</i></a
+                    >
+                  </th>
+                  <% } %> <% if(order === 'asc') { %>
+                  <th scope="col">
+                    <a
+                      href="/article/comment?search=<%= search %>&page=<%= page %>&order=desc"
+                      style="color: inherit"
+                      ><i class="fas fa-sort"> #</i></a
+                    >
+                  </th>
+                  <% } %>
+                  <th scope="col">عنوان مقاله</th>
+                  <th scope="col">آواتار نویسنده</th>
+                  <th scope="col">نویسنده نظر</th>
+
+                  <th scope="col">متن نظر</th>
+                  <th scope="col">تاریخ ارسال</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% for( let index = 0; index < comments.length; index++ ) { %>
+                <tr class="text-right">
+                  <th class="d-none"><%= comments[index]._id %></th>
+                  <th scope="row"><%= index+1 %></th>
+                  <td>
+                    <a href="/article/view/<%= comments[index].article._id %>"
+                      ><%= comments[index].article.title %></a
+                    >
+                  </td>
+
+                  <td>
+                    <% if (comments[index].author.avatar === "default") { %>
+                    <img
+                      src="/images/avatar.png"
+                      alt="تصویر کاربر"
+                      style="
+                        width: 40px !important;
+                        height: 40px !important;
+                        border-radius: 50% !important;
+                      "
+                    />
+                    <%} else { %>
+                    <img
+                      src="/images/avatars/<%= comments[index].author.avatar %>"
+                      alt="تصویر کاربر"
+                      style="
+                        width: 40px !important;
+                        height: 40px !important;
+                        border-radius: 50% !important;
+                      "
+                    />
+                    <% } %>
+                  </td>
+                  <td>
+                    <%= comments[index].author.firstName %> <%=
+                    comments[index].author.lastName %>
+                  </td>
+                  <% if(comments[index].body.length > 30) { %>
+                  <td><%= comments[index].body.slice(0,30) %>...</td>
+                  <% } else { %>
+                  <td><%= comments[index].body %></td>
+                  <% } %>
+
+                  <td>
+                    <%= createTime[index].time %> - <%= createTime[index].date
+                    %>
+                  </td>
+                  <td>
+                    <a href="/article/comment/<%= comments[index]._id %>"
+                      ><i class="text-danger far fa-trash-alt"></i
+                    ></a>
+                  </td>
+                </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <%- include('../../partials/dashboard/footer') %>
+
+      <aside
+        class="control-sidebar control-sidebar-dark control-sidebar-animate"
+      ></aside>
+    </div>
+    <%- include('../../partials/dashboard/scripts-footer') %>
+    <script>
+      $(".alert")
+        .fadeTo(2000, 500)
+        .slideUp(500, function () {
+          $(".alert").slideUp(500);
+        });
+    </script>
+  </body>
+</html>

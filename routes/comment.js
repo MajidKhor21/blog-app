@@ -7,6 +7,37 @@ const moment = require("moment-jalaali");
 const commentValidate = require("../tools/validator/commentValidate");
 const { validationResult } = require("express-validator");
 
+router.get("/", (req, res, next) => {
+  console.log(2);
+  let page = req.query.page || 1;
+  req.query.order = req.query.order || "desc";
+  Comment.find({})
+    .populate("author", { firstName: 1, lastName: 1, avatar: 1 })
+    .populate("article", {
+      viewCounter: 0,
+      commentCounter: 0,
+      brief: 0,
+      describe: 0,
+    })
+    .exec((err, comments) => {
+      if (err) return res.status(500).json({ msg: "Server Error" });
+      let createTime = [];
+      for (let index = 0; index < comments.length; index++) {
+        createTime[index] = {
+          date: moment(comments[index].createdAt).format("jYYYY/jM/jD"),
+          time: moment(comments[index].createdAt).format("HH:mm"),
+        };
+      }
+      console.log(comments);
+      return res.render("user/admin/comments", {
+        user: req.session.user,
+        page: req.query.page,
+        comments,
+        createTime,
+      });
+    });
+});
+
 router.post("/", commentValidate.handle(), (req, res, next) => {
   console.log(req.body);
   const result = validationResult(req);
