@@ -51,6 +51,22 @@
         </section>
         <section class="content mt-2">
           <div class="container">
+            <% if (successfullyDelete) { %>
+            <div
+              class="alert alert-success alert-dismissible fade show w-50 text-right mx-auto"
+              role="alert"
+            >
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <%= successfullyDelete %>
+            </div>
+            <% } %>
             <table class="table table-hover table-fixed">
               <thead style="background-color: #343a40; color: #c2c7d0">
                 <tr>
@@ -82,7 +98,12 @@
                 </tr>
               </thead>
               <tbody>
-                <% for( let index = 0; index < comments.length; index++ ) { %>
+                <% if(comments.length == 0) { %>
+                <tr class="text-right">
+                  <td>نظری وجود ندارد.</td>
+                </tr>
+                <% } %> <% for( let index = 0; index < comments.length; index++
+                ) { %>
                 <tr class="text-right">
                   <th class="d-none"><%= comments[index]._id %></th>
                   <th scope="row"><%= index+1 %></th>
@@ -130,9 +151,26 @@
                     %>
                   </td>
                   <td>
-                    <a href="/article/comment/<%= comments[index]._id %>"
-                      ><i class="text-danger far fa-trash-alt"></i
-                    ></a>
+                    <form
+                      action="/article/comment/<%= comments[index]._id %>?_method=DELETE"
+                      method="POST"
+                    >
+                      <input
+                        type="hidden"
+                        name="_method"
+                        value="DELETE"
+                        enctype="application/x-www-form-urlencoded"
+                      />
+                      <input
+                        type="text"
+                        class="d-none"
+                        name="article_id"
+                        value="<%= comments[index].article._id %>"
+                      />
+                      <button class="btn" type="submit">
+                        <i class="text-danger far fa-trash-alt"></i>
+                      </button>
+                    </form>
                   </td>
                 </tr>
                 <% } %>
@@ -141,6 +179,55 @@
           </div>
         </section>
       </div>
+      <nav aria-label="Page navigation example d-flex">
+        <% if (pages > 0) { %>
+        <ul class="pagination text-center justify-content-center">
+          <% if (current == 1) { %>
+          <li class="page-item disabled">
+            <a class="page-link">اولین</a>
+          </li>
+          <% } else { %>
+          <li>
+            <a
+              class="page-link"
+              href="/article/comment/?search=<%= search %>&page=1&order=<%= order %>"
+              >اولین</a
+            >
+          </li>
+          <% } %> <% let i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+          <% if (i !== 1) { %>
+          <li class="page-item disabled"><a class="page-link">...</a></li>
+          <% } %> <% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
+          <% if (i == current) { %>
+          <li class="page-item active">
+            <a class="page-link"><%= i %></a>
+          </li>
+          <% } else { %>
+          <li>
+            <a
+              class="page-link"
+              href="/article/comment/?search=<%= search %>&page=<%= i %>&order=<%= order %>"
+              ><%= i %></a
+            >
+          </li>
+          <% } %> <% if (i == Number(current) + 4 && i < pages) { %>
+          <li class="page-item disabled"><a class="page-link">...</a></li>
+          <% } %> <% } %> <% if (current == pages) { %>
+          <li class="page-item disabled">
+            <a class="page-link">آخرین</a>
+          </li>
+          <% } else { %>
+          <li>
+            <a
+              class="page-link"
+              href="/article/comment/?search=<%= search %>&page=<%= pages %>&order=<%= order %>"
+              >آخرین</a
+            >
+          </li>
+          <% } %>
+        </ul>
+        <% } %>
+      </nav>
 
       <%- include('../../partials/dashboard/footer') %>
 

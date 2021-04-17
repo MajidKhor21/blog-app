@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
 const Article = require("../models/article");
+const Comment = require("../models/comment");
 const ResetPassowrd = require("../models/reset-password");
 const moment = require("moment-jalaali");
 const fs = require("fs");
@@ -147,6 +148,7 @@ router.get("/members/delete/:id", async (req, res, next) => {
       );
     }
     await User.deleteOne({ _id: req.params.id });
+    await Comment.deleteMany({ author: req.params.id });
     req.flash("deleted", "کاربر مورد نظر با موفقیت حذف شد.");
     return res.status(200).redirect("/user/manage/members");
   } catch (err) {
@@ -238,11 +240,7 @@ router.get("/articles/delete/:id", async (req, res, next) => {
         { _id: article.author },
         { $inc: { articleCounter: -1 } }
       );
-      // const user = await User.findOne({ _id: article.author });
-      // user.update({ $inc: { articleCounter: -1 } });
-      // await User.findByIdAndUpdate(article.author, {
-      //   $inc: { articleCounter: -1 },
-      // });
+      await Comment.deleteMany({ article: req.params.id });
       req.flash("delete", "مقاله با موفقیت حذف شد.");
       res.redirect("/user/manage/articles");
     }

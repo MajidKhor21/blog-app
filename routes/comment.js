@@ -8,10 +8,19 @@ const commentValidate = require("../tools/validator/commentValidate");
 const { validationResult } = require("express-validator");
 
 router.get("/", (req, res, next) => {
-  console.log(2);
+  let perPage = 10;
   let page = req.query.page || 1;
+  let search = new RegExp(req.query.search, "i");
   req.query.order = req.query.order || "desc";
-  Comment.find({})
+  let order = -1;
+  if (req.query.order === "asc") {
+    order = 1;
+  } else if (req.query.order === "desc") {
+    order = -1;
+  }
+  Comment.find({ body: { $regex: search } })
+    .skip(perPage * page - perPage)
+    .limit(perPage)
     .populate("author", { firstName: 1, lastName: 1, avatar: 1 })
     .populate("article", {
       viewCounter: 0,
@@ -19,6 +28,7 @@ router.get("/", (req, res, next) => {
       brief: 0,
       describe: 0,
     })
+    .sort({ createdAt: order })
     .exec((err, comments) => {
       if (err) return res.status(500).json({ msg: "Server Error" });
       let createTime = [];
@@ -28,18 +38,24 @@ router.get("/", (req, res, next) => {
           time: moment(comments[index].createdAt).format("HH:mm"),
         };
       }
-      console.log(comments);
-      return res.render("user/admin/comments", {
-        user: req.session.user,
-        page: req.query.page,
-        comments,
-        createTime,
-      });
+      Comment.find({ body: { $regex: search } })
+        .count()
+        .exec((err, commentCount) => {
+          if (err) return res.status(500).json({ msg: "Server Error" });
+          return res.render("user/admin/comments", {
+            user: req.session.user,
+            page: req.query.page,
+            successfullyDelete: req.flash("successfullyDelete"),
+            comments,
+            createTime,
+            current: page,
+            pages: Math.ceil(commentCount / perPage),
+          });
+        });
     });
 });
 
 router.post("/", commentValidate.handle(), (req, res, next) => {
-  console.log(req.body);
   const result = validationResult(req);
   if (!result.isEmpty()) {
     const errors = result.array();
@@ -68,6 +84,22 @@ router.post("/", commentValidate.handle(), (req, res, next) => {
       return res.redirect(`/article/view/${req.body.article_id}`);
     }
   );
+});
+
+router.delete("/:id", (req, res, next) => {
+  Comment.deleteOne({ _id: req.params.id }, (err) => {
+    if (err) return res.status(500).json({ msg: "Server Error" });
+    Article.findByIdAndUpdate(
+      req.body.article_id,
+      { $inc: { commentCounter: -1 } },
+      { new: true },
+      (err) => {
+        if (err) return res.status(500).json({ msg: "Server Error" });
+        req.flash("successfullyDelete", "نظر مورد نظر با موفقیت حذف شد.");
+        return res.redirect("/article/comment");
+      }
+    );
+  });
 });
 
 module.exports = router;

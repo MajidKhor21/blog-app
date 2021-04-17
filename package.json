@@ -15,6 +15,7 @@
     "express-session": "^1.17.1",
     "express-validator": "^6.10.0",
     "http-errors": "~1.6.3",
+    "method-override": "^3.0.0",
     "moment-jalaali": "^0.9.2",
     "mongoose": "^5.12.1",
     "morgan": "~1.9.1",

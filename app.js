@@ -7,6 +7,7 @@ const config = require("./config/config");
 const session = require("express-session");
 const flash = require("req-flash");
 const favicon = require("serve-favicon");
+const methodOverride = require("method-override");
 require("./tools/initialization");
 const {
   deleteArticlePicture,
@@ -31,6 +32,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(methodOverride("_method"));
 
 // set up express-session
 app.use(

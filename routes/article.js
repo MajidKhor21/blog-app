@@ -383,6 +383,7 @@ router.get("/delete/:id", async (req, res) => {
       await User.findByIdAndUpdate(req.session.user._id, {
         $inc: { articleCounter: -1 },
       });
+      await Comment.deleteMany({ article: req.params.id });
       req.flash("delete", "مقاله با موفقیت حذف شد.");
       res.redirect("/user/dashboard");
     }
