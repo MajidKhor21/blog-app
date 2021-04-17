@@ -108,6 +108,24 @@
         <% if (user.role === 'admin') { %>
         <li class="nav-item has-treeview">
           <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-comments"></i>
+            <p>
+              نظرات
+              <i class="fas fa-angle-right right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="/article/comment" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>مدیریت نظرات</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <% } %> <% if (user.role === 'admin') { %>
+        <li class="nav-item has-treeview">
+          <a href="#" class="nav-link">
             <i class="nav-icon fas fa-users"></i>
             <p>
               کاربران

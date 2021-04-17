@@ -24,9 +24,19 @@ router.post("/", commentValidate.handle(), (req, res, next) => {
     author: req.session.user._id,
     article: req.body.article_id,
   });
-  comment.save();
-  req.flash("successfullyAdded", "نظر شما با موفقیت ثبت شد");
-  return res.redirect(`/article/view/${req.body.article_id}`);
+  comment.save((err) => {
+    if (err) return res.status(500).json({ msg: "Server Error" });
+  });
+  Article.findByIdAndUpdate(
+    req.body.article_id,
+    { $inc: { commentCounter: 1 } },
+    { new: true },
+    (err) => {
+      if (err) return res.status(500).json({ msg: "Server Error" });
+      req.flash("successfullyAdded", "نظر شما با موفقیت ثبت شد");
+      return res.redirect(`/article/view/${req.body.article_id}`);
+    }
+  );
 });
 
 module.exports = router;

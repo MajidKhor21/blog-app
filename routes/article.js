@@ -137,6 +137,8 @@ router.get("/my/:username", (req, res) => {
 
 //show article in a single page
 router.get("/view/:id", (req, res) => {
+  let perPage = 2;
+  let page = req.query.page || 1;
   //find that article's requested
   Article.findOne({ _id: req.params.id })
     .populate("author", {
@@ -159,7 +161,10 @@ router.get("/view/:id", (req, res) => {
             time: moment(article.createdAt).format("HH:mm"),
           };
           Comment.find({ article: req.params.id })
+            .skip(perPage * page - perPage)
+            .limit(perPage)
             .populate("author", { firstName: 1, lastName: 1, avatar: 1 })
+            .sort({ createdAt: -1 })
             .exec((err, comments) => {
               if (err) return res.status(500).json({ msg: "Server Error" });
               const commentCreateTime = [];
@@ -169,16 +174,25 @@ router.get("/view/:id", (req, res) => {
                   time: moment(comments[index].createdAt).format("HH:mm"),
                 };
               }
-              res.render("article/single-article", {
-                user: req.session.user,
-                messages: req.flash("messages"),
-                successfullyAdded: req.flash("successfullyAdded"),
-                article,
-                createTime,
-                art,
-                comments,
-                commentCreateTime,
-              });
+              Comment.find({})
+                .count()
+                .exec((err, commentCount) => {
+                  if (err) return res.status(500).json({ msg: "Server Error" });
+                  console.log(commentCount);
+                  res.render("article/single-article", {
+                    user: req.session.user,
+                    messages: req.flash("messages"),
+                    successfullyAdded: req.flash("successfullyAdded"),
+                    article,
+                    createTime,
+                    art,
+                    comments,
+                    commentCreateTime,
+                    page: req.query.page,
+                    current: page,
+                    pages: Math.ceil(commentCount / perPage),
+                  });
+                });
             });
         }
       );

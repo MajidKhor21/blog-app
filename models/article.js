@@ -40,6 +40,10 @@ const ArticleSchema = new Schema({
     type: Number,
     default: 0,
   },
+  commentCounter: {
+    type: Number,
+    default: 0,
+  },
   author: {
     type: Schema.Types.ObjectId,
     required: true,
