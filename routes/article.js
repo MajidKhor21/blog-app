@@ -8,9 +8,6 @@ const moment = require("moment-jalaali");
 const generalTools = require("../tools/general-tools");
 const fs = require("fs");
 const path = require("path");
-const articleCreateValidate = require("../tools/validator/articleCreateValidate");
-const articleEditvalidate = require("../tools/validator/articleEditvalidate");
-const { validationResult } = require("express-validator");
 
 //get new article page
 router.get("/create", (req, res) => {
@@ -23,21 +20,15 @@ router.get("/create", (req, res) => {
 });
 
 //add new article
-router.post("/create", articleCreateValidate.handle(), (req, res) => {
-  const result = validationResult(req);
-  if (!result.isEmpty()) {
-    const errors = result.array();
-    const messages = [];
-    errors.forEach((err) => {
-      messages.push(err.msg);
-    });
-    req.flash("messages", messages);
-    res.status(404);
-    return res.redirect("/article/create");
-  }
+router.post("/create", (req, res) => {
   const upload = generalTools.uploadArticlePic.single("picture");
 
   upload(req, res, function (err) {
+    if (!req.file || !req.body.title || !req.body.brief || !req.body.describe) {
+      req.flash("messages", messages);
+      res.status(404);
+      return res.redirect("/article/create");
+    }
     //check article picture and describe is not empty
     if (err instanceof multer.MulterError) {
       return res.status(500).json({ msg: "Server Error" });
@@ -280,7 +271,7 @@ router.get("/edit/:id", (req, res) => {
 });
 
 //update article route
-router.put("/", articleEditvalidate.handle(), (req, res) => {
+router.put("/", (req, res) => {
   //update article's picture
   const upload = generalTools.uploadArticlePic.single("picture");
 
