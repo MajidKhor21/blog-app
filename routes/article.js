@@ -25,7 +25,6 @@ router.post("/create", (req, res) => {
 
   upload(req, res, function (err) {
     if (!req.file || !req.body.title || !req.body.brief || !req.body.describe) {
-      req.flash("messages", messages);
       res.status(404);
       return res.redirect("/article/create");
     }

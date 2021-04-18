@@ -125,12 +125,23 @@
                 <tr class="text-right">
                   <th class="d-none"><%= articles[index]._id %></th>
                   <th scope="row"><%= index+1 %></th>
+                  <% if(articles[index].title.length > 10) { %>
+                  <td>
+                    <a href="/article/<%= articles[index]._id %>"
+                      ><%= articles[index].title.substring(0,10) %>...</a
+                    >
+                  </td>
+                  <% } else { %>
                   <td>
                     <a href="/article/<%= articles[index]._id %>"
                       ><%= articles[index].title %></a
                     >
                   </td>
+                  <% } %> <% if(articles[index].brief.length > 15) { %>
+                  <td><%= articles[index].brief.substring(0,15) %>...</td>
+                  <% } else { %>
                   <td><%= articles[index].brief %></td>
+                  <% } %>
                   <td>
                     <img
                       src="/images/articles/<%= articles[index].picture %>"

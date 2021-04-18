@@ -99,12 +99,13 @@
                   <div class="my-auto">
                     <h5 class="float-right"><%= article.brief %></h5>
                     <br />
+                    <br />
 
                     <p class="float-right text-muted">
                       ارسال شده در تاریخ: <%= createTime.date %> ساعت : <%=
                       createTime.time %>
                     </p>
-                    <br />
+                    <br /><br />
                     <p
                       class="float-right d-inline-block text-muted font-weight-lighter ml-2"
                     >
@@ -120,10 +121,13 @@
 
                   <div class="">
                     <img
-                      class="img-fluid rounded"
                       src="/images/articles/<%= article.picture %>"
                       alt="تصویر پست مقاله"
-                      style="width: 180px !important; height: 100px !important"
+                      style="
+                        width: 220px !important;
+                        height: 120px !important;
+                        border-radius: 8% !important;
+                      "
                     />
                   </div>
                 </div>

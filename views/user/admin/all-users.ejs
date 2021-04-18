@@ -163,8 +163,15 @@
                 <tr class="text-right">
                   <th class="d-none"><%= users[index]._id %></th>
                   <th scope="row"><%= index+1 %></th>
+                  <% if(users[index].firstName.length > 10) { %>
+                  <td><%= users[index].firstName.substring(0,10) %>...</td>
+                  <% } else { %>
                   <td><%= users[index].firstName %></td>
+                  <% } %> <% if(users[index].lastName.length > 10) { %>
+                  <td><%= users[index].lastName.substring(0,10) %>...</td>
+                  <% } else { %>
                   <td><%= users[index].lastName %></td>
+                  <% } %>
                   <td>
                     <% if (users[index].avatar === "default") { %>
                     <img
@@ -188,8 +195,15 @@
                     />
                     <% } %>
                   </td>
+                  <% if(users[index].email.length > 20) { %>
+                  <td><%= users[index].email.substring(0,20) %>...</td>
+                  <% } else { %>
                   <td><%= users[index].email %></td>
+                  <% } %> <% if(users[index].username.length > 10) { %>
+                  <td><%= users[index].username.substring(0,10) %>...</td>
+                  <% } else { %>
                   <td><%= users[index].username %></td>
+                  <% } %>
                   <td><%= users[index].articleCounter %></td>
                   <% if (users[index].gender === "male") { %>
                   <td>مرد</td>

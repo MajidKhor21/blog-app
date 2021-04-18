@@ -8,14 +8,14 @@ const ArticleSchema = new Schema({
     required: true,
     trim: true,
     minlength: 3,
-    maxlength: 50,
+    maxlength: 40,
   },
   brief: {
     type: String,
     required: true,
     trim: true,
     minlength: 3,
-    maxlength: 100,
+    maxlength: 80,
   },
   describe: {
     type: String,
