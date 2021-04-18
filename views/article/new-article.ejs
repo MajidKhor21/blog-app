@@ -42,25 +42,9 @@
             enctype="multipart/form-data"
             class="w-75 mx-auto mb-5"
           >
-          <% if (empty) { %>
-            <div
-              class="alert alert-warning alert-dismissible fade show w-75 text-right mx-auto"
-              role="alert"
-            >
-              <button
-                type="button"
-                class="close"
-                data-dismiss="alert"
-                aria-label="Close"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <%= empty %>
-            </div>
-            <% } %>
             <% if (title) { %>
               <div
-                class="alert alert-warning alert-dismissible fade show w-75 text-right mx-auto"
+                class="alert alert-danger alert-dismissible fade show w-75 text-right mx-auto"
                 role="alert"
               >
                 <button
@@ -74,6 +58,23 @@
                 <%= title %>
               </div>
               <% } %>
+              <% if (messages) { %>
+                <div
+                  class="alert alert-danger alert-dismissible fade show w-75 text-right mx-auto"
+                  role="alert"
+                >
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="alert"
+                    aria-label="Close"
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <% messages.forEach(msg =>{ %> <%- msg %> <br />
+                    <% }) %>
+                </div>
+                <% } %>
               <input class="d-none" type="text" value=<%- title %> id="localTitle">
             <div class="form-group row w-50">
               <label class="col-sm-2 col-form-label" for="title"

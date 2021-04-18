@@ -150,6 +150,7 @@ router.delete("/members/:id", async (req, res, next) => {
       );
     }
     await User.deleteOne({ _id: req.params.id });
+    await Comment.deleteMany({ author: req.params.id });
     req.flash("deleted", "کاربر مورد نظر با موفقیت حذف شد.");
     return res.status(200).redirect("/user/manage/members");
   } catch (err) {

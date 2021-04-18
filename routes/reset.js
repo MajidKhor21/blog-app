@@ -5,7 +5,6 @@ const ResetPassowrd = require("../models/reset-password");
 const uniqueString = require("unique-string");
 const nodemailer = require("nodemailer");
 const config = require("../config/config");
-const { countDocuments } = require("../models/user");
 
 //get reset password page
 router.get("/", (req, res, next) => {

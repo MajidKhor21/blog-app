@@ -8,6 +8,9 @@ const moment = require("moment-jalaali");
 const generalTools = require("../tools/general-tools");
 const fs = require("fs");
 const path = require("path");
+const articleCreateValidate = require("../tools/validator/articleCreateValidate");
+const articleEditvalidate = require("../tools/validator/articleEditvalidate");
+const { validationResult } = require("express-validator");
 
 //get new article page
 router.get("/create", (req, res) => {
@@ -15,20 +18,27 @@ router.get("/create", (req, res) => {
     user: req.session.user,
     empty: req.flash("empty"),
     title: req.flash("title"),
+    messages: req.flash("messages"),
   });
 });
 
 //add new article
-router.post("/create", (req, res) => {
+router.post("/create", articleCreateValidate.handle(), (req, res) => {
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+    const errors = result.array();
+    const messages = [];
+    errors.forEach((err) => {
+      messages.push(err.msg);
+    });
+    req.flash("messages", messages);
+    res.status(404);
+    return res.redirect("/article/create");
+  }
   const upload = generalTools.uploadArticlePic.single("picture");
 
   upload(req, res, function (err) {
     //check article picture and describe is not empty
-    if (!req.file || !req.body.describe || !req.body.title || !req.body.brief) {
-      req.flash("empty", "ورودی های نامعتبر");
-      return res.redirect("/article/create");
-    }
-
     if (err instanceof multer.MulterError) {
       return res.status(500).json({ msg: "Server Error" });
     } else if (err) {
@@ -264,26 +274,20 @@ router.get("/edit/:id", (req, res) => {
       article,
       user: req.session.user,
       title: req.flash("title"),
+      messages: req.flash("messages"),
     });
   });
 });
 
 //update article route
-router.put("/", (req, res) => {
+router.put("/", articleEditvalidate.handle(), (req, res) => {
   //update article's picture
   const upload = generalTools.uploadArticlePic.single("picture");
 
   upload(req, res, function (err) {
     //check article title, describe and brief is not empty
     if (!req.body.title || !req.body.brief || !req.body.describe)
-      return res.redirect(
-        url.format({
-          pathname: "/article",
-          query: {
-            msg: "error",
-          },
-        })
-      );
+      return res.redirect("/article");
     if (err instanceof multer.MulterError) {
       return res.status(500).json({ msg: "Server Error" });
     } else if (err) {
