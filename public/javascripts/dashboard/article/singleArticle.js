@@ -15,13 +15,6 @@ $(document).ready(() => {
   });
   $("#example1").emojioneArea({});
   $(".emojionearea").emojioneArea({
-    pickerPosition: "right",
-    tonesStyle: "bullet",
-    events: {
-      keyup: function (editor, event) {
-        console.log(editor.html());
-        console.log(this.getText());
-      },
-    },
+    standalone: true,
   });
 });

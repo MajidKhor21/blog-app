@@ -139,8 +139,12 @@
           </div>
 
           <div class="container mt-5">
+            <p class="text-right font-weight-bold">نظرات</p>
             <hr />
-            <% for( let index = 0; index < comments.length; index++) { %>
+            <% if(comments.length === 0) { %>
+            <p class="text-right">نظری ارسال نشده است.</p>
+            <% } %> <% for( let index = 0; index < comments.length; index++) {
+            %>
             <div class="p-2">
               <div class="d-flex flex-row user-info">
                 <% if (comments[index].author.avatar === "default") { %>
@@ -191,9 +195,7 @@
                 </li>
                 <% } else { %>
                 <li>
-                  <a
-                    class="page-link"
-                    href="/article/view/<%= article._id %>?page=1"
+                  <a class="page-link" href="/article/<%= article._id %>?page=1"
                     >اولین</a
                   >
                 </li>
@@ -209,7 +211,7 @@
                 <li>
                   <a
                     class="page-link"
-                    href="/article/view/<%= article._id %>?page=<%= i %>"
+                    href="/article/<%= article._id %>?page=<%= i %>"
                     ><%= i %></a
                   >
                 </li>
@@ -223,7 +225,7 @@
                 <li>
                   <a
                     class="page-link"
-                    href="/article/view/<%= article._id %>?page=<%= pages %>"
+                    href="/article/<%= article._id %>?page=<%= pages %>"
                     >آخرین</a
                   >
                 </li>
@@ -247,7 +249,7 @@
                           value="<%= article._id %>"
                         />
                         <textarea
-                          class="form-control ml-1 shadow-none textarea"
+                          class="form-control ml-1 shadow-none textarea text-right"
                           name="comment"
                           id="example1"
                         ></textarea>

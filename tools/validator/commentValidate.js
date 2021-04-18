@@ -6,7 +6,9 @@ class commentValidate extends validator {
     return [
       check("comment")
         .isLength({ min: 3, max: 300 })
-        .withMessage("نظر شما نباید کمتر از 3 و بیشتر از 300 حرف باشد."),
+        .withMessage(
+          "طول متن نظر شما نباید کمتر از 3 و بیشتر از 300 حرف باشد."
+        ),
     ];
   }
 }

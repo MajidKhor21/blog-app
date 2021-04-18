@@ -24,7 +24,7 @@
                 <form
                   class="input-group col-12 col-xl-8 m-auto"
                   style="direction: rtl"
-                  action="/article/comment"
+                  action="/article/comment/all"
                   method="GET"
                 >
                   <input
@@ -190,7 +190,7 @@
           <li>
             <a
               class="page-link"
-              href="/article/comment/?search=<%= search %>&page=1&order=<%= order %>"
+              href="/article/comment/all/?search=<%= search %>&page=1&order=<%= order %>"
               >اولین</a
             >
           </li>
@@ -206,7 +206,7 @@
           <li>
             <a
               class="page-link"
-              href="/article/comment/?search=<%= search %>&page=<%= i %>&order=<%= order %>"
+              href="/article/comment/all/?search=<%= search %>&page=<%= i %>&order=<%= order %>"
               ><%= i %></a
             >
           </li>
@@ -220,7 +220,7 @@
           <li>
             <a
               class="page-link"
-              href="/article/comment/?search=<%= search %>&page=<%= pages %>&order=<%= order %>"
+              href="/article/comment/all/?search=<%= search %>&page=<%= pages %>&order=<%= order %>"
               >آخرین</a
             >
           </li>

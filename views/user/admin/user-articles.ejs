@@ -109,6 +109,7 @@
                   <th scope="col">تصویر مقاله</th>
                   <th scope="col">نویسنده</th>
                   <th scope="col">تعداد بازدید</th>
+                  <th scope="col">تعداد نظرات</th>
                   <th scope="col">تاریخ ایجاد</th>
                   <th scope="col">آخرین ویرایش</th>
                   <th scope="col"></th>
@@ -144,6 +145,7 @@
                     articles[index].author.lastName %>
                   </td>
                   <td><%= articles[index].viewCounter %></td>
+                  <td><%= articles[index].commentCounter %></td>
                   <td>
                     <%= createAt[index].time %> - <%= createAt[index].date %>
                   </td>
