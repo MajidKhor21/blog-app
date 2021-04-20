@@ -39,7 +39,7 @@
                 </form>
               </div>
               <div class="col-sm-4">
-                <ol class="breadcrumb float-sm-left">
+                <ol class="breadcrumb float-sm-left d-none d-lg-flex">
                   <li class="breadcrumb-item">
                     <a href="/user/dashboard">داشبورد</a>
                   </li>
@@ -50,10 +50,10 @@
           </div>
         </section>
         <section class="content mt-2">
-          <div class="container">
+          <div class="container table-responsive">
             <% if (successfullyEdit) { %>
             <div
-              class="alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
+              class="col-10 col-lg-6 alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
               role="alert"
             >
               <button
@@ -68,7 +68,7 @@
             </div>
             <% } %> <% if (successfullyDelete) { %>
             <div
-              class="alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
+              class="col-10 col-lg-6 alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
               role="alert"
             >
               <button

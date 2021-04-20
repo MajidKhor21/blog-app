@@ -19,13 +19,6 @@
               <div class="col-sm-4">
                 <% let { search, page, order } = req.query %>
                 <h3 class="d-inline-block ml-2">ویرایش کاربران</h3>
-                <% if (users.length) { %>
-                <span class="d-inline-block ml-1">صفحه</span>
-                <% } %> <% if (page) { %>
-                <span class="d-inline-block" id="articleSpan"><%= page %></span>
-                <%} else if(!page && users.length) { %>
-                <span class="d-inline-block" id="articleSpan">1</span>
-                <% } %>
               </div>
               <div class="col-12 col-sm-8 col-md-8 col-lg-4 mb-2">
                 <form
@@ -46,7 +39,7 @@
                 </form>
               </div>
               <div class="col-sm-4">
-                <ol class="breadcrumb float-sm-left">
+                <ol class="breadcrumb float-sm-left d-none d-lg-flex">
                   <li class="breadcrumb-item">
                     <a href="/user/dashboard">داشبورد</a>
                   </li>
@@ -60,7 +53,7 @@
         <section class="content mt-2">
           <% if (invalid) { %>
           <div
-            class="alert alert-danger alert-dismissible fade show w-50 text-right mx-auto"
+            class="col-10 col-lg-6 alert alert-danger alert-dismissible fade show w-75 text-right mx-auto"
             role="alert"
           >
             <button
@@ -75,7 +68,7 @@
           </div>
           <% } %> <% if (error) { %>
           <div
-            class="alert alert-danger alert-dismissible fade show w-50 text-right mx-auto"
+            class="col-10 col-lg-6 alert alert-danger alert-dismissible fade show w-75 text-right mx-auto"
             role="alert"
           >
             <button
@@ -90,7 +83,7 @@
           </div>
           <% } %> <% if (resetPassword) { %>
           <div
-            class="alert alert-success alert-dismissible fade show w-50 text-right mx-auto"
+            class="col-10 col-lg-6 alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
             role="alert"
           >
             <button
@@ -105,7 +98,7 @@
           </div>
           <% } %> <% if (deleted) { %>
           <div
-            class="alert alert-success alert-dismissible fade show w-50 text-right mx-auto"
+            class="col-10 col-lg-6 alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
             role="alert"
           >
             <button
@@ -119,7 +112,7 @@
             <%= deleted %>
           </div>
           <% } %>
-          <div class="container-fluid">
+          <div class="container-fluid table-responsive">
             <table class="table table-hover table-fixed w-75 mx-auto">
               <thead style="background-color: #343a40; color: #c2c7d0">
                 <tr>

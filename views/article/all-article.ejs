@@ -13,18 +13,18 @@
       include('../partials/dashboard/sidebar') %>
 
       <div class="content-wrapper mb-5">
+        <% let { search, page, order } = req.query %>
         <section class="content-header">
           <div class="container-fluid">
             <div class="row mb-2">
               <div class="col-sm-4">
                 <h3 class="d-inline-block ml-2">ویرایش مقالات</h3>
-                <% let { search, page, order } = req.query %>
               </div>
               <div class="col-12 col-sm-8 col-md-8 col-lg-4 mb-2">
                 <form
                   class="input-group col-12 col-xl-8 m-auto"
                   style="direction: rtl"
-                  action="/article/edit"
+                  action="/article"
                   method="GET"
                 >
                   <input
@@ -39,7 +39,7 @@
                 </form>
               </div>
               <div class="col-sm-4">
-                <ol class="breadcrumb float-sm-left">
+                <ol class="breadcrumb float-sm-left d-none d-lg-flex">
                   <li class="breadcrumb-item">
                     <a href="/user/dashboard">داشبورد</a>
                   </li>
@@ -52,7 +52,7 @@
 
         <% if (successfullyEdit) { %>
         <div
-          class="alert alert-success alert-dismissible fade show w-50 text-right mx-auto"
+          class="col-10 col-lg-6 alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
           role="alert"
         >
           <button
@@ -67,7 +67,7 @@
         </div>
         <% } %> <% if (successfullyDelete) { %>
         <div
-          class="alert alert-success alert-dismissible fade show w-50 text-right mx-auto"
+          class="col-10 col-lg-6 alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
           role="alert"
         >
           <button
@@ -83,7 +83,7 @@
         <% } %>
 
         <section class="content mt-2">
-          <div class="container">
+          <div class="container table-responsive">
             <table class="table table-hover table-fixed">
               <thead style="background-color: #343a40; color: #c2c7d0">
                 <tr>
@@ -92,7 +92,7 @@
                   <% if(order === 'desc') { %>
                   <th scope="col">
                     <a
-                      href="/article/edit?search=<%= search %>&page=<%= page %>&order=asc"
+                      href="/article?search=<%= search %>&page=<%= page %>&order=asc"
                       style="color: inherit"
                       ><i class="fas fa-sort"> #</i></a
                     >
@@ -100,7 +100,7 @@
                   <% } %> <% if(order === 'asc') { %>
                   <th scope="col">
                     <a
-                      href="/article/edit?search=<%= search %>&page=<%= page %>&order=desc"
+                      href="/article?search=<%= search %>&page=<%= page %>&order=desc"
                       style="color: inherit"
                       ><i class="fas fa-sort"> #</i></a
                     >
@@ -162,7 +162,7 @@
                     %>
                   </td>
                   <td>
-                    <div class="d-inline-block">
+                    <div class="col-2 d-inline-block">
                       <a
                         class="text-warning updateBtn"
                         href="/article/edit/<%= articles[index]._id %> "
@@ -206,7 +206,7 @@
           <li>
             <a
               class="page-link"
-              href="/article/edit?search=<%= search %>&page=1&order=<%= order %>"
+              href="/article?search=<%= search %>&page=1&order=<%= order %>"
               >اولین</a
             >
           </li>
@@ -222,7 +222,7 @@
           <li>
             <a
               class="page-link"
-              href="/article/edit?search=<%= search %>&page=<%= i %>&order=<%= order %>"
+              href="/article?search=<%= search %>&page=<%= i %>&order=<%= order %>"
               ><%= i %></a
             >
           </li>
@@ -236,7 +236,7 @@
           <li>
             <a
               class="page-link"
-              href="/article/edit?search=<%= search %>&page=<%= pages %>&order=<%= order %>"
+              href="/article?search=<%= search %>&page=<%= pages %>&order=<%= order %>"
               >آخرین</a
             >
           </li>

@@ -1,6 +1,5 @@
 $(document).ready(() => {
   let a = $("#describe").text();
-  console.log(a);
   $("#desc").html(a);
   $(".alert")
     .fadeTo(4000, 500)
@@ -11,7 +10,7 @@ $(document).ready(() => {
     $("#submit").click();
   });
   $("#cancelBtn").click(() => {
-    location.reload();
+    if ($("#example1").val()) location.reload();
   });
   $("#example1").emojioneArea({});
   $(".emojionearea").emojioneArea({

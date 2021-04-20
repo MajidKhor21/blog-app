@@ -11,20 +11,20 @@
     <li class="nav-item d-none d-lg-inline-block">
       <a href="/article/create" class="nav-link">ایجاد مقاله جدید</a>
     </li>
-    <li class="nav-item d-none d-xl-inline-block">
+    <li class="nav-item d-none d-lg-inline-block">
       <a href="/article" class="nav-link">مقالات من</a>
     </li>
     <% if (user.role === 'admin') { %>
     <li class="nav-item d-none d-xl-inline-block">
-      <a href="/article/comment/all" class="nav-link">مدیریت نظرات</a>
+      <a href="/article/comment/all" class="nav-link">نظرات</a>
     </li>
     <% } %> <% if (user.role === 'admin') { %>
     <li class="nav-item d-none d-xl-inline-block">
-      <a href="/user/manage/articles" class="nav-link">مدیریت مقالات</a>
+      <a href="/user/manage/articles" class="nav-link">مقالات</a>
     </li>
     <% } %> <% if (user.role === 'admin') { %>
     <li class="nav-item d-none d-xl-inline-block">
-      <a href="/user/manage/members" class="nav-link">مدیریت کاربران</a>
+      <a href="/user/manage/members" class="nav-link">کاربران</a>
     </li>
     <% } %>
   </ul>

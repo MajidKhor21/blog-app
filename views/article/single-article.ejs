@@ -18,7 +18,7 @@
             <div class="row mb-2">
               <div class="col-sm-6"></div>
               <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-left">
+                <ol class="breadcrumb float-sm-left d-none d-lg-flex">
                   <li class="breadcrumb-item">
                     <a href="/user/dashboard">داشبورد</a>
                   </li>
@@ -34,7 +34,7 @@
           <div class="container">
             <% if (messages) { %>
             <div
-              class="alert alert-danger alert-dismissible fade show w-50 text-right mx-auto"
+              class="col-10 col-lg-6 alert alert-danger alert-dismissible fade show w-75 text-right mx-auto"
               role="alert"
             >
               <button
@@ -49,7 +49,7 @@
             </div>
             <% } %> <% if (successfullyAdded) { %>
             <div
-              class="alert alert-success alert-dismissible fade show w-50 text-right mx-auto"
+              class="col-10 col-lg-6 alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
               role="alert"
             >
               <button
@@ -67,7 +67,7 @@
               <div class="col-lg-12">
                 <h1 class="mt-4"><%= article.title %></h1>
 
-                <p class="lead">
+                <p class="lead mb-5 mt-3">
                   نویسنده:
                   <a href="#"
                     ><%= article.author.firstName %> <%= article.author.lastName
@@ -95,32 +95,34 @@
                 </p>
 
                 <hr />
-                <div class="d-flex justify-content-between">
-                  <div class="my-auto">
-                    <h5 class="float-right"><%= article.brief %></h5>
+                <div class="d-lg-flex justify-content-lg-between">
+                  <div class="row my-auto">
+                    <h5 class="text-right col-11"><%= article.brief %></h5>
                     <br />
                     <br />
 
-                    <p class="float-right text-muted">
+                    <p class="text-right text-muted mt-2">
                       ارسال شده در تاریخ: <%= createTime.date %> ساعت : <%=
                       createTime.time %>
                     </p>
-                    <br /><br />
-                    <p
-                      class="float-right d-inline-block text-muted font-weight-lighter ml-2"
-                    >
-                      تعداد بازدید: <%= art.viewCounter %>
-                    </p>
-                    <p class="float-right d-inline-block ml-2">-</p>
-                    <p
-                      class="float-right d-inline-block text-muted font-weight-lighter"
-                    >
-                      تعداد نظرات: <%= art.commentCounter %>
-                    </p>
+                    <div class="row col-12">
+                      <p
+                        class="float-right d-block text-muted font-weight-lighter"
+                      >
+                        تعداد بازدید: <%= art.viewCounter %>
+                      </p>
+                      <p class="float-right d-block mr-2 ml-2">-</p>
+                      <p
+                        class="float-right d-block text-muted font-weight-lighter"
+                      >
+                        تعداد نظرات: <%= art.commentCounter %>
+                      </p>
+                    </div>
                   </div>
 
-                  <div class="">
+                  <div class="row">
                     <img
+                      class="m-auto"
                       src="/images/articles/<%= article.picture %>"
                       alt="تصویر پست مقاله"
                       style="
@@ -256,6 +258,8 @@
                           class="form-control ml-1 shadow-none textarea text-right"
                           name="comment"
                           id="example1"
+                          required
+                          placeholder="نظر خود را بنویسید..."
                         ></textarea>
                         <div class="row">
                           <div class="col">
