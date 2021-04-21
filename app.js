@@ -12,6 +12,7 @@ require("./tools/initialization");
 const {
   deleteArticlePicture,
   deleteDescribePicture,
+  deleteAvatarsPicture,
 } = require("./tools/cleaner");
 
 const app = express();
