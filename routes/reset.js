@@ -38,7 +38,7 @@ router.post("/", async (req, res, next) => {
     let transporter = await nodemailer.createTransport({
       host: config.emailHost,
       port: config.emailPort,
-      secure: true, // use SSL
+      secure: true,
       auth: {
         user: config.emailUser, // user
         pass: config.emailPass, // password
@@ -64,8 +64,8 @@ router.post("/", async (req, res, next) => {
       "لینک بازیابی رمز عبور به آدرس ایمیل وارد شده ارسال شد."
     );
     res.redirect("/reset");
-  } catch {
-    res.status(500).json({ msg: "Server Error" });
+  } catch (err) {
+    res.status(500).send(err);
   }
 });
 

@@ -100,7 +100,7 @@ router.get("/members/reset/:id", async (req, res, next) => {
 
     req.flash(
       "resetPassword",
-      "لینک بازیابی رمز عبور به آدرس ایمیل کاربر مورد نظر وارد شده ارسال شد."
+      "لینک بازیابی رمز عبور به آدرس ایمیل کاربر مورد نظر ارسال شد."
     );
     return res.redirect("/user/manage/members");
   } catch (err) {

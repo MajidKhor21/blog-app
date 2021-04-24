@@ -213,7 +213,7 @@
                       <a
                         class="text-info updateBtn"
                         href="/user/manage/members/reset/<%= users[index]._id %> "
-                        ><i class="fas fa-redo ml-2"></i
+                        ><i class="fas fa-redo"></i
                       ></a>
                     </div>
                     <div class="d-inline-block">
@@ -223,7 +223,11 @@
                         enctype="application/x-www-form-urlencoded"
                       >
                         <input type="hidden" name="_method" value="DELETE" />
-                        <button class="btn" type="submit">
+                        <button
+                          class="btn"
+                          type="submit"
+                          onclick="if (!confirm('آیا برای پاک کردن این کاربر مطمئنی؟')) { return false }"
+                        >
                           <i class="text-danger far fa-trash-alt"></i>
                         </button>
                       </form>

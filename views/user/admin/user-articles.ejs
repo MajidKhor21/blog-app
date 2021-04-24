@@ -178,7 +178,11 @@
                           name="article_id"
                           value="<%= articles[index]._id %>"
                         />
-                        <button class="btn" type="submit">
+                        <button
+                          class="btn"
+                          type="submit"
+                          onclick="if (!confirm('آیا برای پاک کردن این مقاله مطمئنی؟')) { return false }"
+                        >
                           <i class="text-danger far fa-trash-alt"></i>
                         </button>
                       </form>

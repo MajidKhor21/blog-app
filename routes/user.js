@@ -225,7 +225,7 @@ router.delete("/removeAvatar", (req, res) => {
           (err) => {
             if (err) return res.status(500).json({ msg: "Server Error" });
             req.session.user = user;
-            req.flash("avatar", "عکس آواتار با موفقیت تغییر کرد.");
+            req.flash("avatar", "عکس آواتار با موفقیت حذف شد.");
             return res.redirect("/user/avatar");
           }
         );

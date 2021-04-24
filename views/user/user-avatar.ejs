@@ -97,7 +97,11 @@
     <script>
       $(document).ready(()=>{
         $("#removeAvatar").click(()=>{
-          $("#removeSubmit").click();
+          console.log(1);
+          let result = confirm("آیا برای حذف آواتار مطمئنی؟");
+            if (result == true) {
+              $("#removeSubmit").click();
+            }
         })
         $("#uploadAvatar").click(()=>{
           $("#avatarSubmit").click();

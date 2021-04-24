@@ -176,7 +176,11 @@
                         name="article_id"
                         value="<%= comments[index].article._id %>"
                       />
-                      <button class="btn" type="submit">
+                      <button
+                        class="btn"
+                        type="submit"
+                        onclick="if (!confirm('آیا برای پاک کردن این نظر مطمئنی؟')) { return false }"
+                      >
                         <i class="text-danger far fa-trash-alt"></i>
                       </button>
                     </form>
