@@ -3,6 +3,7 @@ const multer = require("multer");
 
 let generalTools = {};
 
+//avatar storage
 const avatarStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(__dirname, "../public/images/avatars"));
@@ -12,6 +13,7 @@ const avatarStorage = multer.diskStorage({
   },
 });
 
+//article picture storage
 const articlePicStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(__dirname, "../public/images/articles"));
@@ -21,6 +23,7 @@ const articlePicStorage = multer.diskStorage({
   },
 });
 
+//describe picture storage
 const describePicStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(__dirname, "../public/images/uploads"));
@@ -34,6 +37,7 @@ const describePicStorage = multer.diskStorage({
   },
 });
 
+//upload avatar function
 generalTools.uploadAvatar = multer({
   storage: avatarStorage,
   fileFilter: function (req, file, cb) {
@@ -50,6 +54,7 @@ generalTools.uploadAvatar = multer({
   },
 });
 
+//upload article picture function
 generalTools.uploadArticlePic = multer({
   storage: articlePicStorage,
   fileFilter: function (req, file, cb) {
@@ -65,6 +70,7 @@ generalTools.uploadArticlePic = multer({
   },
 });
 
+//upload describe picture function
 generalTools.uploadDescribePic = multer({
   storage: describePicStorage,
   fileFilter: function (req, file, cb) {

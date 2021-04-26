@@ -6,6 +6,7 @@ const moment = require("moment-jalaali");
 const commentValidate = require("../tools/validator/commentValidate");
 const { validationResult } = require("express-validator");
 
+//get all comments
 router.get("/all", (req, res, next) => {
   let perPage = 10;
   let page = req.query.page || 1;
@@ -54,6 +55,7 @@ router.get("/all", (req, res, next) => {
     });
 });
 
+//create a new comment
 router.post("/", commentValidate.handle(), (req, res, next) => {
   const result = validationResult(req);
   if (!result.isEmpty()) {
@@ -85,6 +87,7 @@ router.post("/", commentValidate.handle(), (req, res, next) => {
   );
 });
 
+//delete a comment
 router.delete("/:id", (req, res, next) => {
   Comment.deleteOne({ _id: req.params.id }, (err) => {
     if (err) return res.status(500).json({ msg: "Server Error" });

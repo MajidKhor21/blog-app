@@ -1,9 +1,9 @@
 const express = require("express");
+require("dotenv").config();
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
-const config = require("./config/config");
 const session = require("express-session");
 const flash = require("req-flash");
 const favicon = require("serve-favicon");
@@ -18,10 +18,11 @@ const {
 const app = express();
 
 // setup mongoose
-mongoose.connect(config.mongoUrl, {
+mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
+  useCreateIndex: true,
 });
 
 // view engine setup
@@ -39,11 +40,11 @@ app.use(methodOverride("_method"));
 app.use(
   session({
     key: "user_sid",
-    secret: config.sessionSecret,
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: config.maxAge,
+      maxAge: Number(process.env.SESSION_AGE),
     },
   })
 );

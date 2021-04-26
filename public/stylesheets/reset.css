@@ -2,11 +2,11 @@
   body{
     background-color: #eaeaea;
     direction: rtl;
-    background: url(../images/back3.jpg);
-    background-repeat: no-repeat;
-    background-position: center;
+    background: url(../images/back3.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
     background-size: cover;
-    overflow: hidden;
   }
   @font-face {
     font-family: iranSans;
@@ -42,7 +42,7 @@
     background-color: rgba(0, 0, 0, 0.8);
     width: 290px;
     position: absolute;
-    top: 60%;
+    top: 370px;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
@@ -159,13 +159,6 @@
     }
 }
 
-
-  @media only screen and (min-width: 400px) {
-    .center{
-      top: 60% !important;
-    }
-  }
-
   @media only screen and (min-width: 700px) {
     .text-input > i{
       padding-bottom: 9.5px;
@@ -175,7 +168,6 @@
     background-color: rgba(0, 0, 0, 0.8);
     width: 440px;
     position: absolute;
-    top: 350px !important;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;

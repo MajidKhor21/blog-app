@@ -69,7 +69,7 @@
             <% } %>
             <table class="table table-hover table-fixed">
               <thead style="background-color: #343a40; color: #c2c7d0">
-                <tr>
+                <tr class="text-center">
                   <th class="d-none" scope="col"></th>
                   <% if(order === 'desc') { %>
                   <th scope="col">
@@ -104,13 +104,17 @@
                 </tr>
                 <% } %> <% for( let index = 0; index < comments.length; index++
                 ) { %>
-                <tr class="text-right">
+                <tr class="text-center">
                   <th class="d-none"><%= comments[index]._id %></th>
                   <th scope="row"><%= index+1 %></th>
-                  <% if(comments[index].article.title.length > 10) { %>
-                  <td>
+                  <% if(comments[index].article.title.length > 15) { %>
+                  <td
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    title="<%= comments[index].article.title %>"
+                  >
                     <a href="/article/<%= comments[index].article._id %>"
-                      ><%= comments[index].article.title.substring(0,10)
+                      ><%= comments[index].article.title.substring(0,15)
                       %>...</a
                     >
                   </td>
@@ -150,7 +154,13 @@
                     comments[index].author.lastName %>
                   </td>
                   <% if(comments[index].body.length > 30) { %>
-                  <td><%= comments[index].body.slice(0,30) %>...</td>
+                  <td
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    title="<%= comments[index].body %>"
+                  >
+                    <%= comments[index].body.slice(0,30) %>...
+                  </td>
                   <% } else { %>
                   <td><%= comments[index].body %></td>
                   <% } %>

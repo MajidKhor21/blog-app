@@ -4,6 +4,7 @@ const path = require("path");
 const schedule = require("node-schedule");
 const fs = require("fs");
 
+//delete unused article picture
 const deleteArticlePicture = schedule.scheduleJob(
   { hour: 3, minute: 15 },
   function () {
@@ -36,6 +37,7 @@ const deleteArticlePicture = schedule.scheduleJob(
   }
 );
 
+//delete unused article describe picture
 const deleteDescribePicture = schedule.scheduleJob(
   { hour: 3, minute: 30 },
   function () {
@@ -66,6 +68,7 @@ const deleteDescribePicture = schedule.scheduleJob(
   }
 );
 
+//delete unused avatar picture
 const deleteAvatarsPicture = schedule.scheduleJob(
   { hour: 3, minute: 45 },
   function () {

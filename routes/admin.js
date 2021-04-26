@@ -3,13 +3,10 @@ const router = express.Router();
 const User = require("../models/user");
 const Article = require("../models/article");
 const Comment = require("../models/comment");
-const ResetPassowrd = require("../models/reset-password");
 const moment = require("moment-jalaali");
 const fs = require("fs");
 const path = require("path");
-const uniqueString = require("unique-string");
-const nodemailer = require("nodemailer");
-const config = require("../config/config");
+const reset = require("../tools/reset");
 
 //manage all users route
 router.get("/members", async (req, res, next) => {
@@ -65,39 +62,7 @@ router.get("/members", async (req, res, next) => {
 //reset password route for admin only
 router.get("/members/reset/:id", async (req, res, next) => {
   try {
-    const user = await User.find({ _id: req.params.id });
-    const setPassword = new ResetPassowrd({
-      email: user[0].email,
-      token: uniqueString(),
-    });
-
-    await setPassword.save();
-
-    // create reusable transporter object using the default SMTP transport
-    let transporter = await nodemailer.createTransport({
-      host: config.emailHost,
-      port: config.emailPort,
-      secure: true, // use SSL
-      auth: {
-        user: config.emailUser, // user
-        pass: config.emailPass, // password
-      },
-    });
-
-    // send mail with defined transport object
-    let info = await transporter.sendMail({
-      from: '"مکتب بلاگ 👻" <manager@maktab.info>', // sender address
-      to: `${setPassword.email}`, // list of receivers
-      subject: "بازیابی رمز عبور ✔", // Subject line
-      text: "از طریق لینک زیر می توانید رمز عبور خود را تغییر دهید?", // plain text body
-      html: `<p>با سلام</p></ br>
-      <a href="http://${req.headers.host}/reset/password/${setPassword.token}">لینک بازیابی رمز عبور</a>
-      </ br></ br>
-      <p> اگر شما درخواست بازیابی رمز عبور را ندادید، لطفا این ایمیل را نادیده بگیرید.</p>`, // html body
-    });
-
-    await transporter.sendMail(info);
-
+    await reset.sendEmailByAdmin(req);
     req.flash(
       "resetPassword",
       "لینک بازیابی رمز عبور به آدرس ایمیل کاربر مورد نظر ارسال شد."

@@ -205,15 +205,37 @@
                         >
                       </div>
                     </div>
-
+                    <% if(articles[index].title.length > 40) { %>
+                    <h3
+                      class="card-title font-weight-bold"
+                      data-toggle="tooltip"
+                      data-placement="bottom"
+                      title="<%= articles[index].title %>"
+                    >
+                      <%= articles[index].title.substring(0,40) %>...
+                    </h3>
+                    <% } else { %>
                     <h3 class="card-title font-weight-bold">
                       <%= articles[index].title %>
                     </h3>
+                    <% } %>
+
                     <br />
                     <br />
+                    <% if(articles[index].brief.length > 82) { %>
+                    <p
+                      class="card-text text-right"
+                      data-toggle="tooltip"
+                      data-placement="bottom"
+                      title="<%= articles[index].brief %>"
+                    >
+                      <%= articles[index].brief.substring(0,82) %>...
+                    </p>
+                    <% } else { %>
                     <p class="card-text text-right">
                       <%= articles[index].brief %>
                     </p>
+                    <% } %>
                   </div>
                   <div class="card-footer">
                     <% if (new Date(articles[index].createdAt).getTime() >=

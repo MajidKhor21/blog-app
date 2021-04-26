@@ -115,7 +115,7 @@
           <div class="container-fluid table-responsive">
             <table class="table table-hover table-fixed w-75 mx-auto">
               <thead style="background-color: #343a40; color: #c2c7d0">
-                <tr>
+                <tr class="text-center">
                   <th class="d-none" scope="col"></th>
                   <% if(order === 'desc') { %>
                   <th scope="col">
@@ -137,7 +137,7 @@
                   <th scope="col">نام</th>
                   <th scope="col">نام خانوادگی</th>
                   <th scope="col">عکس آواتار</th>
-                  <th class="text-center" scope="col">آدرس ایمیل</th>
+                  <th scope="col">آدرس ایمیل</th>
                   <th scope="col">نام کاربری</th>
                   <th scope="col">تعداد مقالات</th>
                   <th scope="col">جنسیت</th>
@@ -153,15 +153,27 @@
                 </tr>
                 <% } %> <% for( let index = 0; index < users.length; index++ ) {
                 %>
-                <tr class="text-right">
+                <tr class="text-center">
                   <th class="d-none"><%= users[index]._id %></th>
                   <th scope="row"><%= index+1 %></th>
                   <% if(users[index].firstName.length > 10) { %>
-                  <td><%= users[index].firstName.substring(0,10) %>...</td>
+                  <td
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    title="<%= users[index].firstName %>"
+                  >
+                    <%= users[index].firstName.substring(0,10) %>...
+                  </td>
                   <% } else { %>
                   <td><%= users[index].firstName %></td>
                   <% } %> <% if(users[index].lastName.length > 10) { %>
-                  <td><%= users[index].lastName.substring(0,10) %>...</td>
+                  <td
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    title="<%= users[index].lastName %>"
+                  >
+                    <%= users[index].lastName.substring(0,10) %>...
+                  </td>
                   <% } else { %>
                   <td><%= users[index].lastName %></td>
                   <% } %>
@@ -188,12 +200,24 @@
                     />
                     <% } %>
                   </td>
-                  <% if(users[index].email.length > 20) { %>
-                  <td><%= users[index].email.substring(0,20) %>...</td>
+                  <% if(users[index].email.length > 25) { %>
+                  <td
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    title="<%= users[index].email %>"
+                  >
+                    <%= users[index].email.substring(0,25) %>...
+                  </td>
                   <% } else { %>
                   <td><%= users[index].email %></td>
                   <% } %> <% if(users[index].username.length > 10) { %>
-                  <td><%= users[index].username.substring(0,10) %>...</td>
+                  <td
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    title="<%= users[index].username %>"
+                  >
+                    <%= users[index].username.substring(0,10) %>...
+                  </td>
                   <% } else { %>
                   <td><%= users[index].username %></td>
                   <% } %>
