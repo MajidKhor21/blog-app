@@ -9,13 +9,14 @@ checker.sessionChecker = function (req, res, next) {
 };
 
 checker.loginChecker = (req, res, next) => {
-  User.findOne({ _id: req.session.user._id }, (err, user) => {
-    if (err) console.log(err);
-    if (!user) return res.redirect("/logout");
-    if (!req.session.user) {
-      return res.redirect("/login");
-    }
-  });
+  if (!req.session.user) {
+    return res.redirect("/login");
+  } else {
+    User.findOne({ _id: req.session.user._id }, (err, user) => {
+      if (err) console.log(err);
+      if (!user) return res.redirect("/logout");
+    });
+  }
 
   next();
 };

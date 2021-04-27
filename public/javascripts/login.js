@@ -1,4 +1,5 @@
 $(document).ready(() => {
+  localStorage.clear();
   $("#loginBtn").click(() => {
     $("input").each(function () {
       if (!$(this).val()) {

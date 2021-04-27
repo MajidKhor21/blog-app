@@ -1,4 +1,12 @@
 $(document).ready(() => {
+  let user = JSON.parse(localStorage.getItem("user"));
+  if (user) {
+    $("#firstName").val(user.firstName);
+    $("#lastName").val(user.lastName);
+    $("#email").val(user.email);
+    $("#username").val(user.username);
+    $("#mobileNumber").val(user.mobileNumber);
+  }
   $("#registerBtn").click(() => {
     $("input").each(function () {
       if (!$(this).val()) {
@@ -23,3 +31,14 @@ $(document).ready(() => {
     });
   });
 });
+
+function submitFunc() {
+  user = {
+    firstName: $("#firstName").val(),
+    lastName: $("#lastName").val(),
+    email: $("#email").val(),
+    username: $("#username").val(),
+    mobileNumber: $("#mobileNumber").val(),
+  };
+  localStorage.setItem("user", JSON.stringify(user));
+}

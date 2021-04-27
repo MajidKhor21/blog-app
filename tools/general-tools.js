@@ -29,7 +29,6 @@ const describePicStorage = multer.diskStorage({
     cb(null, path.join(__dirname, "../public/images/uploads"));
   },
   filename: function (req, file, cb) {
-    console.log(file);
     cb(
       null,
       `${req.session.user.username}-${Date.now()}.${file.mimetype.substring(6)}`
