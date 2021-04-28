@@ -87,13 +87,15 @@ const deleteAvatarsPicture = schedule.scheduleJob(
             .filter((x) => !files.includes(x))
             .concat(files.filter((x) => !pics.includes(x)));
           for (let index = 0; index < difference.length; index++) {
-            fs.unlinkSync(
-              path.join(
-                __dirname,
-                "../public/images/avatars",
-                difference[index]
-              )
-            );
+            if (difference[index] !== "default") {
+              fs.unlinkSync(
+                path.join(
+                  __dirname,
+                  "../public/images/avatars",
+                  difference[index]
+                )
+              );
+            }
           }
         }
       );
