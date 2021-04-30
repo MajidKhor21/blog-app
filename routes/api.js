@@ -3,8 +3,8 @@ const router = express.Router();
 const User = require("../models/user");
 const checker = require("../tools/checker");
 
-router.get("/", checker.sessionChecker, (req, res) => {
-  res.render("home");
+router.get("/", (req, res, next) => {
+  res.render("home", { user: req.session.user });
 });
 
 // define register route

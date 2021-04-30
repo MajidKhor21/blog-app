@@ -6,12 +6,45 @@
           >صفحه اصلی <span class="sr-only">(current)</span></a
         >
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/register" tabindex="-1">ثبت نام</a>
+      <% if(user && user.role === 'admin') { %>
+      <li class="nav-item ml-2">
+        <a class="nav-link" href="/user/dashboard" tabindex="-1">پنل مدیریت</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/login">ورود</a>
+      <li class="nav-item ml-2">
+        <a class="nav-link" href="/article/create" tabindex="-1">ایجاد مقاله جدید</a>
       </li>
+      <li class="nav-item ml-2">
+        <a class="nav-link" href="/article" tabindex="-1">مقالات من</a>
+      </li>
+      <li class="nav-item ml-2">
+        <a class="nav-link" href="/article/comment/all" tabindex="-1">نظرات</a>
+      </li>
+      <li class="nav-item ml-2">
+        <a class="nav-link" href="/user/manage/articles" tabindex="-1">مقالات</a>
+      </li>
+      <li class="nav-item ml-2">
+        <a class="nav-link" href="/user/manage/members" tabindex="-1">کاربران</a>
+      </li>
+
+      <% } else if(user && user.role === 'blogger') { %>
+        <li class="nav-item ml-2">
+          <a class="nav-link" href="/user/dashboard" tabindex="-1">پنل کاربری</a>
+        </li>
+        <li class="nav-item ml-2">
+          <a class="nav-link" href="/article/create" tabindex="-1">ایجاد مقاله جدید</a>
+        </li>
+        <li class="nav-item ml-2">
+          <a class="nav-link" href="/article" tabindex="-1">مقالات من</a>
+        </li>
+     <% } else { %>
+        <li class="nav-item ml-2">
+          <a class="nav-link" href="/register" tabindex="-1">ثبت نام</a>
+        </li>
+        <li class="nav-item ml-2">
+          <a class="nav-link" href="/login">ورود</a>
+        </li>
+     <% } %>
+
     </ul>
   </div>
   <button
