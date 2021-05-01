@@ -34,8 +34,7 @@ router.get("/all", (req, res, next) => {
       let createTime = [];
       for (let index = 0; index < comments.length; index++) {
         createTime[index] = {
-          date: moment(comments[index].createdAt).format("jYYYY/jM/jD"),
-          time: moment(comments[index].createdAt).format("HH:mm"),
+          date: moment(comments[index].createdAt).format("HH:mm - jYYYY/jM/jD"),
         };
       }
       Comment.find({ body: { $regex: search } })

@@ -55,9 +55,7 @@
                     url('/images/articles/<%= articles[index].picture %>');
                 "
               >
-                <div class="card-time">
-                  <%= createTime[index].time %> - <%= createTime[index].date %>
-                </div>
+                <div class="card-time"><%= createTime[index].date %></div>
                 <div class="card-description">
                   <h2><%= articles[index].title %></h2>
                   <% if(articles[index].brief.length > 72) { %>

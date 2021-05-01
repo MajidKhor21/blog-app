@@ -32,8 +32,7 @@ router.get("/members", async (req, res, next) => {
     let createTime = [];
     for (let index = 0; index < users.length; index++) {
       createTime[index] = {
-        date: moment(users[index].createdAt).format("jYYYY/jM/jD"),
-        time: moment(users[index].createdAt).format("HH:mm"),
+        date: moment(users[index].createdAt).format("HH:mm - jYYYY/jM/jD"),
       };
     }
     const count = await User.count({
@@ -149,12 +148,10 @@ router.get("/articles", async (req, res, next) => {
     let createAt = [];
     for (let index = 0; index < articles.length; index++) {
       lastUpdate[index] = {
-        date: moment(articles[index].lastUpdate).format("jYYYY/jM/jD"),
-        time: moment(articles[index].lastUpdate).format("HH:mm"),
+        date: moment(articles[index].lastUpdate).format("HH:mm - jYYYY/jM/jD"),
       };
       createAt[index] = {
-        date: moment(articles[index].createdAt).format("jYYYY/jM/jD"),
-        time: moment(articles[index].createdAt).format("HH:mm"),
+        date: moment(articles[index].createdAt).format("HH:mm - jYYYY/jM/jD"),
       };
     }
     const count = await Article.find({

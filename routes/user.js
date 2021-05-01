@@ -35,8 +35,7 @@ router.get("/dashboard", async (req, res, next) => {
     let createTime = [];
     for (let index = 0; index < articles.length; index++) {
       createTime[index] = {
-        date: moment(articles[index].createdAt).format("jYYYY/jM/jD"),
-        time: moment(articles[index].createdAt).format("HH:mm"),
+        date: moment(articles[index].createdAt).format("HH:mm - jYYYY/jM/jD"),
       };
     }
     const count = await Article.find({
@@ -69,10 +68,7 @@ router.get("/info", (req, res, next) => {
 //edit user information
 router.get("/edit", (req, res, next) => {
   req.session.user.lastUpdateDate = moment(req.session.user.lastUpdate).format(
-    "jYYYY/jM/jD"
-  );
-  req.session.user.lastUpdateTime = moment(req.session.user.lastUpdate).format(
-    "HH:mm"
+    "HH:mm - jYYYY/jM/jD"
   );
   res.render("user/user-edit", {
     user: req.session.user,

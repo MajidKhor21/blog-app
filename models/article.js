@@ -36,6 +36,11 @@ const ArticleSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  userView: [
+    {
+      type: String,
+    },
+  ],
   viewCounter: {
     type: Number,
     default: 0,

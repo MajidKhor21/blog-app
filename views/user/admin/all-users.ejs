@@ -200,13 +200,13 @@
                     />
                     <% } %>
                   </td>
-                  <% if(users[index].email.length > 25) { %>
+                  <% if(users[index].email.length > 20) { %>
                   <td
                     data-toggle="tooltip"
                     data-placement="bottom"
                     title="<%= users[index].email %>"
                   >
-                    <%= users[index].email.substring(0,25) %>...
+                    <%= users[index].email.substring(0,20) %>...
                   </td>
                   <% } else { %>
                   <td><%= users[index].email %></td>
@@ -228,10 +228,7 @@
                   <td>زن</td>
                   <% } %>
                   <td><%= users[index].mobileNumber %></td>
-                  <td>
-                    <%= createTime[index].time %> - <%= createTime[index].date
-                    %>
-                  </td>
+                  <td><%= createTime[index].date %></td>
                   <td>
                     <div class="d-inline-block">
                       <a

@@ -115,8 +115,7 @@ router.get("/my/:username", (req, res) => {
       let createTime = [];
       for (let index = 0; index < articles.length; index++) {
         createTime[index] = {
-          date: moment(articles[index].createdAt).format("jYYYY/jM/jD"),
-          time: moment(articles[index].createdAt).format("HH:mm"),
+          date: moment(articles[index].createdAt).format("HH:mm - jYYYY/jM/jD"),
         };
       }
       //find count of all articles
@@ -134,7 +133,7 @@ router.get("/my/:username", (req, res) => {
     });
 });
 
-//show article in a single page
+// show article in a single page
 router.get("/:id", (req, res) => {
   let perPage = 2;
   let page = req.query.page || 1;
@@ -148,52 +147,102 @@ router.get("/:id", (req, res) => {
     })
     .exec((err, article) => {
       if (err) return res.status(500).json({ msg: "Server Error" });
-      Article.findByIdAndUpdate(
-        req.params.id,
-        { $inc: { viewCounter: 1 } },
-        { new: true },
-        (err, art) => {
-          if (err) return res.status(500).json({ msg: "Server Error" });
-          //change create date to jalaali datetime
-          createTime = {
-            date: moment(article.createdAt).format("jYYYY/jM/jD"),
-            time: moment(article.createdAt).format("HH:mm"),
-          };
-          Comment.find({ article: req.params.id })
-            .skip(perPage * page - perPage)
-            .limit(perPage)
-            .populate("author", { firstName: 1, lastName: 1, avatar: 1 })
-            .sort({ createdAt: -1 })
-            .exec((err, comments) => {
-              if (err) return res.status(500).json({ msg: "Server Error" });
-              const commentCreateTime = [];
-              for (let index = 0; index < comments.length; index++) {
-                commentCreateTime[index] = {
-                  date: moment(comments[index].createdAt).format("jYYYY/jM/jD"),
-                  time: moment(comments[index].createdAt).format("HH:mm"),
-                };
-              }
-              Comment.find({})
-                .count()
-                .exec((err, commentCount) => {
-                  if (err) return res.status(500).json({ msg: "Server Error" });
-                  res.render("article/single-article", {
-                    user: req.session.user,
-                    messages: req.flash("messages"),
-                    successfullyAdded: req.flash("successfullyAdded"),
-                    article,
-                    createTime,
-                    art,
-                    comments,
-                    commentCreateTime,
-                    page: req.query.page,
-                    current: page,
-                    pages: Math.ceil(commentCount / perPage),
+      if (!article.userView.includes(req.session.user._id)) {
+        Article.findByIdAndUpdate(
+          req.params.id,
+          {
+            $push: {
+              userView: req.session.user._id,
+            },
+            $inc: { viewCounter: 1 },
+          },
+          { new: true },
+          (err, art) => {
+            if (err) return res.status(500).json({ msg: "Server Error" });
+            //change create date to jalaali datetime
+            createTime = {
+              date: moment(article.createdAt).format("jYYYY/jM/jD"),
+              time: moment(article.createdAt).format("HH:mm"),
+            };
+            Comment.find({ article: req.params.id })
+              .skip(perPage * page - perPage)
+              .limit(perPage)
+              .populate("author", { firstName: 1, lastName: 1, avatar: 1 })
+              .sort({ createdAt: -1 })
+              .exec((err, comments) => {
+                if (err) return res.status(500).json({ msg: "Server Error" });
+                const commentCreateTime = [];
+                for (let index = 0; index < comments.length; index++) {
+                  commentCreateTime[index] = {
+                    date: moment(comments[index].createdAt).format(
+                      "jYYYY/jM/jD"
+                    ),
+                    time: moment(comments[index].createdAt).format("HH:mm"),
+                  };
+                }
+                Comment.find({ article: req.params.id })
+                  .count()
+                  .exec((err, commentCount) => {
+                    if (err)
+                      return res.status(500).json({ msg: "Server Error" });
+                    res.render("article/single-article", {
+                      user: req.session.user,
+                      messages: req.flash("messages"),
+                      successfullyAdded: req.flash("successfullyAdded"),
+                      article,
+                      createTime,
+                      art,
+                      comments,
+                      commentCreateTime,
+                      page: req.query.page,
+                      current: page,
+                      pages: Math.ceil(commentCount / perPage),
+                    });
                   });
+              });
+          }
+        );
+      } else {
+        createTime = {
+          date: moment(article.createdAt).format("jYYYY/jM/jD"),
+          time: moment(article.createdAt).format("HH:mm"),
+        };
+        Comment.find({ article: req.params.id })
+          .skip(perPage * page - perPage)
+          .limit(perPage)
+          .populate("author", { firstName: 1, lastName: 1, avatar: 1 })
+          .sort({ createdAt: -1 })
+          .exec((err, comments) => {
+            if (err) return res.status(500).json({ msg: "Server Error" });
+            const commentCreateTime = [];
+            for (let index = 0; index < comments.length; index++) {
+              commentCreateTime[index] = {
+                date: moment(comments[index].createdAt).format("jYYYY/jM/jD"),
+                time: moment(comments[index].createdAt).format("HH:mm"),
+              };
+            }
+            let art = article;
+            Comment.find({ article: req.params.id })
+              .count()
+              .exec((err, commentCount) => {
+                console.log(commentCount);
+                if (err) return res.status(500).json({ msg: "Server Error" });
+                res.render("article/single-article", {
+                  user: req.session.user,
+                  messages: req.flash("messages"),
+                  successfullyAdded: req.flash("successfullyAdded"),
+                  article,
+                  createTime,
+                  art,
+                  comments,
+                  commentCreateTime,
+                  page: req.query.page,
+                  current: page,
+                  pages: Math.ceil(commentCount / perPage),
                 });
-            });
-        }
-      );
+              });
+          });
+      }
     });
 });
 
@@ -223,12 +272,10 @@ router.get("/", async (req, res) => {
     let createAt = [];
     for (let index = 0; index < articles.length; index++) {
       lastUpdate[index] = {
-        date: moment(articles[index].lastUpdate).format("jYYYY/jM/jD"),
-        time: moment(articles[index].lastUpdate).format("HH:mm"),
+        date: moment(articles[index].lastUpdate).format("HH:mm - jYYYY/jM/jD"),
       };
       createAt[index] = {
-        date: moment(articles[index].createdAt).format("jYYYY/jM/jD"),
-        time: moment(articles[index].createdAt).format("HH:mm"),
+        date: moment(articles[index].createdAt).format("HH:mm - jYYYY/jM/jD"),
       };
     }
 

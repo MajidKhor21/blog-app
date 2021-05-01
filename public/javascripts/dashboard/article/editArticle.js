@@ -2,9 +2,7 @@ CKEDITOR.replace("editor1", {
   filebrowserUploadUrl: "/article/uploader",
   height: 300,
 });
-
 let user = {};
-
 $(document).ready(() => {
   $("#alertDanger")
     .fadeTo(4000, 500)
@@ -14,7 +12,6 @@ $(document).ready(() => {
   let text = $("#describeValue").val();
   CKEDITOR.instances["editor1"].setData(text);
   let article = JSON.parse(localStorage.getItem("article"));
-
   if (
     $("#localTitle").val().includes("عنوان") &&
     $("#articleId").val() == article.id

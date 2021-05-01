@@ -1,5 +1,5 @@
 $(document).ready(() => {
-  let user = JSON.parse(localStorage.getItem("user"));
+  let user = JSON.parse(sessionStorage.getItem("user"));
   if (user) {
     $("#firstName").val(user.firstName);
     $("#lastName").val(user.lastName);
@@ -40,5 +40,5 @@ function submitFunc() {
     username: $("#username").val(),
     mobileNumber: $("#mobileNumber").val(),
   };
-  localStorage.setItem("user", JSON.stringify(user));
+  sessionStorage.setItem("user", JSON.stringify(user));
 }

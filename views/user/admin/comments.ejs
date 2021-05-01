@@ -165,10 +165,7 @@
                   <td><%= comments[index].body %></td>
                   <% } %>
 
-                  <td>
-                    <%= createTime[index].time %> - <%= createTime[index].date
-                    %>
-                  </td>
+                  <td><%= createTime[index].date %></td>
                   <td>
                     <form
                       action="/article/comment/<%= comments[index]._id %>?_method=DELETE"
