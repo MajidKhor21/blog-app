@@ -22,7 +22,7 @@ const ArticleSchema = new Schema({
     required: true,
     trim: true,
     minlength: 10,
-    maxlength: 3000,
+    maxlength: 100000,
   },
   picture: {
     type: String,

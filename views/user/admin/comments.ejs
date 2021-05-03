@@ -106,14 +106,14 @@
                 <tr class="text-center">
                   <th class="d-none"><%= comments[index]._id %></th>
                   <th scope="row"><%= index+1 %></th>
-                  <% if(comments[index].article.title.length > 15) { %>
+                  <% if(comments[index].article.title.length > 45) { %>
                   <td
                     data-toggle="tooltip"
                     data-placement="bottom"
                     title="<%= comments[index].article.title %>"
                   >
                     <a href="/article/<%= comments[index].article._id %>"
-                      ><%= comments[index].article.title.substring(0,15)
+                      ><%= comments[index].article.title.substring(0,45)
                       %>...</a
                     >
                   </td>
@@ -151,13 +151,13 @@
                     <%= comments[index].author.firstName %> <%=
                     comments[index].author.lastName %>
                   </td>
-                  <% if(comments[index].body.length > 30) { %>
+                  <% if(comments[index].body.length > 45) { %>
                   <td
                     data-toggle="tooltip"
                     data-placement="bottom"
                     title="<%= comments[index].body %>"
                   >
-                    <%= comments[index].body.slice(0,30) %>...
+                    <%= comments[index].body.slice(0,45) %>...
                   </td>
                   <% } else { %>
                   <td><%= comments[index].body %></td>
