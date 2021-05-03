@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const User = require("../models/user");
 const Article = require("../models/article");
 const Comment = require("../models/comment");
 const moment = require("moment-jalaali");
@@ -73,31 +74,50 @@ router.post("/", commentValidate.handle(), (req, res, next) => {
   });
   comment.save((err) => {
     if (err) return res.status(500).json({ msg: "Server Error" });
+    Article.findByIdAndUpdate(
+      req.body.article_id,
+      { $inc: { commentCounter: 1 } },
+      { new: true },
+      (err) => {
+        if (err) return res.status(500).json({ msg: "Server Error" });
+        User.findByIdAndUpdate(
+          req.session.user._id,
+          { $inc: { commentCounter: 1 } },
+          { new: true },
+          (err) => {
+            if (err) return res.status(500).json({ msg: "Server Error" });
+            req.flash("successfullyAdded", "نظر شما با موفقیت ثبت شد.");
+            return res.redirect(`/article/${req.body.article_id}`);
+          }
+        );
+      }
+    );
   });
-  Article.findByIdAndUpdate(
-    req.body.article_id,
-    { $inc: { commentCounter: 1 } },
-    { new: true },
-    (err) => {
-      if (err) return res.status(500).json({ msg: "Server Error" });
-      req.flash("successfullyAdded", "نظر شما با موفقیت ثبت شد.");
-      return res.redirect(`/article/${req.body.article_id}`);
-    }
-  );
 });
 
 //delete a comment
 router.delete("/:id", (req, res, next) => {
-  Comment.deleteOne({ _id: req.params.id }, (err) => {
+  Comment.findOne({ _id: req.params.id }, (err, comment) => {
     if (err) return res.status(500).json({ msg: "Server Error" });
-    Article.findByIdAndUpdate(
-      req.body.article_id,
+    User.findByIdAndUpdate(
+      comment.author,
       { $inc: { commentCounter: -1 } },
       { new: true },
       (err) => {
-        if (err) return res.status(500).json({ msg: "Server Error" });
-        req.flash("successfullyDelete", "نظر مورد نظر با موفقیت حذف شد.");
-        return res.redirect("/article/comment/all");
+        if (err) if (err) return res.status(500).json({ msg: "Server Error" });
+        Article.findByIdAndUpdate(
+          req.body.article_id,
+          { $inc: { commentCounter: -1 } },
+          { new: true },
+          (err) => {
+            if (err) return res.status(500).json({ msg: "Server Error" });
+            comment.remove((err) => {
+              if (err) return res.status(500).json({ msg: "Server Error" });
+              req.flash("successfullyDelete", "نظر مورد نظر با موفقیت حذف شد.");
+              return res.redirect("/article/comment/all");
+            });
+          }
+        );
       }
     );
   });

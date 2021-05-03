@@ -140,6 +140,7 @@
                   <th scope="col">آدرس ایمیل</th>
                   <th scope="col">نام کاربری</th>
                   <th scope="col">تعداد مقالات</th>
+                  <th scope="col">تعداد نظرات</th>
                   <th scope="col">جنسیت</th>
                   <th scope="col">شماره موبایل</th>
                   <th scope="col">تاریخ عضویت</th>
@@ -200,13 +201,13 @@
                     />
                     <% } %>
                   </td>
-                  <% if(users[index].email.length > 20) { %>
+                  <% if(users[index].email.length > 15) { %>
                   <td
                     data-toggle="tooltip"
                     data-placement="bottom"
                     title="<%= users[index].email %>"
                   >
-                    <%= users[index].email.substring(0,20) %>...
+                    <%= users[index].email.substring(0,15) %>...
                   </td>
                   <% } else { %>
                   <td><%= users[index].email %></td>
@@ -222,6 +223,7 @@
                   <td><%= users[index].username %></td>
                   <% } %>
                   <td><%= users[index].articleCounter %></td>
+                  <td><%= users[index].commentCounter %></td>
                   <% if (users[index].gender === "male") { %>
                   <td>مرد</td>
                   <%} else { %>

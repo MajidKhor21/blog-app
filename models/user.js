@@ -71,6 +71,10 @@ const UserSchema = new Schema({
     type: Number,
     default: 0,
   },
+  commentCounter: {
+    type: Number,
+    default: 0,
+  },
 });
 
 UserSchema.pre("save", function (next) {

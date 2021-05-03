@@ -98,20 +98,6 @@
     border: 0px  !important;
   }
 
-  #pic{
-    float: right;
-    display: block;
-    background-color: #666;
-    color: #f9f9f9;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-    width: 35px;
-    padding: 10.5px !important;
-    padding-bottom: 9px;
-    font-size: 0.9rem;
-    border: 1px solid #f9f9f9;
-  }
-
   .text-input > input {
     float: right;
     width: 60%;
@@ -183,9 +169,6 @@
     border-bottom-left-radius: 3px;
     background-color: #fafafa;
   }
-    #pic{
-      padding: 10.5px !important;
-    }
     .submitBtn {
       width: 340px !important;
     }

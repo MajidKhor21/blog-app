@@ -134,116 +134,92 @@ router.get("/my/:username", (req, res) => {
 });
 
 // show article in a single page
-router.get("/:id", (req, res) => {
-  let perPage = 2;
-  let page = req.query.page || 1;
-  //find that article's requested
-  Article.findOne({ _id: req.params.id })
-    .populate("author", {
-      _id: 1,
-      firstName: 1,
-      lastName: 1,
-      avatar: 1,
-    })
-    .exec((err, article) => {
-      if (err) return res.status(500).json({ msg: "Server Error" });
-      if (!article.userView.includes(req.session.user._id)) {
-        Article.findByIdAndUpdate(
-          req.params.id,
-          {
-            $push: {
-              userView: req.session.user._id,
-            },
-            $inc: { viewCounter: 1 },
-          },
-          { new: true },
-          (err, art) => {
-            if (err) return res.status(500).json({ msg: "Server Error" });
-            //change create date to jalaali datetime
-            createTime = {
-              date: moment(article.createdAt).format("jYYYY/jM/jD"),
-              time: moment(article.createdAt).format("HH:mm"),
-            };
-            Comment.find({ article: req.params.id })
-              .skip(perPage * page - perPage)
-              .limit(perPage)
-              .populate("author", { firstName: 1, lastName: 1, avatar: 1 })
-              .sort({ createdAt: -1 })
-              .exec((err, comments) => {
-                if (err) return res.status(500).json({ msg: "Server Error" });
-                const commentCreateTime = [];
-                for (let index = 0; index < comments.length; index++) {
-                  commentCreateTime[index] = {
-                    date: moment(comments[index].createdAt).format(
-                      "jYYYY/jM/jD"
-                    ),
-                    time: moment(comments[index].createdAt).format("HH:mm"),
-                  };
-                }
-                Comment.find({ article: req.params.id })
-                  .count()
-                  .exec((err, commentCount) => {
-                    if (err)
-                      return res.status(500).json({ msg: "Server Error" });
-                    res.render("article/single-article", {
-                      user: req.session.user,
-                      messages: req.flash("messages"),
-                      successfullyAdded: req.flash("successfullyAdded"),
-                      article,
-                      createTime,
-                      art,
-                      comments,
-                      commentCreateTime,
-                      page: req.query.page,
-                      current: page,
-                      pages: Math.ceil(commentCount / perPage),
-                    });
-                  });
-              });
-          }
-        );
-      } else {
-        createTime = {
-          date: moment(article.createdAt).format("jYYYY/jM/jD"),
-          time: moment(article.createdAt).format("HH:mm"),
+router.get("/:id", async (req, res) => {
+  try {
+    let perPage = 2;
+    let page = req.query.page || 1;
+    let article = await Article.findOne({ _id: req.params.id })
+      .populate("author", { _id: 1, firstName: 1, lastName: 1, avatar: 1 })
+      .exec();
+    if (!article) return res.redirect("/404");
+    if (!article.userView.includes(req.session.user._id)) {
+      let art = await Article.findByIdAndUpdate(
+        req.params.id,
+        { $push: { userView: req.session.user._id }, $inc: { viewCounter: 1 } },
+        { new: true }
+      );
+      createTime = {
+        date: moment(article.createdAt).format("jYYYY/jM/jD"),
+        time: moment(article.createdAt).format("HH:mm"),
+      };
+      let comments = await Comment.find({ article: req.params.id })
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .populate("author", { firstName: 1, lastName: 1, avatar: 1 })
+        .sort({ createdAt: -1 })
+        .exec();
+      const commentCreateTime = [];
+      for (let index = 0; index < comments.length; index++) {
+        commentCreateTime[index] = {
+          date: moment(comments[index].createdAt).format("jYYYY/jM/jD"),
+          time: moment(comments[index].createdAt).format("HH:mm"),
         };
-        Comment.find({ article: req.params.id })
-          .skip(perPage * page - perPage)
-          .limit(perPage)
-          .populate("author", { firstName: 1, lastName: 1, avatar: 1 })
-          .sort({ createdAt: -1 })
-          .exec((err, comments) => {
-            if (err) return res.status(500).json({ msg: "Server Error" });
-            const commentCreateTime = [];
-            for (let index = 0; index < comments.length; index++) {
-              commentCreateTime[index] = {
-                date: moment(comments[index].createdAt).format("jYYYY/jM/jD"),
-                time: moment(comments[index].createdAt).format("HH:mm"),
-              };
-            }
-            let art = article;
-            Comment.find({ article: req.params.id })
-              .count()
-              .exec((err, commentCount) => {
-                console.log(commentCount);
-                if (err) return res.status(500).json({ msg: "Server Error" });
-                res.render("article/single-article", {
-                  user: req.session.user,
-                  messages: req.flash("messages"),
-                  successfullyAdded: req.flash("successfullyAdded"),
-                  article,
-                  createTime,
-                  art,
-                  comments,
-                  commentCreateTime,
-                  page: req.query.page,
-                  current: page,
-                  pages: Math.ceil(commentCount / perPage),
-                });
-              });
-          });
       }
-    });
+      const commentCount = await Comment.find({ article: req.params.id })
+        .count()
+        .exec();
+      res.render("article/single-article", {
+        user: req.session.user,
+        messages: req.flash("messages"),
+        successfullyAdded: req.flash("successfullyAdded"),
+        article,
+        createTime,
+        art,
+        comments,
+        commentCreateTime,
+        page: req.query.page,
+        current: page,
+        pages: Math.ceil(commentCount / perPage),
+      });
+    } else {
+      createTime = {
+        date: moment(article.createdAt).format("jYYYY/jM/jD"),
+        time: moment(article.createdAt).format("HH:mm"),
+      };
+      let comments = await Comment.find({ article: req.params.id })
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .populate("author", { firstName: 1, lastName: 1, avatar: 1 })
+        .sort({ createdAt: -1 })
+        .exec();
+      const commentCreateTime = [];
+      for (let index = 0; index < comments.length; index++) {
+        commentCreateTime[index] = {
+          date: moment(comments[index].createdAt).format("jYYYY/jM/jD"),
+          time: moment(comments[index].createdAt).format("HH:mm"),
+        };
+      }
+      const commentCount = await Comment.find({ article: req.params.id })
+        .count()
+        .exec();
+      let art = article;
+      res.render("article/single-article", {
+        user: req.session.user,
+        messages: req.flash("messages"),
+        successfullyAdded: req.flash("successfullyAdded"),
+        article,
+        createTime,
+        art,
+        comments,
+        commentCreateTime,
+        page: req.query.page,
+        current: page,
+        pages: Math.ceil(commentCount / perPage),
+      });
+    }
+  } catch (err) {
+    return res.status(500).json({ msg: "server error" });
+  }
 });
 
 //get all articles in a page
@@ -420,6 +396,12 @@ router.delete("/:id", async (req, res) => {
       articlePic.forEach((element) => {
         fs.unlinkSync(path.join(__dirname, "../public/", element));
       });
+      let comments = await Comment.find({ article: req.params.id });
+      comments.forEach(async (element) => {
+        await User.findByIdAndUpdate(element.author, {
+          $inc: { commentCounter: -1 },
+        });
+      });
       //find and delete article
       await Article.findByIdAndDelete(req.params.id);
       await User.findByIdAndUpdate(req.session.user._id, {
@@ -428,6 +410,8 @@ router.delete("/:id", async (req, res) => {
       await Comment.deleteMany({ article: req.params.id });
       req.flash("delete", "مقاله با موفقیت حذف شد.");
       res.redirect("/article");
+    } else {
+      throw new Error("permission denied");
     }
   } catch (err) {
     res.status(500).json({ msg: "Server Error" });

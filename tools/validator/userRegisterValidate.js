@@ -22,7 +22,7 @@ class userRegisterValidate extends validator {
           "رمز عبور باید شامل 6 کاراکتر و یک حرف بزرگ و یک حرف کوچک باشد."
         ),
       check("mobileNumber")
-        .matches(/^(\+98|0098|0)?9\d{9}$/)
+        .matches(/^(\+989|00989|09)\d{9}$/)
         .withMessage("شماره موبایل وارد شده معتبر نمی باشد."),
       check("gender").not().isEmpty().withMessage("جنسیت خود را وارد کنید."),
     ];

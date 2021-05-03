@@ -78,7 +78,21 @@ router.delete("/members/:id", async (req, res, next) => {
     const articles = await Article.find({ author: req.params.id });
     const user = await User.find({ _id: req.params.id });
     if (!user.length > 0) return res.status(404).redirect("/404");
+    let commentsByMember = await Comment.find({ author: req.params.id });
+    commentsByMember.forEach(async (element) => {
+      await Article.findByIdAndUpdate(element.article, {
+        $inc: { commentCounter: -1 },
+      });
+    });
     if (articles) {
+      articles.forEach(async (art) => {
+        let comments = await Comment.find({ article: art._id });
+        comments.forEach(async (element) => {
+          await User.findByIdAndUpdate(element.author, {
+            $inc: { commentCounter: -1 },
+          });
+        });
+      });
       //delete picture of article from our host
       for (let index = 0; index < articles.length; index++) {
         fs.unlinkSync(
@@ -198,6 +212,12 @@ router.delete("/articles/:id", async (req, res, next) => {
       articlePic.forEach((element) => {
         fs.unlinkSync(path.join(__dirname, "../public", element));
       });
+      let comments = await Comment.find({ article: req.params.id });
+      comments.forEach(async (element) => {
+        await User.findByIdAndUpdate(element.author, {
+          $inc: { commentCounter: -1 },
+        });
+      });
       //find and delete article
       await Article.findByIdAndDelete(req.params.id);
       await User.findOneAndUpdate(
@@ -207,6 +227,8 @@ router.delete("/articles/:id", async (req, res, next) => {
       await Comment.deleteMany({ article: req.params.id });
       req.flash("delete", "مقاله با موفقیت حذف شد.");
       res.redirect("/user/manage/articles");
+    } else {
+      throw new Error("permission denied");
     }
   } catch (err) {
     res.status(500).json({ msg: "Server Error" });

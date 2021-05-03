@@ -15,13 +15,14 @@ router.get("/", (req, res, next) => {
 //reset pass route
 router.post("/", async (req, res, next) => {
   try {
-    await reset.sendEmail(req);
+    await reset.sendEmail(req, res);
     req.flash(
       "success",
       "لینک بازیابی رمز عبور به آدرس ایمیل وارد شده ارسال شد."
     );
     res.redirect("/reset");
   } catch (err) {
+    console.log(err);
     res.status(500).json({ msg: "Server Error" });
   }
 });
@@ -67,7 +68,7 @@ router.post("/password", async (req, res) => {
       return res.redirect("/reset");
     }
     await result.remove({ token: req.params.token });
-    req.flash("password", "رمز عبور با موفقیت تغییر کرد");
+    req.flash("password", "رمز عبور با موفقیت تغییر کرد.");
     res.redirect("/login");
   } catch (err) {
     res.status(500).json({ msg: "Server Error" });
