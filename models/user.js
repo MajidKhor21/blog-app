@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const { NetworkAuthenticationRequire } = require("http-errors");
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({

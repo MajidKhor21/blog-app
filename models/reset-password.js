@@ -6,9 +6,7 @@ const ResetPasswordSchema = new Schema({
     type: String,
     required: true,
     trim: true,
-    match: [
-      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
-    ],
+    match: [/^[a-zA-Z0-9.]+@[a-zA-Z0-9.]+\.[a-zA-Z]{2,4}/],
   },
   token: {
     type: String,
