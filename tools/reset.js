@@ -6,7 +6,6 @@ const nodemailer = require("nodemailer");
 module.exports = {
   sendEmail: async function (req, res) {
     //check req.body is not empty
-    console.log(req.body.email);
     const user = await User.find({ email: req.body.email });
     if (!req.body.email) {
       req.flash("error", "ایمیل خود را وارد کنید");

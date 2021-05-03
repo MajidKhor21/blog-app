@@ -22,7 +22,6 @@ router.post("/", async (req, res, next) => {
     );
     res.redirect("/reset");
   } catch (err) {
-    console.log(err);
     res.status(500).json({ msg: "Server Error" });
   }
 });
