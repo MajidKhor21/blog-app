@@ -53,7 +53,15 @@
           <div class="container table-responsive">
             <% if (successfullyDelete) { %>
             <div
-              class="col-10 col-lg-6 alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
+              class="
+                col-10 col-lg-6
+                alert alert-success alert-dismissible
+                fade
+                show
+                w-75
+                text-right
+                mx-auto
+              "
               role="alert"
             >
               <button
@@ -106,24 +114,17 @@
                 <tr class="text-center">
                   <th class="d-none"><%= comments[index]._id %></th>
                   <th scope="row"><%= index+1 %></th>
-                  <% if(comments[index].article.title.length > 45) { %>
                   <td
+                    class="text-truncate"
                     data-toggle="tooltip"
                     data-placement="bottom"
                     title="<%= comments[index].article.title %>"
+                    style="max-width: 150px"
                   >
-                    <a href="/article/<%= comments[index].article._id %>"
-                      ><%= comments[index].article.title.substring(0,45)
-                      %>...</a
-                    >
+                  <a href="/article/<%= comments[index].article._id %>"
+                      ><%= comments[index].article.title
+                      %></a
                   </td>
-                  <% } else { %>
-                  <td>
-                    <a href="/article/<%= comments[index].article._id %>"
-                      ><%= comments[index].article.title %></a
-                    >
-                  </td>
-                  <% } %>
                   <td>
                     <% if (comments[index].author.avatar === "default") { %>
                     <img
@@ -151,17 +152,15 @@
                     <%= comments[index].author.firstName %> <%=
                     comments[index].author.lastName %>
                   </td>
-                  <% if(comments[index].body.length > 45) { %>
                   <td
+                    class="text-truncate"
                     data-toggle="tooltip"
                     data-placement="bottom"
                     title="<%= comments[index].body %>"
+                    style="max-width: 300px"
                   >
-                    <%= comments[index].body.slice(0,45) %>...
+                    <%= comments[index].body %>
                   </td>
-                  <% } else { %>
-                  <td><%= comments[index].body %></td>
-                  <% } %>
 
                   <td><%= createTime[index].date %></td>
                   <td>

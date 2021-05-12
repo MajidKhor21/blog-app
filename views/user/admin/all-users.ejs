@@ -53,7 +53,15 @@
         <section class="content mt-2">
           <% if (invalid) { %>
           <div
-            class="col-10 col-lg-6 alert alert-danger alert-dismissible fade show w-75 text-right mx-auto"
+            class="
+              col-10 col-lg-6
+              alert alert-danger alert-dismissible
+              fade
+              show
+              w-75
+              text-right
+              mx-auto
+            "
             role="alert"
           >
             <button
@@ -68,7 +76,15 @@
           </div>
           <% } %> <% if (error) { %>
           <div
-            class="col-10 col-lg-6 alert alert-danger alert-dismissible fade show w-75 text-right mx-auto"
+            class="
+              col-10 col-lg-6
+              alert alert-danger alert-dismissible
+              fade
+              show
+              w-75
+              text-right
+              mx-auto
+            "
             role="alert"
           >
             <button
@@ -83,7 +99,15 @@
           </div>
           <% } %> <% if (resetPassword) { %>
           <div
-            class="col-10 col-lg-6 alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
+            class="
+              col-10 col-lg-6
+              alert alert-success alert-dismissible
+              fade
+              show
+              w-75
+              text-right
+              mx-auto
+            "
             role="alert"
           >
             <button
@@ -98,7 +122,15 @@
           </div>
           <% } %> <% if (deleted) { %>
           <div
-            class="col-10 col-lg-6 alert alert-success alert-dismissible fade show w-75 text-right mx-auto"
+            class="
+              col-10 col-lg-6
+              alert alert-success alert-dismissible
+              fade
+              show
+              w-75
+              text-right
+              mx-auto
+            "
             role="alert"
           >
             <button
@@ -157,27 +189,24 @@
                 <tr class="text-center">
                   <th class="d-none"><%= users[index]._id %></th>
                   <th scope="row"><%= index+1 %></th>
-                  <% if(users[index].firstName.length > 10) { %>
                   <td
+                    class="text-truncate"
                     data-toggle="tooltip"
                     data-placement="bottom"
                     title="<%= users[index].firstName %>"
+                    style="max-width: 100px; direction: ltr"
                   >
-                    <%= users[index].firstName.substring(0,10) %>...
+                    <%= users[index].firstName %>
                   </td>
-                  <% } else { %>
-                  <td><%= users[index].firstName %></td>
-                  <% } %> <% if(users[index].lastName.length > 10) { %>
                   <td
+                    class="text-truncate"
                     data-toggle="tooltip"
                     data-placement="bottom"
                     title="<%= users[index].lastName %>"
+                    style="max-width: 100px; direction: ltr"
                   >
-                    <%= users[index].lastName.substring(0,10) %>...
+                    <%= users[index].lastName %>
                   </td>
-                  <% } else { %>
-                  <td><%= users[index].lastName %></td>
-                  <% } %>
                   <td>
                     <% if (users[index].avatar === "default") { %>
                     <img
@@ -201,27 +230,24 @@
                     />
                     <% } %>
                   </td>
-                  <% if(users[index].email.length > 15) { %>
                   <td
+                    class="text-truncate"
                     data-toggle="tooltip"
                     data-placement="bottom"
                     title="<%= users[index].email %>"
+                    style="max-width: 150px; direction: ltr"
                   >
-                    <%= users[index].email.substring(0,15) %>...
+                    <%= users[index].email %>
                   </td>
-                  <% } else { %>
-                  <td><%= users[index].email %></td>
-                  <% } %> <% if(users[index].username.length > 10) { %>
                   <td
+                    class="text-truncate"
                     data-toggle="tooltip"
                     data-placement="bottom"
                     title="<%= users[index].username %>"
+                    style="max-width: 100px; direction: ltr"
                   >
-                    <%= users[index].username.substring(0,10) %>...
+                    <%= users[index].username %>
                   </td>
-                  <% } else { %>
-                  <td><%= users[index].username %></td>
-                  <% } %>
                   <td><%= users[index].articleCounter %></td>
                   <td><%= users[index].commentCounter %></td>
                   <% if (users[index].gender === "male") { %>

@@ -63,11 +63,6 @@ app.use("/", require("./routes/api"));
 
 app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
 
-// catch 404 and forward to error handler
-app.use("*", function (req, res, next) {
-  res.status(404).render("404");
-});
-
 // error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
@@ -75,9 +70,11 @@ app.use(function (err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.redirect("/404");
+  const status = err.status || 500;
+
+  return res
+    .status(status)
+    .render("error", { err: "خطایی در عملیات مورد نظر رخ داده است", status });
 });
 
 module.exports = app;

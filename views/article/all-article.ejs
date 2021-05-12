@@ -126,34 +126,26 @@
                 <tr class="text-center">
                   <th class="d-none"><%= articles[index]._id %></th>
                   <th scope="row"><%= index+1 %></th>
-                  <% if(articles[index].title.length > 15) { %>
                   <td
+                    class="text-truncate"
                     data-toggle="tooltip"
                     data-placement="bottom"
                     title="<%= articles[index].title %>"
+                    style="max-width: 150px"
                   >
-                    <a href="/article/<%= articles[index]._id %>"
-                      ><%= articles[index].title.substring(0,15) %>...</a
-                    >
+                  <a href="/article/<%= articles[index]._id %>"
+                      ><%= articles[index].title
+                      %></a
                   </td>
-                  <% } else { %>
-                  <td>
-                    <a href="/article/<%= articles[index]._id %>"
-                      ><%= articles[index].title %></a
-                    >
-                  </td>
-                  <% } %> <% if(articles[index].brief.length > 15) { %>
                   <td
+                    class="text-truncate"
                     data-toggle="tooltip"
                     data-placement="bottom"
                     title="<%= articles[index].brief %>"
-                  >
-                    <%= articles[index].brief.substring(0,15) %>...
+                    style="max-width: 150px"
+                  ><%= articles[index].brief
+                      %>
                   </td>
-                  <% } else { %>
-                  <td><%= articles[index].brief %></td>
-                  <% } %>
-
                   <td>
                     <img
                       src="/images/articles/<%= articles[index].picture %>"

@@ -10,138 +10,202 @@ const fs = require("fs");
 const path = require("path");
 
 //get new article page
-router.get("/create", (req, res) => {
-  res.render("article/new-article", {
-    user: req.session.user,
-    empty: req.flash("empty"),
-    title: req.flash("title"),
-    messages: req.flash("messages"),
-  });
+router.get("/create", (req, res, next) => {
+  try {
+    res.render("article/new-article", {
+      user: req.session.user,
+      empty: req.flash("empty"),
+      title: req.flash("title"),
+      messages: req.flash("messages"),
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 //add new article
-router.post("/create", (req, res) => {
-  const upload = generalTools.uploadArticlePic.single("picture");
-
-  upload(req, res, function (err) {
-    if (!req.file || !req.body.title || !req.body.brief || !req.body.describe) {
-      res.status(404);
-      return res.redirect("/article/create");
-    }
-    //check article picture and describe is not empty
-    if (err instanceof multer.MulterError) {
-      return res.status(500).json({ msg: "Server Error" });
-    } else if (err) {
-      res.status(406).send(err.message);
-    } else {
-      User.findOne({ _id: req.session.user._id }, (err, user) => {
-        if (err) return res.status(500).json({ msg: "Server Error" });
-        if (!user) {
-          return res.status(404).redirect("/logout");
-        }
-        Article.findOne({ title: req.body.title }, (err, article) => {
-          if (err) return res.status(500).json({ msg: "Server Error" });
-          if (article) {
-            fs.unlinkSync(
-              path.join(
-                __dirname,
-                "../public/images/articles/",
-                req.file.filename
-              )
-            );
-            req.flash("title", "عنوان مقاله تکراری می باشد.");
-            return res.redirect("/article/create");
+router.post("/create", (req, res, next) => {
+  try {
+    const upload = generalTools.uploadArticlePic.single("picture");
+    upload(req, res, function (err) {
+      if (
+        !req.file ||
+        !req.body.title ||
+        !req.body.brief ||
+        !req.body.describe
+      ) {
+        const error = new Error("not found");
+        error.status = 500;
+        next(error);
+      }
+      //check article picture and describe is not empty
+      if (err instanceof multer.MulterError) {
+        const error = new Error("Server Error");
+        error.status = 500;
+        next(error);
+      } else if (err) {
+        const error = new Error(err.message);
+        error.status = 406;
+        next(error);
+      } else {
+        User.findOne({ _id: req.session.user._id }, (err, user) => {
+          if (err) {
+            const error = new Error("Server Error");
+            error.status = 500;
+            next(error);
           }
-          //create article object
-          const newArticle = new Article({
-            title: req.body.title,
-            brief: req.body.brief,
-            describe: req.body.describe,
-            picture: req.file.filename,
-            author: req.session.user._id,
-          });
-          //save new article to our database
-          newArticle.save((err) => {
-            if (err) return res.status(500).json({ msg: "Server Error" });
-            User.findByIdAndUpdate(
-              req.session.user._id,
-              { $inc: { articleCounter: 1 } },
-              { new: true },
-              (err, user) => {
-                if (err) return res.status(500).json({ msg: "Server Error" });
-                req.session.user = user;
-                req.flash("successfullyAdded", "با موفقیت اضافه شد.");
-                return res.redirect("/user/dashboard");
+          if (!user) {
+            return res.status(404).redirect("/logout");
+          }
+          Article.findOne({ title: req.body.title }, (err, article) => {
+            if (err) {
+              const error = new Error("Server Error");
+              error.status = 500;
+              next(error);
+            }
+            if (article) {
+              fs.unlinkSync(
+                path.join(
+                  __dirname,
+                  "../public/images/articles/",
+                  req.file.filename
+                )
+              );
+              req.flash("title", "عنوان مقاله تکراری می باشد.");
+              return res.redirect("/article/create");
+            }
+            //create article object
+            const newArticle = new Article({
+              title: req.body.title,
+              brief: req.body.brief,
+              describe: req.body.describe,
+              picture: req.file.filename,
+              author: req.session.user._id,
+            });
+            //save new article to our database
+            newArticle.save((err) => {
+              if (err) {
+                const error = new Error("Server Error");
+                error.status = 500;
+                next(error);
               }
-            );
+              User.findByIdAndUpdate(
+                req.session.user._id,
+                { $inc: { articleCounter: 1 } },
+                { new: true },
+                (err, user) => {
+                  if (err) {
+                    const error = new Error("Server Error");
+                    error.status = 500;
+                    next(error);
+                  }
+                  req.session.user = user;
+                  req.flash("successfullyAdded", "با موفقیت اضافه شد.");
+                  return res.redirect("/user/dashboard");
+                }
+              );
+            });
           });
         });
-      });
-    }
-  });
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 //upload images of ckeditor
-router.post("/uploader", (req, res) => {
-  const upload = generalTools.uploadDescribePic.single("upload");
-  upload(req, res, function (err) {
-    if (err instanceof multer.MulterError) {
-      return res.status(500).json({ msg: "Server Error" });
-    } else if (err) {
-      res.status(406).send(err.message);
-    } else {
-      return res.json({
-        uploaded: 1,
-        filename: req.file.filename,
-        url: `/images/uploads/${req.file.filename}`,
-      });
-    }
-  });
+router.post("/uploader", (req, res, next) => {
+  try {
+    const upload = generalTools.uploadDescribePic.single("upload");
+    upload(req, res, function (err) {
+      if (err instanceof multer.MulterError) {
+        const error = new Error("Server Error");
+        error.status = 500;
+        next(error);
+      } else if (err) {
+        const error = new Error(err.message);
+        error.status = 406;
+        next(error);
+      } else {
+        return res.json({
+          uploaded: 1,
+          filename: req.file.filename,
+          url: `/images/uploads/${req.file.filename}`,
+        });
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 //show user's article
-router.get("/my/:username", (req, res) => {
-  let perPage = 6;
-  let page = req.query.page || 1;
-  //find all article's of this username
-
-  Article.find({ author: req.session.user._id })
-    .skip(perPage * page - perPage)
-    .limit(perPage)
-    .sort({ createdAt: -1 })
-    .exec((err, articles) => {
-      if (err) return res.status(500).json({ msg: "Server Error" });
-      //change create date to jalaali datetime
-      let createTime = [];
-      for (let index = 0; index < articles.length; index++) {
-        createTime[index] = {
-          date: moment(articles[index].createdAt).format("HH:mm - jYYYY/jM/jD"),
-        };
-      }
-      //find count of all articles
-      Article.count().exec((err, count) => {
-        if (err) return res.status(500).json({ msg: "Server Error" });
-        res.render("article/my-articles", {
-          user: req.session.user,
-          page: req.query.page,
-          articles,
-          createTime,
-          current: page,
-          pages: Math.ceil(count / perPage),
+router.get("/my/:username", (req, res, next) => {
+  try {
+    let perPage = 6;
+    let page = req.query.page || 1;
+    //find all article's of this username
+    Article.find({ author: req.session.user._id })
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .sort({ createdAt: -1 })
+      .exec((err, articles) => {
+        if (err) {
+          const error = new Error("Server Error");
+          error.status = 500;
+          next(error);
+        }
+        if (!articles) {
+          const error = new Error("Not Found");
+          error.status = 404;
+          next(error);
+        }
+        //change create date to jalaali datetime
+        let createTime = [];
+        for (let index = 0; index < articles.length; index++) {
+          createTime[index] = {
+            date: moment(articles[index].createdAt).format(
+              "HH:mm - jYYYY/jM/jD"
+            ),
+          };
+        }
+        //find count of all articles
+        Article.count().exec((err, count) => {
+          if (err) {
+            const error = new Error("Server Error");
+            error.status = 500;
+            next(error);
+          }
+          res.render("article/my-articles", {
+            user: req.session.user,
+            page: req.query.page,
+            articles,
+            createTime,
+            current: page,
+            pages: Math.ceil(count / perPage),
+          });
         });
       });
-    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 // show article in a single page
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res, next) => {
   try {
     let perPage = 2;
     let page = req.query.page || 1;
+    // let userModel = await UserModel.find({});
     let article = await Article.findOne({ _id: req.params.id })
       .populate("author", { _id: 1, firstName: 1, lastName: 1, avatar: 1 })
       .exec();
-    if (!article) return res.redirect("/404");
+    if (!article) {
+      const error = new Error("not found");
+      error.status = 404;
+      next(error);
+    }
     if (!article.userView.includes(req.session.user._id)) {
       let art = await Article.findByIdAndUpdate(
         req.params.id,
@@ -218,12 +282,12 @@ router.get("/:id", async (req, res) => {
       });
     }
   } catch (err) {
-    return res.status(500).json({ msg: "server error" });
+    next(err);
   }
 });
 
 //get all articles in a page
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
   try {
     //paginate user articles per page 10
     let perPage = 10;
@@ -275,108 +339,146 @@ router.get("/", async (req, res) => {
       pages: Math.ceil(count / perPage),
     });
   } catch (err) {
-    res.status(500).json({ msg: "Server Error" });
+    next(err);
   }
 });
 
 //get edit article single page
-router.get("/edit/:id", (req, res) => {
-  Article.findById(req.params.id, (err, article) => {
-    if (err) return res.status(500).json({ msg: "Server Error" });
-    return res.status(200).render("article/edit-article", {
-      article,
-      user: req.session.user,
-      title: req.flash("title"),
-      messages: req.flash("messages"),
+router.get("/edit/:id", (req, res, next) => {
+  try {
+    Article.findById(req.params.id, (err, article) => {
+      if (err) {
+        const error = new Error("Server Error");
+        error.status = 500;
+        next(error);
+      }
+      if (!article) {
+        const error = new Error("not found");
+        error.status = 404;
+        next(error);
+      }
+      return res.status(200).render("article/edit-article", {
+        article,
+        user: req.session.user,
+        title: req.flash("title"),
+        messages: req.flash("messages"),
+      });
     });
-  });
+  } catch (err) {
+    next(err);
+  }
 });
 
 //update article route
-router.put("/", (req, res) => {
-  //update article's picture
-  const upload = generalTools.uploadArticlePic.single("picture");
-
-  upload(req, res, function (err) {
-    //check article title, describe and brief is not empty
-    if (!req.body.title || !req.body.brief || !req.body.describe)
-      return res.redirect("/article");
-    if (err instanceof multer.MulterError) {
-      return res.status(500).json({ msg: "Server Error" });
-    } else if (err) {
-      res.status(406).send(err.message);
-    } else {
-      //find one article with this title's requested and return
-      Article.findOne(
-        {
-          $and: [{ title: req.body.title }, { _id: { $ne: req.body.id } }],
-        },
-        (err, article) => {
-          if (err) return res.status(500).json({ msg: "Server Error" });
-          if (article) {
-            req.flash("title", "عنوان مقاله تکراری می باشد.");
-            return res.redirect(`/article/edit/${req.body.id}`);
-          } else if (req.file) {
-            //update article where update article's picture
-            Article.findById(req.body.id, (err, article) => {
-              if (err) return res.status(500).json({ msg: "Server Error" });
-              if (article && article.picture) {
-                fs.unlinkSync(
-                  path.join(
-                    __dirname,
-                    "../public/images/articles/",
-                    article.picture
-                  )
-                );
-                Article.findByIdAndUpdate(
-                  req.body.id,
-                  {
-                    title: req.body.title,
-                    brief: req.body.brief,
-                    describe: req.body.describe,
-                    picture: req.file.filename,
-                    lastUpdate: Date.now(),
-                  },
-                  { new: true },
-                  (err) => {
-                    if (err)
-                      return res.status(500).json({ msg: "Server Error" });
-                    req.flash("successfullyEdit", "مقاله با موفقیت ویرایش شد.");
-                    return res.redirect("/article");
-                  }
-                );
-              }
-            });
-          } else {
-            //find article
-            Article.findByIdAndUpdate(
-              req.body.id,
-              {
-                title: req.body.title,
-                brief: req.body.brief,
-                describe: req.body.describe,
-                lastUpdate: Date.now(),
-              },
-              { new: true },
-              (err) => {
-                if (err) return res.status(500).json({ msg: "Server Error" });
-                req.flash("successfullyEdit", "مقاله با موفقیت ویرایش شد.");
-                return res.redirect("/article");
-              }
-            );
+router.put("/", (req, res, next) => {
+  try {
+    //update article's picture
+    const upload = generalTools.uploadArticlePic.single("picture");
+    upload(req, res, function (err) {
+      //check article title, describe and brief is not empty
+      if (!req.body.title || !req.body.brief || !req.body.describe)
+        return res.redirect("/article");
+      if (err instanceof multer.MulterError) {
+        const error = new Error("Server Error");
+        error.status = 500;
+        next(error);
+      } else if (err) {
+        const error = new Error(err.message);
+        error.status = 406;
+        next(error);
+      } else {
+        //find one article with this title's requested and return
+        Article.findOne(
+          {
+            $and: [{ title: req.body.title }, { _id: { $ne: req.body.id } }],
+          },
+          (err, article) => {
+            if (err) {
+              const error = new Error("Server Error");
+              error.status = 500;
+              next(error);
+            }
+            if (article) {
+              req.flash("title", "عنوان مقاله تکراری می باشد.");
+              return res.redirect(`/article/edit/${req.body.id}`);
+            } else if (req.file) {
+              //update article where update article's picture
+              Article.findById(req.body.id, (err, article) => {
+                if (err) {
+                  const error = new Error("Server Error");
+                  error.status = 500;
+                  next(error);
+                }
+                if (article && article.picture) {
+                  fs.unlinkSync(
+                    path.join(
+                      __dirname,
+                      "../public/images/articles/",
+                      article.picture
+                    )
+                  );
+                  Article.findByIdAndUpdate(
+                    req.body.id,
+                    {
+                      title: req.body.title,
+                      brief: req.body.brief,
+                      describe: req.body.describe,
+                      picture: req.file.filename,
+                      lastUpdate: Date.now(),
+                    },
+                    { new: true },
+                    (err) => {
+                      if (err) {
+                        const error = new Error("Server Error");
+                        error.status = 500;
+                        next(error);
+                      }
+                      req.flash(
+                        "successfullyEdit",
+                        "مقاله با موفقیت ویرایش شد."
+                      );
+                      return res.redirect("/article");
+                    }
+                  );
+                }
+              });
+            } else {
+              //find article
+              Article.findByIdAndUpdate(
+                req.body.id,
+                {
+                  title: req.body.title,
+                  brief: req.body.brief,
+                  describe: req.body.describe,
+                  lastUpdate: Date.now(),
+                },
+                { new: true },
+                (err) => {
+                  if (err) return res.status(500).json({ msg: "Server Error" });
+                  req.flash("successfullyEdit", "مقاله با موفقیت ویرایش شد.");
+                  return res.redirect("/article");
+                }
+              );
+            }
           }
-        }
-      );
-    }
-  });
+        );
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 //delete article
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req, res, next) => {
   try {
     //get article's requested
     let article = await Article.findById(req.params.id);
-    if (!article) throw new Error("article not found");
+    if (!article) {
+      const error = new Error("article not found");
+      error.status = 404;
+      next(error);
+    }
     //check if who is requested for delete this article is admin or author of this article
     if (
       article.author == req.session.user._id ||
@@ -411,10 +513,12 @@ router.delete("/:id", async (req, res) => {
       req.flash("delete", "مقاله با موفقیت حذف شد.");
       res.redirect("/article");
     } else {
-      throw new Error("permission denied");
+      const error = new Error("Permission Denied");
+      error.status = 403;
+      next(error);
     }
   } catch (err) {
-    res.status(500).json({ msg: "Server Error" });
+    next(err);
   }
 });
 

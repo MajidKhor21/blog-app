@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    ports:
+      - 8080:8080
+    environment:
+      MONGO_URL: mongodb://db/blog
+      SESSION_SECRET: ~:m_AyQ#m-99'H:DSA
+      SESSION_AGE: 99000000
+      EMAIL_HOST: smtp.gmail.com
+      EMAIL_PORT: 465
+      EMAIL_USER: maktabblog00@gmail.com
+      EMAIL_PASS: b6tU./,zu-]{/u&A
+  db:
+    image: mongo:4.0-xenial
+    ports:
+      - 27017:27017
+    volumes:
+      - blog:/data/db
+
+volumes:
+  blog:

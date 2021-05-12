@@ -6,10 +6,14 @@ const reset = require("../tools/reset");
 
 //get reset password page
 router.get("/", (req, res, next) => {
-  return res.render("auth/reset", {
-    errors: req.flash("error"),
-    success: req.flash("success"),
-  });
+  try {
+    return res.render("auth/reset", {
+      errors: req.flash("error"),
+      success: req.flash("success"),
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 //reset pass route
@@ -26,18 +30,28 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-router.get("/password/:token", (req, res) => {
-  //check token is valid
-  ResetPassword.findOne({ token: req.params.token }, (err, result) => {
-    if (err) return res.status(500).json({ msg: "Server Error" });
-    if (!result) {
-      return res.status(400).redirect("/404");
-    }
-    return res.render("auth/reset-password", {
-      token: req.params.token,
-      password: req.flash("password"),
+router.get("/password/:token", (req, res, next) => {
+  try {
+    //check token is valid
+    ResetPassword.findOne({ token: req.params.token }, (err, result) => {
+      if (err) {
+        const error = new Error("Server Error");
+        error.status = 500;
+        next(error);
+      }
+      if (!result) {
+        const error = new Error("not found");
+        error.status = 404;
+        next(error);
+      }
+      return res.render("auth/reset-password", {
+        token: req.params.token,
+        password: req.flash("password"),
+      });
     });
-  });
+  } catch (err) {
+    next(err);
+  }
 });
 
 //reset password by user
@@ -70,7 +84,7 @@ router.post("/password", async (req, res) => {
     req.flash("password", "رمز عبور با موفقیت تغییر کرد.");
     res.redirect("/login");
   } catch (err) {
-    res.status(500).json({ msg: "Server Error" });
+    next(err);
   }
 });
 

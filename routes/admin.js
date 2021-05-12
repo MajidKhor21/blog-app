@@ -21,7 +21,6 @@ router.get("/members", async (req, res, next) => {
     } else if (req.query.order === "desc") {
       order = -1;
     }
-
     const users = await User.find({
       role: { $ne: "admin" },
       $or: [{ firstName: search }, { lastName: search }, { username: search }],
@@ -54,7 +53,7 @@ router.get("/members", async (req, res, next) => {
       pages: Math.ceil(count / perPage),
     });
   } catch (err) {
-    res.status(500).json({ msg: "Server Error" });
+    next(err);
   }
 });
 
@@ -68,16 +67,20 @@ router.get("/members/reset/:id", async (req, res, next) => {
     );
     return res.redirect("/user/manage/members");
   } catch (err) {
-    res.status(500).json({ msg: "Server Error" });
+    next(err);
   }
 });
 
 //delete user with articles route for admin only
 router.delete("/members/:id", async (req, res, next) => {
   try {
-    const articles = await Article.find({ author: req.params.id });
     const user = await User.find({ _id: req.params.id });
-    if (!user.length > 0) return res.status(404).redirect("/404");
+    if (!user.length > 0) {
+      const error = new Error("user not found");
+      error.status = 404;
+      next(error);
+    }
+    const articles = await Article.find({ author: req.params.id });
     let commentsByMember = await Comment.find({ author: req.params.id });
     commentsByMember.forEach(async (element) => {
       await Article.findByIdAndUpdate(element.article, {
@@ -132,7 +135,7 @@ router.delete("/members/:id", async (req, res, next) => {
     req.flash("deleted", "کاربر مورد نظر با موفقیت حذف شد.");
     return res.status(200).redirect("/user/manage/members");
   } catch (err) {
-    res.status(500).json({ msg: "Server error" });
+    next(err);
   }
 });
 
@@ -186,7 +189,7 @@ router.get("/articles", async (req, res, next) => {
       pages: Math.ceil(count / perPage),
     });
   } catch (err) {
-    res.status(500).json({ msg: "Server error" });
+    next(err);
   }
 });
 
@@ -195,7 +198,11 @@ router.delete("/articles/:id", async (req, res, next) => {
   try {
     //get article's requested
     let article = await Article.findById(req.params.id);
-    if (!article) throw new Error("article not found");
+    if (!article) {
+      const error = new Error("article not found");
+      error.status = 404;
+      next(error);
+    }
     //check if who is requested for delete this article is admin!!
     if (req.session.user.role === "admin") {
       //delete picture of article from our host
@@ -228,10 +235,12 @@ router.delete("/articles/:id", async (req, res, next) => {
       req.flash("delete", "مقاله با موفقیت حذف شد.");
       res.redirect("/user/manage/articles");
     } else {
-      throw new Error("permission denied");
+      const error = new Error("Permission Denied");
+      error.status = 403;
+      next(error);
     }
   } catch (err) {
-    res.status(500).json({ msg: "Server Error" });
+    next(err);
   }
 });
 
