@@ -36,6 +36,11 @@
 3. Open Your Browser
 4. Search URL http://localhost:8080
 
+### Create Admin User
+
+1. Send a post request to localhost:8080/createAdmin
+2. Define (firstName, lastName, email, username, password, gender, mobileNumber) in body of request
+
 ### Online demo
 
 http://makhor.ir
