@@ -1,24 +1,37 @@
 version: "3.9"
 
+networks:
+  blogApp:
+    name: blogApp
+
 services:
-  web:
-    build: .
+  mongo:
+    container_name: mongo
+    image: mongo:4.0-xenial
+    networks:
+      - blogApp
+    ports:
+      - 27017:27017
+    volumes:
+      - ./data/db:/data/db
+  node:
+    container_name: node
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nodejs
     ports:
       - 8080:8080
+    networks:
+      - blogApp
+    volumes:
+      - ./:/app
     environment:
-      MONGO_URL: mongodb://db/blog
+      MONGO_URL: mongodb://mongo:27017/blog
       SESSION_SECRET: ~:m_AyQ#m-99'H:DSA
       SESSION_AGE: 99000000
       EMAIL_HOST: smtp.gmail.com
       EMAIL_PORT: 465
       EMAIL_USER: maktabblog00@gmail.com
       EMAIL_PASS: b6tU./,zu-]{/u&A
-  db:
-    image: mongo:4.0-xenial
-    ports:
-      - 27017:27017
-    volumes:
-      - blog:/data/db
-
-volumes:
-  blog:
+    command: ["sh", "-c", "ls && npm i bcrypt && npm start"]
