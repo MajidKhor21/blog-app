@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
 const checker = require("../tools/checker");
+const userRegisterValidate = require("../tools/validator/userRegisterValidate");
+const { validationResult } = require("express-validator");
 
 router.get("/", (req, res, next) => {
   res.render("home", { user: req.session.user });
@@ -29,11 +31,16 @@ router.get("/logout", (req, res) => {
 router.use("/article", checker.loginChecker, require("./article"));
 
 //create admin user at first
-router.post("/createAdmin", (req, res) => {
+router.post("/createAdmin", userRegisterValidate.handle(), (req, res) => {
+  const result = validationResult(req);
   User.findOne({ role: "admin" }, (err, existAdmin) => {
-    if (err) return res.status(500).send("err in create admin");
+    if (err) return res.status(500).send("error in create admin");
     if (existAdmin) return res.status(404).send("Not Found!");
-
+    if (!result.isEmpty()) {
+      return res
+        .status(406)
+        .send("please fill all of input or check your username/password");
+    }
     new User({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
@@ -44,7 +51,7 @@ router.post("/createAdmin", (req, res) => {
       gender: req.body.gender,
       mobileNumber: req.body.mobileNumber,
     }).save((err) => {
-      if (err) return res.send("err in create admin2");
+      if (err) return res.status(500).send("errpr in create admin");
       return res.send("admin created successfully");
     });
   });
