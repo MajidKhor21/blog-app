@@ -34,4 +34,4 @@ services:
       EMAIL_PORT: 465
       EMAIL_USER: maktabblog00@gmail.com
       EMAIL_PASS: b6tU./,zu-]{/u&A
-    command: ["sh", "-c", "ls && npm i bcrypt && npm start"]
+    command: ["sh", "-c", "ls && npm i && npm start"]
